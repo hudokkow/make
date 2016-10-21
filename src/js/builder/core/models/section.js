@@ -6,14 +6,12 @@ var oneApp = oneApp || {};
 
 	oneApp.SectionModel = Backbone.Model.extend({
 		defaults: {
-			sectionType: '',
-			viewName: '',
-			id: ''
+			'section-type': ''
 		},
 
 		initialize: function () {
 			// Capitalize the name
-			var viewName = this.get('sectionType').charAt(0).toUpperCase() + this.get('sectionType').slice(1);
+			var viewName = this.get('section-type').charAt(0).toUpperCase() + this.get('section-type').slice(1);
 			this.set('viewName', viewName);
 		}
 	});

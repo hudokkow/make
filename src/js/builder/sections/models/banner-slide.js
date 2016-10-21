@@ -8,7 +8,7 @@ var oneApp = oneApp || {};
 		defaults: {
 			id: '',
 			parentID: '',
-			sectionType: 'bannerslide'
+			'section-type': 'bannerslide'
 		}
 	});
 

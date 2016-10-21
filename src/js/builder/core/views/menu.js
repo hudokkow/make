@@ -32,8 +32,8 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 			// Add a new model to the collection with the specified section type
 			oneApp.sections.create({
-				sectionType: sectionType,
-				id: new Date().getTime()
+				'section-type': sectionType,
+				'id': new Date().getTime()
 			});
 		},
 

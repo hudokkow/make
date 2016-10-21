@@ -101,33 +101,22 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 	};
 
 	oneApp.initViews = function () {
-		$('.ttfmake-section').each(function () {
-			var $section = $(this),
-				idAttr = $section.attr('id'),
-				id = $section.attr('data-id'),
-				sectionType = $section.attr('data-section-type'),
-				sectionModel, modelViewName, view, viewName;
+		if (typeof ttfMakeSectionData === 'object') {
+			_.forEach(ttfMakeSectionData, function(sectionData, sectionID) {
+				var sectionModel,
+						modelViewName,
+						view,
+						viewName;
 
-			// Build the model
-			sectionModel = new oneApp.SectionModel({
-				sectionType: sectionType,
-				id: id
+				sectionModel	= new oneApp.SectionModel(sectionData);
+				modelViewName = sectionModel.get('viewName') + 'View';
+				viewName			= oneApp.hasOwnProperty(modelViewName) ? modelViewName : 'SectionView';
+
+				view = new oneApp[viewName]({
+					model: sectionModel
+				});
 			});
-
-			// Ensure that a view exists for the section, otherwise use the base view
-			modelViewName = sectionModel.get('viewName') + 'View';
-			viewName      = (true === oneApp.hasOwnProperty(modelViewName)) ? modelViewName : 'SectionView';
-
-			// Create view
-			view = new oneApp[viewName]({
-				model: sectionModel,
-				el: $('#' + idAttr),
-				serverRendered: true
-			});
-
-			// Update section json
-			oneApp.updateSectionJSON(id);
-		});
+		}
 	};
 
 	oneApp.scrollToAddedView = function (view) {

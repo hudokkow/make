@@ -107,7 +107,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 	// Initialize the sortables
 	$oneApp.on('afterSectionViewAdded', function(evt, view) {
-		if ('gallery' === view.model.get('sectionType')) {
+		if ('gallery' === view.model.get('section-type')) {
 			// Add 3 initial gallery item
 			var $addButton = $('.ttfmake-gallery-add-item', view.$el);
 			$addButton.trigger('click', {type: 'pseudo'});

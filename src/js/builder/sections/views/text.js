@@ -111,7 +111,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 	// Initialize the sortables
 	$oneApp.on('afterSectionViewAdded', function(evt, view) {
-		if ('text' === view.model.get('sectionType')) {
+		if ('text' === view.model.get('section-type')) {
 			oneApp.initializeTextColumnSortables(view);
 
 			// Initialize the iframes

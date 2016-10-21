@@ -37,16 +37,16 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
 				escape     : /\{\{([^\}]+?)\}\}(?!\})/g
 			};
-			// this.template = _.template($('#tmpl-ttfmake-' + this.model.get('sectionType')).html());
-			this.template = _.template(ttfMakeSectionTemplates[this.model.get('sectionType')]);
+			
+			this.template = _.template(ttfMakeSectionTemplates[this.model.get('section-type')]);
 		},
 
 		render: function () {
 			this.$el.html(this.template(this.model.toJSON()))
-				.addClass('ttfmake-section-' + this.model.get('sectionType'))
+				.addClass('ttfmake-section-' + this.model.get('section-type'))
 				.attr('id', this.idAttr)
 				.attr('data-id', this.model.get('id'))
-				.attr('data-section-type', this.model.get('sectionType'));
+				.attr('data-section-type', this.model.get('section-type'));
 			return this;
 		},
 
@@ -220,7 +220,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 			oneApp.setActiveSectionID(self.model.get('id'));
 
-			$oneApp.trigger('ttfOverlayOpened', [this.model.get('sectionType'), $overlay]);
+			$oneApp.trigger('ttfOverlayOpened', [this.model.get('section-type'), $overlay]);
 		},
 
 		setSize: function($overlay, $wrapper) {

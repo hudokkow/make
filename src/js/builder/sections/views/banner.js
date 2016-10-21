@@ -100,7 +100,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 	// Initialize the sortables
 	$oneApp.on('afterSectionViewAdded', function(evt, view) {
-		if ('banner' === view.model.get('sectionType')) {
+		if ('banner' === view.model.get('section-type')) {
 			// Add an initial slide item
 			$('.ttfmake-add-slide', view.$el).trigger('click', {type: 'pseudo'});
 
