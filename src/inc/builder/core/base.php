@@ -580,12 +580,17 @@ class TTFMAKE_Builder_Base {
 		// Expose section template strings to JS
 		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionTemplates', $templates );
 
-		foreach ( $section_defaults as $section_id => &$section_fields ) {
+		// Expose section default configuration to JS
+		foreach ( $section_defaults as $section_id => $section_fields ) {
+			$section_field_defaults = array();
+
 			foreach ( $section_fields as $f => $section_field ) {
-				$section_fields[$section_field['name']] = $section_field;
-				unset($section_fields[$f]);
+				$section_field_defaults[$section_field['name']] = $section_field;
 			}
+
+			$section_defaults[$section_id] = $section_field_defaults;
 		}
+
 		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionDefaults', $section_defaults );
 
 		unset( $GLOBALS['ttfmake_is_js_template'] );
