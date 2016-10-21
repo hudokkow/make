@@ -562,6 +562,7 @@ class TTFMAKE_Builder_Base {
 
 		// Print the templates
 		$templates = array();
+		$section_defaults = array();
 
 		foreach ( ttfmake_get_sections() as $section ) : ?>
 			<script type="text/html" id="tmpl-ttfmake-<?php echo esc_attr( $section['id'] ); ?>">
@@ -570,6 +571,7 @@ class TTFMAKE_Builder_Base {
 			$this->load_section( $section, array() );
 			$html = ob_get_clean();
 			$templates[$section['id']] = $html;
+			$section_defaults[$section['id']] = $section['config'];
 			echo $html;
 			?>
 		</script>
@@ -577,6 +579,14 @@ class TTFMAKE_Builder_Base {
 
 		// Expose section template strings to JS
 		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionTemplates', $templates );
+
+		foreach ( $section_defaults as $section_id => &$section_fields ) {
+			foreach ( $section_fields as $f => $section_field ) {
+				$section_fields[$section_field['name']] = $section_field;
+				unset($section_fields[$f]);
+			}
+		}
+		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionDefaults', $section_defaults );
 
 		unset( $GLOBALS['ttfmake_is_js_template'] );
 
