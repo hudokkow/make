@@ -113,6 +113,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 				viewName			= oneApp.hasOwnProperty(modelViewName) ? modelViewName : 'SectionView';
 
 				view = new oneApp[viewName]({
+					el: $('#ttfmake-section-' + sectionID),
 					model: sectionModel
 				});
 			});
