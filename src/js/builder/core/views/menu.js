@@ -35,12 +35,12 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			modelClass = (true === oneApp.hasOwnProperty(modelClass)) ? modelClass : 'SectionModel';
 
 			var modelDefaults = ttfMakeSectionDefaults[sectionType] || {};
-			modelDefaults = _(modelDefaults).extend({
+			var modelAttributes = _(modelDefaults).extend({
 				'section-type': sectionType,
 				'id': new Date().getTime()
 			});
 
-			var model = new oneApp[modelClass](modelDefaults);
+			var model = new oneApp[modelClass](modelAttributes);
 			oneApp.sections.add(model);
 		},
 
