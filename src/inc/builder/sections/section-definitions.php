@@ -620,6 +620,14 @@ class TTFMAKE_Section_Definitions {
 		);
 
 		wp_register_script(
+			'ttfmake-sections/js/models/text.js',
+			Make()->scripts()->get_js_directory_uri() . '/builder/sections/models/text.js',
+			array(),
+			TTFMAKE_VERSION,
+			true
+		);
+
+		wp_register_script(
 			'ttfmake-sections/js/views/text.js',
 			Make()->scripts()->get_js_directory_uri() . '/builder/sections/views/text.js',
 			array(),
@@ -691,6 +699,7 @@ class TTFMAKE_Section_Definitions {
 			'ttfmake-sections/js/models/banner-slide.js',
 			'ttfmake-sections/js/views/gallery-item.js',
 			'ttfmake-sections/js/views/gallery.js',
+			'ttfmake-sections/js/models/text.js',
 			'ttfmake-sections/js/views/text.js',
 			'ttfmake-sections/js/views/banner-slide.js',
 			'ttfmake-sections/js/views/banner.js',
