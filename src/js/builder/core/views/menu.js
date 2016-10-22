@@ -34,11 +34,13 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			var modelClass = sectionType.charAt(0).toUpperCase() + sectionType.slice(1) + 'Model';
 			modelClass = (true === oneApp.hasOwnProperty(modelClass)) ? modelClass : 'SectionModel';
 
-			var model = new oneApp[modelClass]({
+			var modelDefaults = ttfMakeSectionDefaults[sectionType] || {};
+			modelDefaults = _(modelDefaults).extend({
 				'section-type': sectionType,
 				'id': new Date().getTime()
 			});
 
+			var model = new oneApp[modelClass](modelDefaults);
 			oneApp.sections.add(model);
 		},
 

@@ -585,7 +585,7 @@ class TTFMAKE_Builder_Base {
 			$section_field_defaults = array();
 
 			foreach ( $section_fields as $f => $section_field ) {
-				$section_field_defaults[$section_field['name']] = $section_field;
+				$section_field_defaults[$section_field['name']] = $section_field['default'];
 			}
 
 			$section_defaults[$section_id] = $section_field_defaults;
