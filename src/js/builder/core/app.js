@@ -106,9 +106,14 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 				var sectionModel,
 						modelViewName,
 						view,
-						viewName;
+						viewName,
+						sectionType = sectionData['section-type'];
 
-				sectionModel	= new oneApp.SectionModel(sectionData);
+				// Ensure that a model exists for the section, otherwise use the generic model
+				var modelClass = sectionType.charAt(0).toUpperCase() + sectionType.slice(1) + 'Model';
+				modelClass = (true === oneApp.hasOwnProperty(modelClass)) ? modelClass : 'SectionModel';
+
+				sectionModel	= new oneApp[modelClass](sectionData);
 				modelViewName = sectionModel.get('viewName') + 'View';
 				viewName			= oneApp.hasOwnProperty(modelViewName) ? modelViewName : 'SectionView';
 
