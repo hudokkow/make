@@ -39,6 +39,8 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			};
 
 			this.template = _.template(ttfMakeSectionTemplates[this.model.get('section-type')]);
+
+			this.render();
 		},
 
 		render: function () {
