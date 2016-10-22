@@ -30,11 +30,16 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				$target = $($evt.get(0).currentTarget),
 				sectionType = $target.attr('data-section').replace(/\W/g, ''); // Get and sanitize section
 
-			// Add a new model to the collection with the specified section type
-			oneApp.sections.create({
+			// Ensure that a model exists for the section, otherwise use the generic model
+			var modelClass = sectionType.charAt(0).toUpperCase() + sectionType.slice(1) + 'Model';
+			modelClass = (true === oneApp.hasOwnProperty(modelClass)) ? modelClass : 'SectionModel';
+
+			var model = new oneApp[modelClass]({
 				'section-type': sectionType,
 				'id': new Date().getTime()
 			});
+
+			oneApp.sections.add(model);
 		},
 
 		addOne: function (section) {
