@@ -45,8 +45,8 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 		$iframe_id   = 'ttfmake-iframe-' . $section_id . '-' . $i;
 		$textarea_id = 'ttfmake-content-' . $section_id . '-' . $i;
 		$overlay_id  = 'ttfmake-overlay-' . $section_id . '-' . $i;
-		$link        = ( isset( $ttfmake_section_data['data']['columns'][ $i ]['image-link'] ) ) ? $ttfmake_section_data['data']['columns'][ $i ]['image-link'] : '';
-		$image_id    = ( isset( $ttfmake_section_data['data']['columns'][ $i ]['image-id'] ) ) ? $ttfmake_section_data['data']['columns'][ $i ]['image-id'] : '';
+		$link        = ( isset( $ttfmake_section_data['data']['columns'][ $i ]['image-link'] ) ) ? $ttfmake_section_data['data']['columns'][ $i ]['image-link'] : '{{ get("columns")['. $i .']["image-link"]';
+		$image_id    = ( isset( $ttfmake_section_data['data']['columns'][ $i ]['image-id'] ) ) ? $ttfmake_section_data['data']['columns'][ $i ]['image-id'] : '{{ get("columns")['. $i .']["image-id"]';
 		$title       = ( isset( $ttfmake_section_data['data']['columns'][ $i ]['title'] ) ) ? $ttfmake_section_data['data']['columns'][ $i ]['title'] : '{{ get("columns")['. $i .']["title"] }}';
 		$content     = ( isset( $ttfmake_section_data['data']['columns'][ $i ]['content'] ) ) ? $ttfmake_section_data['data']['columns'][ $i ]['content'] : '{{ get("columns")['. $i .']["content"] }}';
 
@@ -193,5 +193,5 @@ do_action( 'make_section_text_after_columns', $ttfmake_section_data );
 
 <div class="clear"></div>
 <input type="hidden" value="<?php echo esc_attr( implode( ',', $section_order ) ); ?>" name="<?php echo $section_name; ?>[columns-order]" class="ttfmake-text-columns-order" />
-<input type="hidden" class="ttfmake-section-state" name="<?php echo $section_name; ?>[state]" value="<?php if ( isset( $ttfmake_section_data['data']['state'] ) ) echo esc_attr( $ttfmake_section_data['data']['state'] ); else echo "{{{ get('state') }}}"; ?>" />
+<input type="hidden" class="ttfmake-section-state" name="<?php echo $section_name; ?>[state]" value="<?php if ( isset( $ttfmake_section_data['data']['state'] ) ) echo esc_attr( $ttfmake_section_data['data']['state'] ); else echo '{{ get("state") }}'; ?>" />
 <?php ttfmake_load_section_footer();

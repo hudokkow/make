@@ -114,7 +114,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 				modelClass = (true === oneApp.hasOwnProperty(modelClass)) ? modelClass : 'SectionModel';
 
 				sectionModel	= new oneApp[modelClass](sectionData);
-				modelViewName = sectionModel.get('viewName') + 'View';
+				modelViewName = sectionModel.get('section-type').charAt(0).toUpperCase() + sectionModel.get('section-type').slice(1) + 'View';
 				viewName			= oneApp.hasOwnProperty(modelViewName) ? modelViewName : 'SectionView';
 
 				view = new oneApp[viewName]({
