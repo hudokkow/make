@@ -41,6 +41,16 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.template = _.template(ttfMakeSectionTemplates[this.model.get('section-type')]);
 
 			this.render();
+
+			var self = this;
+
+			this.model.bind('change', function() {
+				if (!self.model.hasChanged('section-json')) {
+					self.model.saveData();
+				} else {
+					self.render();
+				}
+			});
 		},
 
 		render: function () {
@@ -49,39 +59,34 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				.attr('id', this.idAttr)
 				.attr('data-id', this.model.get('id'))
 				.attr('data-section-type', this.model.get('section-type'));
+
 			return this;
 		},
 
 		toggleSection: function (evt) {
 			evt.preventDefault();
 
+			var self = this;
 
 			var $this = $(evt.target),
 				$section = $this.parents('.ttfmake-section'),
-				$sectionBody = $('.ttfmake-section-body', $section),
-				$input = $('.ttfmake-section-state', this.$el);
-
-			oneApp.setActiveSectionID(this.model.get('id'));
+				$sectionBody = $('.ttfmake-section-body', $section);
 
 			if ($section.hasClass('ttfmake-section-open')) {
 				$sectionBody.slideUp(oneApp.options.closeSpeed, function() {
 					$section.removeClass('ttfmake-section-open');
-					$input.val('closed');
-					oneApp.updateSectionJSON();
+					self.model.set({'state': 'closed'});
 				});
 			} else {
 				$sectionBody.slideDown(oneApp.options.openSpeed, function() {
 					$section.addClass('ttfmake-section-open');
-					$input.val('open');
-					oneApp.updateSectionJSON();
+					self.model.set({'state': 'open'});
 				});
 			}
 		},
 
 		removeSection: function (evt) {
 			evt.preventDefault();
-
-			oneApp.setActiveSectionID(this.model.get('id'));
 
 			// Confirm the action
 			if (false === window.confirm(ttfmakeBuilderData.confirmString)) {
@@ -185,7 +190,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				// Show the remove link
 				$remove.show();
 
-				// Update section JSON on image select
+				// Save model data on image select
 				oneApp.updateSectionJSON();
 			});
 

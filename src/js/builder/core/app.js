@@ -154,9 +154,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 	oneApp.setTextArea = function (textAreaID) {
 		$('#' + textAreaID).val(oneApp.getMakeContent());
-
-		// update section JSON with new content
-		oneApp.updateSectionJSON();
 	};
 
 	oneApp.getMakeContent = function () {
@@ -313,17 +310,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		}
 
 		$selector.wpColorPicker();
-	});
-
-	$oneApp.on('viewInit', function(evt, view) {
-		var sectionID = view.model.id;
-
-		oneApp.setActiveSectionID(sectionID);
-
-		view.$el.on('change', 'input, select', function() {
-			oneApp.setActiveSectionID(sectionID);
-			oneApp.updateSectionJSON();
-		});
 	});
 
 	// populate JSON with section data for widgetized columns, on page load

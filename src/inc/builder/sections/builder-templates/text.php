@@ -7,10 +7,10 @@ ttfmake_load_section_header();
 
 global $ttfmake_section_data, $ttfmake_is_js_template;
 $section_id     = ( isset( $ttfmake_section_data['data']['id'] ) ) ? $ttfmake_section_data['data']['id'] : '{{ get("id") }}';
-$section_name   = ttfmake_get_section_name( $ttfmake_section_data, $ttfmake_is_js_template );
-$columns_number = ( isset( $ttfmake_section_data['data']['columns-number'] ) ) ? $ttfmake_section_data['data']['columns-number'] : '{{ get("columns-number") }}';
+$section_name   = 'ttfmake-section[{{ get("id") }}]';
+$columns_number = '{{ get("columns-number") }}';
 $section_order  = ( ! empty( $ttfmake_section_data['data']['columns-order'] ) ) ? $ttfmake_section_data['data']['columns-order'] : range(1, 4);
-$columns_class  = ( in_array( $columns_number, range( 1, 4 ) ) && true !== $ttfmake_is_js_template ) ? $columns_number : '{{ get("columns-number") }}';
+$columns_class  = '{{ get("columns-number") }}';
 
 /**
  * Execute code before the columns select input is displayed.
@@ -45,10 +45,10 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 		$iframe_id   = 'ttfmake-iframe-' . $section_id . '-' . $i;
 		$textarea_id = 'ttfmake-content-' . $section_id . '-' . $i;
 		$overlay_id  = 'ttfmake-overlay-' . $section_id . '-' . $i;
-		$link        = ( isset( $ttfmake_section_data['data']['columns'][ $i ]['image-link'] ) ) ? $ttfmake_section_data['data']['columns'][ $i ]['image-link'] : '{{ get("columns")['. $i .']["image-link"]';
-		$image_id    = ( isset( $ttfmake_section_data['data']['columns'][ $i ]['image-id'] ) ) ? $ttfmake_section_data['data']['columns'][ $i ]['image-id'] : '{{ get("columns")['. $i .']["image-id"]';
-		$title       = ( isset( $ttfmake_section_data['data']['columns'][ $i ]['title'] ) ) ? $ttfmake_section_data['data']['columns'][ $i ]['title'] : '{{ get("columns")['. $i .']["title"] }}';
-		$content     = ( isset( $ttfmake_section_data['data']['columns'][ $i ]['content'] ) ) ? $ttfmake_section_data['data']['columns'][ $i ]['content'] : '{{ get("columns")['. $i .']["content"] }}';
+		$link        = '{{ get("columns")['. $i .']["image-link"]';
+		$image_id    = '{{ get("columns")['. $i .']["image-id"]';
+		$title       = '{{ get("columns")['. $i .']["title"] }}';
+		$content     = '{{ get("columns")['. $i .']["content"] }}';
 
 		$item_has_content = ( ! empty( $content ) ) ? ' item-has-content' : '';
 
@@ -149,7 +149,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 				'type'    => 'section_title',
 				'name'    => 'title',
 				'label'   => __( 'Enter column title', 'make' ),
-				'default' => '{{ get("title") }}',
+				'default' => '{{ get("columns")['. $i .']["title"] }}',
 				'class'   => 'ttfmake-configuration-title',
 			),
 			200 => array(
@@ -192,6 +192,6 @@ do_action( 'make_section_text_after_columns', $ttfmake_section_data );
 ?>
 
 <div class="clear"></div>
-<input type="hidden" value="<?php echo esc_attr( implode( ',', $section_order ) ); ?>" name="<?php echo $section_name; ?>[columns-order]" class="ttfmake-text-columns-order" />
+<input type="hidden" value="{{ get('columns-order') }}" name="<?php echo $section_name; ?>[columns-order]" class="ttfmake-text-columns-order" />
 <input type="hidden" class="ttfmake-section-state" name="<?php echo $section_name; ?>[state]" value="<?php if ( isset( $ttfmake_section_data['data']['state'] ) ) echo esc_attr( $ttfmake_section_data['data']['state'] ); else echo '{{ get("state") }}'; ?>" />
 <?php ttfmake_load_section_footer();

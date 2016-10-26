@@ -44,15 +44,31 @@ var oneApp = oneApp || {};
 					'content': ''
 				}
 			},
-			'columns-order': [],
+			'columns-order': '1,2,3,4',
 			'darken': 0,
 			'parallax-enable': 0,
-			'remove-space-below': 0
+			'remove-space-below': 0,
+			'section-json': '{}'
 		},
 
 		initialize: function () {
-			var viewName = this.get('section-type').charAt(0).toUpperCase() + 'View';
+			var viewName = this.get('section-type').charAt(0).toUpperCase() + this.get('section-type').slice(1) + 'View';
 			this.set('viewName', viewName);
+
+			// run saveData on init to create JSON out of our data
+			this.saveData();
+		},
+
+		saveData: function() {
+			var json = {};
+
+			this.set('section-json', '');
+
+			_.forEach(this.attributes, function(value, attr) {
+				json[attr] = value;
+			});
+
+			this.set('section-json', JSON.stringify(json));
 		}
 	});
 
