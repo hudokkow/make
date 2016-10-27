@@ -4,24 +4,26 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.BannerSlideView = Backbone.View.extend({
+	oneApp.BannerSlideView = oneApp.SectionView.extend({
 		template: '',
 		className: 'ttfmake-banner-slide ttfmake-banner-slide-open',
 
 		events: {
 			'click .ttfmake-banner-slide-remove': 'removeItem',
-			'click .ttfmake-banner-slide-toggle': 'toggleSection'
+			'click .ttfmake-banner-slide-toggle': 'toggleSection',
+			'click .ttfmake-media-uploader-add': 'onMediaOpen',
 		},
 
 		initialize: function (options) {
 			this.model = options.model;
 			this.idAttr = 'ttfmake-banner-slide-' + this.model.get('id');
 			this.serverRendered = ( options.serverRendered ) ? options.serverRendered : false;
-			this.template = _.template($('#tmpl-ttfmake-banner-slide').html(), oneApp.templateSettings);
+			this.template = _.template(ttfMakeSectionTemplates['banner-item']);
+			this.on('mediaSelected', this.onMediaSelected, this);
 		},
 
 		render: function () {
-			this.$el.html(this.template(this.model.toJSON()))
+			this.$el.html(this.template(this.model))
 				.attr('id', this.idAttr)
 				.attr('data-id', this.model.get('id'));
 			return this;
@@ -63,6 +65,18 @@ var oneApp = oneApp || {};
 					$input.val('open');
 				});
 			}
+		},
+
+		onMediaOpen: function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			oneApp.initUploader(this);
+		},
+
+		onMediaSelected: function(attachment) {
+			this.model.set('image-id', attachment.id);
+			this.model.set('image-url', attachment.url);
 		}
 	});
 })(window, Backbone, jQuery, _, oneApp);

@@ -12,17 +12,32 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			});
 		},
 
+		render: function () {
+			oneApp.SectionView.prototype.render.apply(this, arguments);
+
+			// Initialize the views when the app starts up
+			oneApp.initBannerSlideViews(this);
+
+			return this;
+		},
+
 		addSlide: function (evt, params) {
 			evt.preventDefault();
 
-			var view, html;
+			var view, html, model;
+
+			model = new oneApp.BannerSlideModel({
+				id: new Date().getTime(),
+				parentID: this.getParentID()
+			});
+
+			var slides = this.model.get('banner-slides');
+			slides.push(model);
+			this.model.set('banner-slides', slides);
 
 			// Create view
 			view = new oneApp.BannerSlideView({
-				model: new oneApp.BannerSlideModel({
-					id: new Date().getTime(),
-					parentID: this.getParentID()
-				})
+				model: model
 			});
 
 			// Append view
@@ -100,7 +115,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 	// Initialize the sortables
 	$oneApp.on('afterSectionViewAdded', function(evt, view) {
-		if ('banner' === view.model.get('section-type')) {
+		if ('banner' === view.model.get('section-type') && view.model.get('banner-slides').length == 0) {
 			// Add an initial slide item
 			$('.ttfmake-add-slide', view.$el).trigger('click', {type: 'pseudo'});
 
@@ -110,37 +125,24 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 	});
 
 	// Initialize available slides
-	oneApp.initBannerSlideViews = function ($el) {
-		$el = $el || '';
-		var $slides = ('' === $el) ? $('.ttfmake-banner-slide') : $('.ttfmake-banner-slide', $el);
+	oneApp.initBannerSlideViews = function (view) {
+		var slides = view.model.get('banner-slides');
 
-		$slides.each(function () {
-			var $item = $(this),
-				idAttr = $item.attr('id'),
-				id = $item.attr('data-id'),
-				$section = $item.parents('.ttfmake-section'),
-				parentID = $section.attr('data-id'),
-				model, view;
-
-			// Build the model
-			model = new oneApp.BannerSlideModel({
-				id: id,
-				parentID: parentID
-			});
-
+		_(slides).each(function (slideModel) {
 			// Build the view
-			view = new oneApp.BannerSlideView({
-				model: model,
-				el: $('#' + idAttr),
+			var slideView = new oneApp.BannerSlideView({
+				model: slideModel,
+				// el: $('.ttfmake-banner-slides-stage', view.$el),
 				serverRendered: true
 			});
 
-			oneApp.initializeBannerSlidesColorPicker(view);
+			// Append view
+			var html = slideView.render().el;
+			$('.ttfmake-banner-slides-stage', view.$el).append(html);
+
+			oneApp.initializeBannerSlidesColorPicker(slideView);
 		});
 
 		oneApp.initializeBannerSlidesSortables();
 	};
-
-	// Initialize the views when the app starts up
-	oneApp.initBannerSlideViews();
 })(window, jQuery, _, oneApp, $oneApp);
