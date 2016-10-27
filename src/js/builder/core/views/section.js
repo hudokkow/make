@@ -18,7 +18,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			'click .ttfmake-section-toggle': 'toggleSection',
 			'click .ttfmake-section-remove': 'removeSection',
 			'keyup .ttfmake-section-header-title-input': 'constructHeader',
-			'click .ttfmake-media-uploader-add': 'initUploader',
+			'click .ttfmake-media-uploader-add': 'onMediaOpen',
 			'click .edit-content-link': 'openTinyMCEOverlay',
 			'click .ttfmake-overlay-open': 'openConfigurationOverlay',
 			'click .ttfmake-overlay-close': 'closeConfigurationOverlay'
@@ -40,17 +40,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 			this.template = _.template(ttfMakeSectionTemplates[this.model.get('section-type')]);
 
-			this.render();
-
-			var self = this;
-
-			this.model.bind('change', function() {
-				if (!self.model.hasChanged('section-json')) {
-					self.model.saveData();
-				} else {
-					self.render();
-				}
-			});
+			this.on('mediaSelected', this.onMediaSelected, this);
 		},
 
 		render: function () {
@@ -132,70 +122,14 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			}
 		},
 
-		initUploader: function (evt) {
-			evt.preventDefault();
+		onMediaOpen: function(e) {
+			e.preventDefault();
 
-			var $this = $(evt.target),
-				$parent = $this.parents('.ttfmake-uploader'),
-				$placeholder = $('.ttfmake-media-uploader-placeholder', $parent),
-				$input = $('.ttfmake-media-uploader-value', $parent),
-				$remove = $('.ttfmake-media-uploader-remove', $parent),
-				$add = $('.ttfmake-media-uploader-set-link', $parent),
-				frame = frame || {},
-				props, image;
+			oneApp.initUploader(this);
+		},
 
-			oneApp.$currentPlaceholder = $placeholder;
-			oneApp.setActiveSectionID(this.model.get('id'));
-
-			// If the media frame already exists, reopen it.
-			if ('function' === typeof frame.open) {
-				frame.open();
-				return;
-			}
-
-			// Create the media frame.
-			frame = wp.media.frames.frame = wp.media({
-				title: $this.data('title'),
-				className: 'media-frame ttfmake-builder-uploader',
-				button: {
-					text: $this.data('buttonText')
-				},
-				multiple: false
-			});
-
-			// When an image is selected, run a callback.
-			frame.on('select', function () {
-				// We set multiple to false so only get one image from the uploader
-				var attachment = frame.state().get('selection').first().toJSON();
-
-				// Remove the attachment caption
-				attachment.caption = '';
-
-				// Build the image
-				props = wp.media.string.props(
-					{},
-					attachment
-				);
-
-				// Show the image
-				$placeholder.css('background-image', 'url(' + attachment.url + ')');
-				$parent.addClass('ttfmake-has-image-set');
-
-				// Record the chosen value
-				$input.val(attachment.id);
-
-				// Hide the link to set the image
-				$add.hide();
-
-				// Show the remove link
-				$remove.show();
-
-				// Save model data on image select
-				oneApp.updateSectionJSON();
-			});
-
-			// Finally, open the modal
-			frame.open();
+		onMediaSelected: function(attachment) {
+			this.model.set('background-image', {'image-id': attachment.id, 'image-url': attachment.url});
 		},
 
 		openTinyMCEOverlay: function (evt) {

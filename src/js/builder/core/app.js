@@ -113,14 +113,11 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 				var modelClass = sectionType.charAt(0).toUpperCase() + sectionType.slice(1) + 'Model';
 				modelClass = (true === oneApp.hasOwnProperty(modelClass)) ? modelClass : 'SectionModel';
 
-				sectionModel	= new oneApp[modelClass](sectionData);
-				modelViewName = sectionModel.get('section-type').charAt(0).toUpperCase() + sectionModel.get('section-type').slice(1) + 'View';
+				sectionModel	= new oneApp[modelClass](sectionData, {parse: true});
+				modelViewName = sectionModel.get('viewName') + 'View';
 				viewName			= oneApp.hasOwnProperty(modelViewName) ? modelViewName : 'SectionView';
 
-				view = new oneApp[viewName]({
-					el: $('#ttfmake-section-' + sectionID),
-					model: sectionModel
-				});
+				oneApp.sections.add(sectionModel);
 			});
 		}
 	};
@@ -283,11 +280,11 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		});
 	};
 
-	oneApp.updateSectionJSON = function(sectionID) {
-		sectionID = sectionID || oneApp.activeSectionID;
-
-		if (!sectionID) {
-			return false;
+	oneApp.updateSectionJSON = function() {
+		if (oneApp.hasOwnProperty('activeSectionID')) {
+			var sectionModel = oneApp.sections.get(oneApp.activeSectionID);
+			$('[name="ttfmake-section-json['+oneApp.activeSectionID+']"]').val(JSON.stringify(sectionModel.toJSON()));
+			// console.log(oneApp.activeSectionID, sectionModel.toJSON());
 		}
 
 		var serialized = $('[name*="ttfmake-section['+sectionID+']"]').serializeJSON();
@@ -297,6 +294,62 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 		return false;
 	};
+
+	oneApp.initUploader = function (view) {
+		var $uploader = $('.ttfmake-uploader', view.$el),
+				$placeholder = $('.ttfmake-media-uploader-placeholder', view.$el),
+				$remove = $('.ttfmake-media-uploader-remove', view.$el),
+				$add = $('.ttfmake-media-uploader-set-link', view.$el);
+
+		oneApp.$currentPlaceholder = $placeholder;
+		oneApp.setActiveSectionID(view.model.get('id'));
+
+		// If the media frame already exists, reopen it.
+		if (window['frame'] && 'function' === typeof frame.open) {
+			frame.open();
+			return;
+		}
+
+		// Create the media frame.
+		var frame = wp.media.frames.frame = wp.media({
+			title: view.$el.data('title'),
+			className: 'media-frame ttfmake-builder-uploader',
+			multiple: false
+		});
+
+		// When an image is selected, run a callback.
+		frame.on('select', function () {
+			// We set multiple to false so only get one image from the uploader
+			var attachment = frame.state().get('selection').first().toJSON();
+
+			// Remove the attachment caption
+			attachment.caption = '';
+
+			// Build the image
+			var props = wp.media.string.props(
+				{},
+				attachment
+			);
+
+			// Show the image
+			$placeholder.css('background-image', 'url(' + attachment.url + ')');
+			$uploader.addClass('ttfmake-has-image-set');
+
+			// Hide the link to set the image
+			$add.hide();
+
+			// Show the remove link
+			$remove.show();
+
+			view.trigger('mediaSelected', attachment);
+
+			// Update section JSON on image select
+			oneApp.updateSectionJSON();
+		});
+
+		// Finally, open the modal
+		frame.open();
+	},
 
 	// Initialize color pickers
 	$oneApp.on('viewInit afterSectionViewAdded', function(evt, view) {
