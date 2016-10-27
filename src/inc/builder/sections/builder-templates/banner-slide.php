@@ -6,7 +6,7 @@
 global $ttfmake_section_data, $ttfmake_is_js_template, $ttfmake_slide_id;
 $section_name = 'ttfmake-section';
 if ( true === $ttfmake_is_js_template ) {
-	$section_name .= '[{{{ parentID }}}][banner-slides][{{{ id }}}]';
+	$section_name .= "[{{{ get('parentID') }}}][banner-slides][{{{ id }}}]";
 } else {
 	$section_name .= '[' . $ttfmake_section_data[ 'data' ][ 'id' ] . '][banner-slides][' . $ttfmake_slide_id . ']';
 }
@@ -20,12 +20,12 @@ $state            = ( isset( $ttfmake_section_data['data']['banner-slides'][ $tt
 
 // Set up the combined section + slide ID
 $section_id  = ( isset( $ttfmake_section_data['data']['id'] ) ) ? $ttfmake_section_data['data']['id'] : '';
-$combined_id = ( true === $ttfmake_is_js_template ) ? '{{{ parentID }}}-{{{ id }}}' : $section_id . '-' . $ttfmake_slide_id;
+$combined_id = ( true === $ttfmake_is_js_template ) ? "{{{ get('parentID') }}}-{{{ id }}}" : $section_id . '-' . $ttfmake_slide_id;
 $overlay_id  = 'ttfmake-overlay-' . $combined_id;
 ?>
 
 <?php if ( true !== $ttfmake_is_js_template ) : ?>
-<div class="ttfmake-banner-slide" id="ttfmake-banner-slide-<?php echo esc_attr( $ttfmake_slide_id ); ?>" data-id="<?php echo esc_attr( $ttfmake_slide_id ); ?>" data-section-type="banner-slide">
+<div class="ttfmake-banner-slide" id="ttfmake-banner-slide-{{ id }}" data-id="{{ id }}" data-section-type="banner-slide">
 <?php endif; ?>
 
 	<div title="<?php esc_attr_e( 'Drag-and-drop this slide into place', 'make' ); ?>" class="ttfmake-sortable-handle">
