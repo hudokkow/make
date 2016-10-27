@@ -75,7 +75,7 @@ class TTFMAKE_Sections {
 	 * @param  string    $description         Section description.
 	 * @param  string    $icon                URL to the icon for the display.
 	 * @param  string    $save_callback       Function to save the content.
-	 * @param  string    $builder_template    Path to the template used in the builder.
+	 * @param  array     $builder_template    An array (section[, item]) of paths to the template(s) used in the builder.
 	 * @param  string    $display_template    Path to the template used for the frontend.
 	 * @param  int       $order               The order in which to display the item.
 	 * @param  string    $path                The path to the template files.
@@ -83,6 +83,7 @@ class TTFMAKE_Sections {
 	 * @return void
 	 */
 	public function add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order, $path, $config = array() ) {
+
 		/**
 		 * Allow the added sections to be filtered.
 		 *

@@ -205,11 +205,6 @@ class TTFMAKE_Builder_Base {
 					)
 				);
 			}
-
-			if ( isset( $registered_sections[ $section['section-type'] ]['display_template'] ) ) {
-				// Print the saved section
-				$this->load_section( $registered_sections[ $section['section-type'] ], $section );
-			}
 		}
 
 		get_template_part( 'inc/builder/core/templates/stage', 'footer' );
@@ -520,9 +515,10 @@ class TTFMAKE_Builder_Base {
 	 *
 	 * @param  string    $section     The section data.
 	 * @param  array     $data        The data payload to inject into the section.
+	 * @param  boolean   $return      Specifies if the template should be included or returned as string.
 	 * @return void
 	 */
-	public function load_section( $section, $data = array() ) {
+	public function load_section( $section, $data = array(), $return = false ) {
 		if ( ! isset( $section['id'] ) ) {
 			return;
 		}
@@ -535,13 +531,18 @@ class TTFMAKE_Builder_Base {
 		);
 
 		// Include the template
-		ttfmake_load_section_template(
+		$template = ttfmake_load_section_template(
 			$ttfmake_section_data['section']['builder_template'],
-			$ttfmake_section_data['section']['path']
+			$ttfmake_section_data['section']['path'],
+			$return
 		);
 
 		// Destroy the variable as a good citizen does
 		unset( $GLOBALS['ttfmake_section_data'] );
+
+		if ( $return ) {
+			return $template;
+		}
 	}
 
 	/**
@@ -564,35 +565,29 @@ class TTFMAKE_Builder_Base {
 		$templates = array();
 		$section_defaults = array();
 
-		foreach ( ttfmake_get_sections() as $section ) : ?>
-			<script type="text/html" id="tmpl-ttfmake-<?php echo esc_attr( $section['id'] ); ?>">
-			<?php
-			ob_start();
-			$this->load_section( $section, array() );
-			$html = ob_get_clean();
-			$templates[$section['id']] = $html;
-			$section_defaults[$section['id']] = $section['config'];
-			echo $html;
-			?>
-		</script>
-		<?php endforeach;
+		foreach ( ttfmake_get_sections() as $section ) {
+			$html = $this->load_section( $section, array(), true );
+
+			// Check if the template is a simple or a parent + child one
+			if ( is_string( $html) ) {
+				$templates[$section['id']] = $html;
+			} else {
+				$templates[$section['id']] = $html[0];
+				$templates[$section['id'] . '-item'] = $html[1];
+			}
+
+			$section_field_defaults = array();
+
+			foreach ( $section['config'] as $section_field ) {
+				$section_default = array_key_exists('default', $section_field ) ? $section_field['default']: '';
+				$section_field_defaults[$section_field['name']] = $section_default;
+			}
+
+			$section_defaults[$section['id']] = $section_field_defaults;
+		}
 
 		// Expose section template strings to JS
 		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionTemplates', $templates );
-
-		// Expose section default configuration to JS
-		foreach ( $section_defaults as $section_id => $section_fields ) {
-			$section_field_defaults = array();
-
-			foreach ( $section_fields as $f => $section_field ) {
-				if ( array_key_exists('default', $section_field ) ) {
-					$section_field_defaults[$section_field['name']] = $section_field['default'];
-				}
-			}
-
-			$section_defaults[$section_id] = $section_field_defaults;
-		}
-
 		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionDefaults', $section_defaults );
 
 		unset( $GLOBALS['ttfmake_is_js_template'] );
@@ -831,8 +826,17 @@ if ( ! function_exists( 'ttfmake_load_section_template' ) ) :
  * @param  string    $slug    The relative path and filename (w/out suffix) required to substitute the template in a child theme.
  * @param  string    $path    An optional path extension to point to the template in the parent theme or a plugin.
  * @return string             The template filename if one is located.
+ * @param  boolean   $return  Specifies if the template should be included or returned as string.
  */
-function ttfmake_load_section_template( $slug, $path ) {
+function ttfmake_load_section_template( $slug, $path, $return = false ) {
+	// Handle [section, item] template definition
+	if ( is_array( $slug ) ) {
+		return array(
+			ttfmake_load_section_template( $slug[0], $path, $return ),
+			ttfmake_load_section_template( $slug[1], $path, $return )
+		);
+	}
+
 	$templates = array(
 		$slug . '.php',
 		trailingslashit( $path ) . $slug . '.php'
@@ -851,8 +855,16 @@ function ttfmake_load_section_template( $slug, $path ) {
 
 	if ( '' === $located = locate_template( $templates, true, false ) ) {
 		if ( isset( $templates[1] ) && file_exists( $templates[1] ) ) {
+			if ( $return ) {
+				ob_start();
+			}
+
 			require( $templates[1] );
 			$located = $templates[1];
+
+			if ( $return ) {
+				$located = ob_get_clean();
+			}
 		}
 	}
 
