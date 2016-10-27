@@ -77,7 +77,7 @@ class TTFMAKE_Section_Definitions {
 			'sections/builder-templates/text',
 			'sections/front-end-templates/text',
 			100,
-			'inc/builder/',
+			get_template_directory() . '/inc/builder/',
 			array(
 				100 => array(
 					'type'  => 'section_title',
@@ -211,10 +211,10 @@ class TTFMAKE_Section_Definitions {
 			Make()->scripts()->get_css_directory_uri() . '/builder/sections/images/banner.png',
 			__( 'Display multiple types of content in a banner or a slider.', 'make' ),
 			array( $this, 'save_banner' ),
-			'sections/builder-templates/banner',
+			array ( 'sections/builder-templates/banner', 'sections/builder-templates/banner-slide' ),
 			'sections/front-end-templates/banner',
 			300,
-			'inc/builder/',
+			get_template_directory() . '/inc/builder/',
 			array(
 				100 => array(
 					'type'  => 'section_title',
@@ -364,7 +364,14 @@ class TTFMAKE_Section_Definitions {
 		}
 
 		if ( isset( $data['banner-slides'] ) && is_array( $data['banner-slides'] ) ) {
-			foreach ( $data['banner-slides'] as $id => $slide ) {
+			foreach ( $data['banner-slides'] as $slide ) {
+				$id = $slide['id'];
+
+				if ( empty ( $id ) ) {
+					continue;
+				}
+
+				$clean_data['banner-slides'][ $id ]['id'] = $id;
 
 				if ( isset( $slide['content'] ) ) {
 					$clean_data['banner-slides'][ $id ]['content'] = sanitize_post_field( 'post_content', $slide['content'], ( get_post() ) ? get_the_ID() : 0, 'db' );
@@ -408,7 +415,7 @@ class TTFMAKE_Section_Definitions {
 			'sections/builder-templates/gallery',
 			'sections/front-end-templates/gallery',
 			400,
-			'inc/builder/',
+			get_template_directory() . '/inc/builder/',
 			array(
 				100 => array(
 					'type'  => 'section_title',
