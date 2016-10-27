@@ -59,9 +59,8 @@ ksort( $links );
 	do_action( 'make_before_section_header' );
 	?>
 	<div class="ttfmake-section-header">
-		<?php $header_title = ( isset( $ttfmake_section_data['data']['label'] ) ) ? $ttfmake_section_data['data']['label'] : ''; ?>
 		<h3>
-			<span class="ttfmake-section-header-title"><?php echo esc_html( $header_title ); ?></span><em><?php echo ( esc_html( $ttfmake_section_data['section']['label'] ) ); ?></em>
+			<span class="ttfmake-section-header-title">{{{ get('label') }}}</span><em></em>
 		</h3>
 		<div class="ttf-make-section-header-button-wrapper">
 			<?php foreach ( $links as $link ) : ?>
