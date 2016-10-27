@@ -4,7 +4,7 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.TextModel = Backbone.Model.extend({
+	oneApp.TextModel = oneApp.SectionModel.extend({
 		defaults: {
 			'id': '',
 			'label': '',
@@ -49,26 +49,6 @@ var oneApp = oneApp || {};
 			'parallax-enable': 0,
 			'remove-space-below': 0,
 			'section-json': '{}'
-		},
-
-		initialize: function () {
-			var viewName = this.get('section-type').charAt(0).toUpperCase() + this.get('section-type').slice(1) + 'View';
-			this.set('viewName', viewName);
-
-			// run saveData on init to create JSON out of our data
-			this.saveData();
-		},
-
-		saveData: function() {
-			var json = {};
-
-			this.set('section-json', '');
-
-			_.forEach(this.attributes, function(value, attr) {
-				json[attr] = value;
-			});
-
-			this.set('section-json', JSON.stringify(json));
 		}
 	});
 
