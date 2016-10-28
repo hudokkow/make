@@ -101,6 +101,8 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 	};
 
 	oneApp.initViews = function () {
+		var models = [];
+
 		if (typeof ttfMakeSectionData === 'object') {
 			_.forEach(ttfMakeSectionData, function(sectionData, sectionID) {
 				var sectionModel,
@@ -115,8 +117,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 				sectionModel	= new oneApp[modelClass](sectionData, {parse: true});
 				modelViewName = sectionModel.get('viewName') + 'View';
-				viewName			= oneApp.hasOwnProperty(modelViewName) ? modelViewName : 'SectionView';
-
 				oneApp.sections.add(sectionModel);
 			});
 		}
