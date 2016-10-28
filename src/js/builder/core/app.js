@@ -439,7 +439,9 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 	// Leaving function to avoid errors if 3rd party code uses it. Deprecated in 1.4.0.
 	oneApp.initAllEditors = function(id, model) {};
 
-	oneApp.initSortables();
-	oneApp.initViews();
-	oneApp.triggerInitFrames();
+	$(document).ready(function() {
+		oneApp.initSortables();
+		oneApp.initViews();
+		oneApp.triggerInitFrames();
+	})
 })(jQuery, oneApp, ttfMakeFrames);
