@@ -13,6 +13,7 @@ var oneApp = oneApp || {};
 			// Capitalize the name
 			var viewName = this.get('section-type').charAt(0).toUpperCase() + this.get('section-type').slice(1);
 			this.set('viewName', viewName);
+			this.saveData();
 		},
 
 		saveData: function() {
