@@ -13,13 +13,13 @@ var oneApp = oneApp || {};
 			// Capitalize the name
 			var viewName = this.get('section-type').charAt(0).toUpperCase() + this.get('section-type').slice(1);
 			this.set('viewName', viewName);
-			this.saveData();
+			// this.saveData();
 		},
 
-		saveData: function() {
-			// Store JSONified attributes
-			this.set('section-json', JSON.stringify(this.toJSON()));
-		}
+		// saveData: function() {
+		// 	// Store JSONified attributes
+		// 	this.set('section-json', JSON.stringify(this.toJSON()));
+		// }
 	});
 
 	// Set up this model as a "no URL model" where data is not synced with the server
