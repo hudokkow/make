@@ -460,9 +460,8 @@ class TTFMAKE_Builder_Base {
 		$title = ( ! empty( $title ) ) ? $title : esc_html__( 'Set image', 'make' );
 		ob_start();
 		?>
-		<div class="ttfmake-uploader<?php if ( ! empty( $image[0] ) ) : ?> ttfmake-has-image-set<?php endif; ?>">
-			<div data-title="<?php echo esc_attr( $title ); ?>" class="ttfmake-media-uploader-placeholder ttfmake-media-uploader-add"<?php if ( ! empty( $image[0] ) ) : ?> style="background-image: url(<?php echo addcslashes( esc_url_raw( $image[0] ), '"' ); ?>);"<?php endif; ?>></div>
-			<input type="hidden" name="<?php echo esc_attr( $section_name ); ?>[image-id]" value="<?php echo ttfmake_sanitize_image_id( $image_id ); ?>" class="ttfmake-media-uploader-value" />
+		<div class="ttfmake-uploader{{ get('image-url') && ' ttfmake-has-image-set' || '' }}">
+			<div data-title="Ugly modal title" class="ttfmake-media-uploader-placeholder ttfmake-media-uploader-add" style="background-image: url({{ get('image-url') }});"></div>
 		</div>
 	<?php
 		$output = ob_get_clean();
