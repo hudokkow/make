@@ -8,8 +8,13 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 		events: function() {
 			return _.extend({}, oneApp.SectionView.prototype.events, {
-				'click .ttfmake-add-slide' : 'addSlide'
+				'click .ttfmake-add-slide' : 'addSlide',
+				'model-slide-change': 'onSlideChange'
 			});
+		},
+
+		onSlideChange: function() {
+			this.model.trigger('change');
 		},
 
 		render: function () {

@@ -305,6 +305,8 @@ class TTFMAKE_Section_Definitions {
 				),
 			)
 		);
+
+		add_filter( 'make_get_section_data', array ( $this, 'get_banner_section_data' ), 1 );
 	}
 
 	/**
@@ -396,6 +398,27 @@ class TTFMAKE_Section_Definitions {
 		}
 
 		return $clean_data;
+	}
+
+	public function get_banner_section_data( $ordered_data ) {
+		foreach ( $ordered_data as $section_id => $section ) {
+			if ( isset( $section['background-image']['image-id'] ) ) {
+				$image_id = $ordered_data['background-image']['image-id'];
+				$image = ttfmake_get_image_src( $image_id, 'large' );
+				$ordered_data[$section_id]['image-url'] = $image[0];
+			}
+
+			foreach ( $section['banner-slides'] as $slide_id => $slide ) {
+				if ( isset( $slide['image-id'] ) ) {
+					$image_id = $slide['image-id'];
+					$image = ttfmake_get_image_src( $image_id, 'large' );
+					$ordered_data[$section_id]['banner-slides'][$slide_id]['image-url'] = $image[0];
+				}
+			}
+		}
+
+		print_r ( $ordered_data );
+		return $ordered_data;
 	}
 
 	/**

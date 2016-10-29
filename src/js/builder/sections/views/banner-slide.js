@@ -4,7 +4,7 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.BannerSlideView = oneApp.SectionView.extend({
+	oneApp.BannerSlideView = Backbone.View.extend({
 		template: '',
 		className: 'ttfmake-banner-slide ttfmake-banner-slide-open',
 
@@ -15,9 +15,6 @@ var oneApp = oneApp || {};
 		},
 
 		initialize: function (options) {
-			this.model = options.model;
-			this.idAttr = 'ttfmake-banner-slide-' + this.model.get('id');
-			this.serverRendered = ( options.serverRendered ) ? options.serverRendered : false;
 			this.template = _.template(ttfMakeSectionTemplates['banner-item']);
 			this.on('mediaSelected', this.onMediaSelected, this);
 		},
@@ -77,6 +74,7 @@ var oneApp = oneApp || {};
 		onMediaSelected: function(attachment) {
 			this.model.set('image-id', attachment.id);
 			this.model.set('image-url', attachment.url);
+			this.$el.trigger('model-slide-change');
 		}
 	});
 })(window, Backbone, jQuery, _, oneApp);
