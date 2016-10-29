@@ -342,9 +342,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 			$remove.show();
 
 			view.trigger('mediaSelected', attachment);
-
-			// Update section JSON on image select
-			oneApp.updateSectionJSON();
 		});
 
 		// Finally, open the modal
