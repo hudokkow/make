@@ -20,7 +20,7 @@ function ttfmake_create_config_select( $section_name, $args, $section_data ) {
 		$label  = ( isset( $args['label'] ) ) ? '<label for="' . $id . '">' . esc_html( $args['label'] ) . '</label>' : '';
 		$class  = ( isset( $args['class'] ) ) ? ' class="' . esc_attr( $args['class'] ) . '"' : '';
 		$description = ( isset( $args['description'] ) ) ? '<div class="ttfmake-configuration-description">' . esc_html( $args['description'] ) . '</div>': '';
-		$select = '<select id="' . $id . '"' . $class .' name="' . $id . '">%s</select>';
+		$select = '<select id="' . $id . '"' . $class .' name="' . $id . '" data-model-attr="' . $args['name'] .'">%s</select>';
 
 		$options = '';
 
@@ -29,7 +29,7 @@ function ttfmake_create_config_select( $section_name, $args, $section_data ) {
 		}
 
 		foreach ( $args['options'] as $key => $value ) {
-			$options .= '<option value="' . esc_attr( $key ) . '"' . selected( $key, $current_value, false ) . '>' . esc_html( $value ) . '</option>';
+			$options .= '<option value="' . esc_attr( $key ) . '" {{ (get("'. $args['name'] .'").toString() === "'. $value .'".toString()) ? " selected" : "" }}>' . esc_html( $value ) . '</option>';
 		}
 
 		$return = $label . sprintf( $select, $options ) . $description;
@@ -60,7 +60,7 @@ function ttfmake_create_config_checkbox( $section_name, $args, $section_data ) {
 	}
 
 	$description = ( isset( $args['description'] ) ) ? '<div class="ttfmake-configuration-description">' . esc_html( $args['description'] ) . '</div>': '';
-	$args        = '<input id="' . $id . '" type="checkbox" name="' . $id . '" value="1"' . checked( 1, $current_value, false ) . '>' . $description;
+	$args        = '<input id="' . $id . '" type="checkbox" name="' . $id . '" value="1" data-model-attr="' . $args['name'] .'" {{ (parseInt(get("'. $args['name' ] .'"), 10) === 1) ? " checked": "" }}>' . $description;
 
 	return  $label . $args;
 }
@@ -86,7 +86,7 @@ function ttfmake_create_config_text( $section_name, $args, $section_data ) {
 		$current_value = '{{ get("'. $args['name'] .'") }}';
 	}
 
-	return  $label . '<input type="text" id="' . $id . '" name="' . $id . '" value="' . esc_attr( $current_value ) . '" />';
+	return  $label . '<input type="text" id="' . $id . '" name="' . $id . '" value="' . esc_attr( $current_value ) . '" data-model-attr="' . $args['name'] . '" />';
 }
 endif;
 

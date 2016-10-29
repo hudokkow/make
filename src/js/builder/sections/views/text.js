@@ -8,7 +8,10 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		events: function() {
 			return _.extend({}, oneApp.SectionView.prototype.events, {
 				'change .ttfmake-text-columns' : 'handleColumns',
-				'mouseup .ttfmake-text-column' : 'updateJSONOnSlide'
+				'mouseup .ttfmake-text-column' : 'updateJSONOnSlide',
+				'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
+				'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
+				'change .ttfmake-configuration-overlay select': 'updateSelectField'
 			});
 		},
 
@@ -22,11 +25,48 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			$stage.addClass('ttfmake-text-columns-' + parseInt(columns, 10));
 		},
 
-		updateJSONOnSlide: function(evt) {
-			if (typeof makePlusPluginInfo !== 'undefined') {
-				oneApp.setActiveSectionID(this.model.get('id'));
-				oneApp.updateSectionJSON();
+		updateInputField: function(evt) {
+			var $input				= $(evt.target);
+			var modelAttrName = $input.attr('data-model-attr');
+
+			console.log(modelAttrName);
+
+			if (typeof modelAttrName !== 'undefined') {
+				this.model.set(modelAttrName, $input.val());
 			}
+		},
+
+		updateCheckbox: function(evt) {
+			var $checkbox = $(evt.target);
+			var modelAttrName = $checkbox.attr('data-model-attr');
+
+			if (typeof modelAttrName !== 'undefined') {
+				if ($checkbox.is(':checked')) {
+					this.model.set(modelAttrName, 1);
+				} else {
+					this.model.set(modelAttrName, 0);
+				}
+			}
+		},
+
+		updateSelectField: function(evt) {
+			var $select = $(evt.target);
+			var modelAttrName = $select.attr('data-model-attr');
+
+			if (typeof modelAttrName !== 'undefined') {
+				this.model.set(modelAttrName, $select.val());
+			}
+		},
+
+		onMediaOpen: function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			oneApp.initUploader(this);
+		},
+
+		onMediaSelected: function(attachment) {
+			this.model.set('background-image', attachment.id);
 		}
 	});
 

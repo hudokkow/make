@@ -41,7 +41,11 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.template = _.template(ttfMakeSectionTemplates[this.model.get('section-type')]);
 
 			this.model.bind('change', function() {
-				$('[name^="ttfmake-section-json"]', this.$el).val(JSON.stringify(this.model.toJSON()));
+				if (!this.model.hasChanged('section-json')) {
+					this.model.saveData();
+				} else {
+					$('[name="ttfmake-section-json"]', this.$el).val(this.model.get('section-json'));
+				}
 			}, this);
 
 			this.on('mediaSelected', this.onMediaSelected, this);

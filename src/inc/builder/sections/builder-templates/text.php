@@ -50,7 +50,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 		$title       = '{{ get("columns")['. $i .']["title"] }}';
 		$content     = '{{ get("columns")['. $i .']["content"] }}';
 
-		$item_has_content = ( ! empty( $content ) ) ? ' item-has-content' : '';
+		//$item_has_content = ( ! empty( $content ) ) ? ' item-has-content' : '';
 
 		$column_buttons = array(
 			100 => array(
