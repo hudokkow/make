@@ -109,7 +109,7 @@ function ttfmake_create_config_image( $section_name, $args, $section_data ) {
 	if ($current_value == '') {
 		$current_value = '{{ get("'. $args['name'] .'") }}';
 	}
-	
+
 	return $label . ttfmake_get_builder_base()->add_uploader( $name, $current_value, __( 'Set image', 'make' ) );
 }
 endif;
