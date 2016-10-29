@@ -29,7 +29,7 @@ function ttfmake_create_config_select( $section_name, $args, $section_data ) {
 		}
 
 		foreach ( $args['options'] as $key => $value ) {
-			$options .= '<option value="' . esc_attr( $key ) . '" {{ (get("'. $args['name'] .'").toString() === "'. $value .'".toString()) ? " selected" : "" }}>' . esc_html( $value ) . '</option>';
+			$options .= '<option value="' . esc_attr( $key ) . '" {{ (get("'. $args['name'] .'").toString() === "'. $key .'".toString()) ? " selected" : "" }}>' . esc_html( $value ) . '</option>';
 		}
 
 		$return = $label . sprintf( $select, $options ) . $description;
