@@ -408,11 +408,13 @@ class TTFMAKE_Section_Definitions {
 				$ordered_data[$section_id]['image-url'] = $image[0];
 			}
 
-			foreach ( $section['banner-slides'] as $slide_id => $slide ) {
-				if ( isset( $slide['image-id'] ) ) {
-					$image_id = $slide['image-id'];
-					$image = ttfmake_get_image_src( $image_id, 'large' );
-					$ordered_data[$section_id]['banner-slides'][$slide_id]['image-url'] = $image[0];
+			if ( isset( $section['banner-slides'] ) && is_array( $section['banner-slides'] ) ) {
+				foreach ( $section['banner-slides'] as $slide_id => $slide ) {
+					if ( isset( $slide['image-id'] ) ) {
+						$image_id = $slide['image-id'];
+						$image = ttfmake_get_image_src( $image_id, 'large' );
+						$ordered_data[$section_id]['banner-slides'][$slide_id]['image-url'] = $image[0];
+					}
 				}
 			}
 		}
