@@ -160,7 +160,7 @@ function ttfmake_create_config_section_title( $section_name, $args, $section_dat
 		$current_value = '{{ get("'. $args['name'] .'") }}';
 	}
 
-	return  '<input' . $placeholder . ' type="text" ' . $name . ' value="' . esc_attr( $current_value ) . '" class="ttfmake-title' . $class . '" autocomplete="off">';
+	return  '<input' . $placeholder . ' type="text" ' . $name . ' value="' . esc_attr( $current_value ) . '" class="ttfmake-title' . $class . '" data-model-attr="' . $args['name'] . '" autocomplete="off">';
 }
 endif;
 

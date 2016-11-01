@@ -11,6 +11,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				'click .ttfmake-add-slide' : 'addSlide',
 				'model-slide-change': 'onSlideChange',
 				'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
+				'keyup .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 				'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
 				'change .ttfmake-configuration-overlay select': 'updateSelectField'
 			});
