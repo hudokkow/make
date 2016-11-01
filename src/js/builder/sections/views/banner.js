@@ -9,7 +9,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		events: function() {
 			return _.extend({}, oneApp.SectionView.prototype.events, {
 				'click .ttfmake-add-slide' : 'addSlide',
-				'model-slide-change': 'onSlideChange',
+				'model-item-change': 'onSlideChange',
 				'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 				'keyup .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 				'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
