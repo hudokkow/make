@@ -60,7 +60,7 @@ ksort( $links );
 	?>
 	<div class="ttfmake-section-header">
 		<h3>
-			<span class="ttfmake-section-header-title">{{{ get('label') }}}</span><em></em>
+			<span class="ttfmake-section-header-title">{{ get('title') }}</span><em><?php echo ( esc_html( $ttfmake_section_data['section']['label'] ) ); ?></em>
 		</h3>
 		<div class="ttf-make-section-header-button-wrapper">
 			<?php foreach ( $links as $link ) : ?>
