@@ -43,7 +43,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.template = _.template(ttfMakeSectionTemplates[this.model.get('section-type')]);
 
 			this.model.bind('change', function() {
-				console.log(this.model.toJSON());
 				$('[name^="ttfmake-section-json"]', this.$el).val(JSON.stringify(this.model.toJSON()));
 			}, this);
 		},
