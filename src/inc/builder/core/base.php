@@ -455,13 +455,13 @@ class TTFMAKE_Builder_Base {
 	 * @param  string    $title           Title for the media modal.
 	 * @return string                     Either return the string or echo it.
 	 */
-	public function add_uploader( $section_name, $image_id = 0, $title = '' ) {
+	public function add_uploader( $section_name, $image_id = 0, $title = '', $field_name = 'background-image-url' ) {
 		$image = ttfmake_get_image_src( $image_id, 'large' );
 		$title = ( ! empty( $title ) ) ? $title : esc_html__( 'Set image', 'make' );
 		ob_start();
 		?>
-		<div class="ttfmake-uploader{{ get('image-url') && ' ttfmake-has-image-set' || '' }}">
-			<div data-title="Ugly modal title" class="ttfmake-media-uploader-placeholder ttfmake-media-uploader-add" style="background-image: url({{ get('image-url') }});"></div>
+		<div class="ttfmake-uploader{{ get('<?php echo $field_name; ?>') && ' ttfmake-has-image-set' || '' }}">
+			<div data-title="Ugly modal title" class="ttfmake-media-uploader-placeholder ttfmake-media-uploader-add" style="background-image: url({{ get('<?php echo $field_name; ?>') }});"></div>
 		</div>
 	<?php
 		$output = ob_get_clean();
@@ -577,9 +577,20 @@ class TTFMAKE_Builder_Base {
 
 			$section_field_defaults = array();
 
-			foreach ( $section['config'] as $section_field ) {
-				$section_default = array_key_exists('default', $section_field ) ? $section_field['default']: '';
-				$section_field_defaults[$section_field['name']] = $section_default;
+			foreach ( $section['config'] as $key => $section_field ) {
+				if ('item' !== $key) {
+					$section_default = array_key_exists('default', $section_field ) ? $section_field['default']: '';
+					$section_field_defaults[$section_field['name']] = $section_default;
+				} else {
+					$section_item_defaults = array();
+
+					foreach ( $section['config']['item'] as $item_field ) {
+						$item_default = array_key_exists('default', $item_field ) ? $item_field['default']: '';
+						$section_item_defaults[$item_field['name']] = $item_default;
+					}
+
+					$section_defaults[$section['id'] . '-item'] = $section_item_defaults;
+				}
 			}
 
 			$section_defaults[$section['id']] = $section_field_defaults;
