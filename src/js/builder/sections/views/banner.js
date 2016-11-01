@@ -64,24 +64,25 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		addSlide: function (evt, params) {
 			evt.preventDefault();
 
-			var view, html, model;
-
-			model = new oneApp.BannerSlideModel({
+			var slideModelDefaults = ttfMakeSectionDefaults['banner-item'] || {};
+			var slideModelAttributes = _(slideModelDefaults).extend({
 				id: new Date().getTime(),
 				parentID: this.getParentID()
 			});
 
+			var slideModel = new oneApp.BannerSlideModel(slideModelAttributes);
+
 			var slides = this.model.get('banner-slides');
-			slides.push(model);
+			slides.push(slideModel);
 			this.model.set('banner-slides', slides);
 
 			// Create view
-			view = new oneApp.BannerSlideView({
-				model: model
+			var view = new oneApp.BannerSlideView({
+				model: slideModel
 			});
 
 			// Append view
-			html = view.render().el;
+			var html = view.render().el;
 			$('.ttfmake-banner-slides-stage', this.$el).append(html);
 
 			// Only scroll and focus if not triggered by the pseudo event

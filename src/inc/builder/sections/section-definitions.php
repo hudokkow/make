@@ -303,10 +303,46 @@ class TTFMAKE_Section_Definitions {
 					'class'   => 'ttfmake-gallery-background-color ttfmake-configuration-color-picker',
 					'default' => '',
 				),
+
+				'item' => $this->get_banner_slide_defaults(),
 			)
 		);
 
 		add_filter( 'make_get_section_data', array ( $this, 'get_banner_section_data' ), 1 );
+	}
+
+	private function get_banner_slide_defaults() {
+		$inputs = array(
+			100 => array(
+				'type'    => 'select',
+				'name'    => 'alignment',
+				'label'   => __( 'Content position', 'make' ),
+				'default' => 'none',
+				'options' => array(
+					'none'  => __( 'None', 'make' ),
+					'left'  => __( 'Left', 'make' ),
+					'right' => __( 'Right', 'make' ),
+				),
+			),
+			200 => array(
+				'type'    => 'checkbox',
+				'label'   => __( 'Darken background to improve readability', 'make' ),
+				'name'    => 'darken',
+				'default' => 0
+			),
+			300 => array(
+				'type'    => 'color',
+				'label'   => __( 'Background color', 'make' ),
+				'name'    => 'background-color',
+				'class'   => 'ttfmake-gallery-background-color ttfmake-configuration-color-picker',
+				'default' => '',
+			),
+		);
+
+		$inputs = apply_filters( 'make_banner_slide_configuration', $inputs );
+		ksort( $inputs, SORT_NUMERIC );
+
+		return $inputs;
 	}
 
 	/**
