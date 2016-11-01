@@ -4,19 +4,16 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.BannerSlideView = Backbone.View.extend({
+	oneApp.BannerSlideView = oneApp.ItemView.extend({
 		template: '',
 		className: 'ttfmake-banner-slide ttfmake-banner-slide-open',
 
-		events: {
-			'click .ttfmake-banner-slide-remove': 'removeItem',
-			'click .ttfmake-banner-slide-toggle': 'toggleSection',
-			'click .ttfmake-media-uploader-add': 'onMediaOpen',
-			'mediaSelected': 'onMediaSelected',
-			'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
-			'keyup .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
-			'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
-			'change .ttfmake-configuration-overlay select': 'updateSelectField'
+		events: function() {
+			return _.extend({}, oneApp.ItemView.prototype.events, {
+				'click .ttfmake-banner-slide-remove': 'removeItem',
+				'click .ttfmake-banner-slide-toggle': 'toggleSection',
+				'click .ttfmake-media-uploader-add': 'onMediaOpen'
+			});
 		},
 
 		initialize: function (options) {
@@ -28,46 +25,6 @@ var oneApp = oneApp || {};
 				.attr('id', this.idAttr)
 				.attr('data-id', this.model.get('id'));
 			return this;
-		},
-
-		updateInputField: function(e) {
-			e.stopPropagation();
-
-			var $input				= $(e.target);
-			var modelAttrName = $input.attr('data-model-attr');
-
-			if (typeof modelAttrName !== 'undefined') {
-				this.model.set(modelAttrName, $input.val());
-				this.$el.trigger('model-slide-change');
-			}
-		},
-
-		updateCheckbox: function(e) {
-			e.stopPropagation();
-
-			var $checkbox = $(e.target);
-			var modelAttrName = $checkbox.attr('data-model-attr');
-
-			if (typeof modelAttrName !== 'undefined') {
-				if ($checkbox.is(':checked')) {
-					this.model.set(modelAttrName, 1);
-				} else {
-					this.model.set(modelAttrName, 0);
-					this.$el.trigger('model-slide-change');
-				}
-			}
-		},
-
-		updateSelectField: function(e) {
-			e.stopPropagation();
-
-			var $select = $(e.target);
-			var modelAttrName = $select.attr('data-model-attr');
-
-			if (typeof modelAttrName !== 'undefined') {
-				this.model.set(modelAttrName, $select.val());
-				this.$el.trigger('model-slide-change');
-			}
 		},
 
 		removeItem: function (evt) {
@@ -106,19 +63,6 @@ var oneApp = oneApp || {};
 					$input.val('open');
 				});
 			}
-		},
-
-		onMediaOpen: function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			oneApp.initUploader(this);
-		},
-
-		onMediaSelected: function(e, attachment) {
-			e.stopPropagation();
-			this.model.set('image-id', attachment.id);
-			this.model.set('image-url', attachment.url);
-			this.$el.trigger('model-slide-change');
 		}
 	});
 })(window, Backbone, jQuery, _, oneApp);

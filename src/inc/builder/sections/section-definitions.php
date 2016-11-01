@@ -767,6 +767,14 @@ class TTFMAKE_Section_Definitions {
 			true
 		);
 
+		wp_register_script(
+			'ttfmake-sections/js/views/item.js',
+			Make()->scripts()->get_js_directory_uri() . '/builder/sections/views/item.js',
+			array(),
+			TTFMAKE_VERSION,
+			true
+		);
+
 		// Add additional dependencies to the Builder JS
 		add_filter( 'make_builder_js_dependencies', array( $this, 'add_js_dependencies' ) );
 
@@ -794,6 +802,7 @@ class TTFMAKE_Section_Definitions {
 		}
 
 		return array_merge( $deps, array(
+			'ttfmake-sections/js/views/item.js',
 			'ttfmake-sections/js/models/gallery-item.js',
 			'ttfmake-sections/js/models/banner.js',
 			'ttfmake-sections/js/models/banner-slide.js',
