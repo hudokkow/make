@@ -13,6 +13,10 @@ var oneApp = oneApp || {};
 			'click .ttfmake-banner-slide-toggle': 'toggleSection',
 			'click .ttfmake-media-uploader-add': 'onMediaOpen',
 			'mediaSelected': 'onMediaSelected',
+			'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
+			'keyup .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
+			'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
+			'change .ttfmake-configuration-overlay select': 'updateSelectField'
 		},
 
 		initialize: function (options) {
@@ -24,6 +28,46 @@ var oneApp = oneApp || {};
 				.attr('id', this.idAttr)
 				.attr('data-id', this.model.get('id'));
 			return this;
+		},
+
+		updateInputField: function(e) {
+			e.stopPropagation();
+
+			var $input				= $(e.target);
+			var modelAttrName = $input.attr('data-model-attr');
+
+			if (typeof modelAttrName !== 'undefined') {
+				this.model.set(modelAttrName, $input.val());
+				this.$el.trigger('model-slide-change');
+			}
+		},
+
+		updateCheckbox: function(e) {
+			e.stopPropagation();
+
+			var $checkbox = $(e.target);
+			var modelAttrName = $checkbox.attr('data-model-attr');
+
+			if (typeof modelAttrName !== 'undefined') {
+				if ($checkbox.is(':checked')) {
+					this.model.set(modelAttrName, 1);
+				} else {
+					this.model.set(modelAttrName, 0);
+					this.$el.trigger('model-slide-change');
+				}
+			}
+		},
+
+		updateSelectField: function(e) {
+			e.stopPropagation();
+
+			var $select = $(e.target);
+			var modelAttrName = $select.attr('data-model-attr');
+
+			if (typeof modelAttrName !== 'undefined') {
+				this.model.set(modelAttrName, $select.val());
+				this.$el.trigger('model-slide-change');
+			}
 		},
 
 		removeItem: function (evt) {
