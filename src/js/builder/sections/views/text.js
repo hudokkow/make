@@ -57,17 +57,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				this.model.set(modelAttrName, $select.val());
 			}
 		},
-
-		onMediaOpen: function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-
-			oneApp.initUploader(this);
-		},
-
-		onMediaSelected: function(attachment) {
-			this.model.set('background-image', attachment.id);
-		}
 	});
 
 	// Makes gallery items sortable
