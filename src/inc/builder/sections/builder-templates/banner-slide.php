@@ -32,7 +32,7 @@ $overlay_id  = 'ttfmake-overlay-' . $combined_id;
 		<div class="sortable-background"></div>
 	</div>
 
-	<?php echo ttfmake_get_builder_base()->add_uploader( $section_name, ttfmake_sanitize_image_id( $image_id ), __( 'Set banner image', 'make' ) ); ?>
+	<?php echo ttfmake_get_builder_base()->add_uploader( $section_name, ttfmake_sanitize_image_id( $image_id ), __( 'Set banner image', 'make' ), 'image-url' ); ?>
 
 	<a href="#" class="configure-banner-slide-link ttfmake-banner-slide-configure ttfmake-overlay-open" title="<?php esc_attr_e( 'Configure slide', 'make' ); ?>" data-overlay="#<?php echo $overlay_id; ?>">
 		<span>

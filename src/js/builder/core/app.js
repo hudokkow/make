@@ -297,9 +297,9 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 	oneApp.initUploader = function (view) {
 		var $uploader = $('.ttfmake-uploader', view.$el),
-				$placeholder = $('.ttfmake-media-uploader-placeholder', view.$el),
-				$remove = $('.ttfmake-media-uploader-remove', view.$el),
-				$add = $('.ttfmake-media-uploader-set-link', view.$el);
+				$placeholder = $('.ttfmake-media-uploader-placeholder:last', view.$el),
+				$remove = $('.ttfmake-media-uploader-remove:last', view.$el),
+				$add = $('.ttfmake-media-uploader-set-link:last', view.$el);
 
 		oneApp.$currentPlaceholder = $placeholder;
 		oneApp.setActiveSectionID(view.model.get('id'));
@@ -341,7 +341,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 			// Show the remove link
 			$remove.show();
 
-			view.trigger('mediaSelected', attachment);
+			view.$el.trigger('mediaSelected', attachment);
 		});
 
 		// Finally, open the modal

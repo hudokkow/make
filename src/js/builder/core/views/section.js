@@ -22,7 +22,8 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			'color-picker-change': 'onColorPickerChange',
 			'click .edit-content-link': 'openTinyMCEOverlay',
 			'click .ttfmake-overlay-open': 'openConfigurationOverlay',
-			'click .ttfmake-overlay-close': 'closeConfigurationOverlay'
+			'click .ttfmake-overlay-close': 'closeConfigurationOverlay',
+			'mediaSelected': 'onMediaSelected',
 		},
 
 		initialize: function (options) {
@@ -45,8 +46,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				console.log(this.model.toJSON());
 				$('[name^="ttfmake-section-json"]', this.$el).val(JSON.stringify(this.model.toJSON()));
 			}, this);
-
-			this.on('mediaSelected', this.onMediaSelected, this);
 		},
 
 		render: function () {
@@ -130,12 +129,12 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 		onMediaOpen: function(e) {
 			e.preventDefault();
-
 			oneApp.initUploader(this);
 		},
 
-		onMediaSelected: function(attachment) {
-			this.model.set('background-image', {'image-id': attachment.id, 'image-url': attachment.url});
+		onMediaSelected: function(e, attachment) {
+			this.model.set('background-image', attachment.id);
+			this.model.set('background-image-url', attachment.url);
 		},
 
 		openTinyMCEOverlay: function (evt) {

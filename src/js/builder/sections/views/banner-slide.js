@@ -12,11 +12,11 @@ var oneApp = oneApp || {};
 			'click .ttfmake-banner-slide-remove': 'removeItem',
 			'click .ttfmake-banner-slide-toggle': 'toggleSection',
 			'click .ttfmake-media-uploader-add': 'onMediaOpen',
+			'mediaSelected': 'onMediaSelected',
 		},
 
 		initialize: function (options) {
 			this.template = _.template(ttfMakeSectionTemplates['banner-item']);
-			this.on('mediaSelected', this.onMediaSelected, this);
 		},
 
 		render: function () {
@@ -67,11 +67,11 @@ var oneApp = oneApp || {};
 		onMediaOpen: function(e) {
 			e.preventDefault();
 			e.stopPropagation();
-
 			oneApp.initUploader(this);
 		},
 
-		onMediaSelected: function(attachment) {
+		onMediaSelected: function(e, attachment) {
+			e.stopPropagation();
 			this.model.set('image-id', attachment.id);
 			this.model.set('image-url', attachment.url);
 			this.$el.trigger('model-slide-change');
