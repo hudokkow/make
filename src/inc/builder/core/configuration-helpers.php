@@ -135,7 +135,7 @@ function ttfmake_create_config_color( $section_name, $args, $section_data ) {
 		$current_value = '{{ get("'. $args['name'] .'") }}';
 	}
 
-	return  $label . '<input id="' . $name . '" type="text" name="' . $name . '" ' . $class . ' value="' . esc_attr( $current_value ) . '" />';
+	return  $label . '<input id="' . $name . '" type="text" name="' . $name . '" ' . $class . ' value="{{ get("' . $args['name'] . '") }}" data-model-attr="' . $args['name'] . '" />';
 }
 endif;
 

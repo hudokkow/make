@@ -19,6 +19,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			'click .ttfmake-section-remove': 'removeSection',
 			'keyup .ttfmake-section-header-title-input': 'constructHeader',
 			'click .ttfmake-media-uploader-add': 'onMediaOpen',
+			'color-picker-change': 'onColorPickerChange',
 			'click .edit-content-link': 'openTinyMCEOverlay',
 			'click .ttfmake-overlay-open': 'openConfigurationOverlay',
 			'click .ttfmake-overlay-close': 'closeConfigurationOverlay'
@@ -164,9 +165,15 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				$overlay.find('input,select').filter(':first').focus();
 			});
 
-			oneApp.setActiveSectionID(self.model.get('id'));
+			oneApp.initColorPicker(this);
 
 			$oneApp.trigger('ttfOverlayOpened', [this.model.get('section-type'), $overlay]);
+		},
+
+		onColorPickerChange: function(evt, data) {
+			if (data) {
+				this.model.set(data.modelAttr, data.color);
+			}
 		},
 
 		setSize: function($overlay, $wrapper) {

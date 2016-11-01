@@ -348,21 +348,39 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		frame.open();
 	},
 
-	// Initialize color pickers
-	$oneApp.on('viewInit afterSectionViewAdded', function(evt, view) {
-		var $selector;
-		view = view || '';
+  oneApp.initColorPicker = function(view) {
+		var $el = view.$el;
 
-		if (view.$el) {
-			$selector = $('.ttfmake-configuration-color-picker', view.$el);
-		} else {
-			$selector = $('.ttfmake-configuration-color-picker');
+		if ($el) {
+			var $colorPickerInput = $('.ttfmake-configuration-color-picker', $el);
+
+			var colorPickerOptions = {
+				change: function(event, ui) {
+					var $input = $(event.target);
+
+					if ($input) {
+						// pass data to trigger so it can be passed to model
+						var data = {
+							modelAttr: $input.attr('data-model-attr'),
+							color: $input.val()
+						};
+
+						view.$el.trigger('color-picker-change', data);
+					}
+				}
+			};
+
+			// set default color if there's already some color saved
+			if ($colorPickerInput.val()) {
+				colorPickerOptions.defaultColor = $colorPickerInput.val();
+			}
+
+			// init color picker
+			$colorPickerInput.wpColorPicker(colorPickerOptions);
 		}
+	},
 
-		$selector.wpColorPicker();
-	});
-
-	// populate JSON with section data for widgetized columns, on page load
+		// populate JSON with section data for widgetized columns, on page load
 	$(document).ready(function() {
 		if (typeof makePlusPluginInfo === 'object') {
 			// loop through all Columns components

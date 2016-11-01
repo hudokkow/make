@@ -125,7 +125,7 @@ class TTFMAKE_Section_Definitions {
 					'label'   => __( 'Background color', 'make' ),
 					'name'    => 'background-color',
 					'class'   => 'ttfmake-text-background-color ttfmake-configuration-color-picker',
-					'default' => '',
+					'default' => '{{ get("background-color") }}'
 				),
 			)
 		);
@@ -521,7 +521,7 @@ class TTFMAKE_Section_Definitions {
 					'label'   => __( 'Background color', 'make' ),
 					'name'    => 'background-color',
 					'class'   => 'ttfmake-gallery-background-color ttfmake-configuration-color-picker',
-					'default' => '',
+					'default' => '{{ get("background-color") }}',
 				),
 			)
 		);
