@@ -129,6 +129,30 @@ class TTFMAKE_Section_Definitions {
 				),
 			)
 		);
+
+		add_filter( 'make_get_section_data', array ( $this, 'get_text_section_data' ), 1 );
+	}
+
+	public function get_text_section_data( $ordered_data ) {
+		foreach ( $ordered_data as $section_id => $section ) {
+			if ( isset( $section['background-image'] ) ) {
+				$image_id = intval( $section['background-image'] );
+				$image = ttfmake_get_image_src( $image_id, 'large' );
+				$ordered_data[$section_id]['background-image-url'] = $image[0];
+			}
+
+			if ( isset( $section['columns'] ) && is_array( $section['columns'] ) ) {
+				foreach ( $section['columns'] as $column_id => $column ) {
+					if ( isset( $column['image-id'] ) ) {
+						$image_id = $column['image-id'];
+						$image = ttfmake_get_image_src( $image_id, 'large' );
+						$ordered_data[$section_id]['columns'][$column_id]['image-url'] = $image[0];
+					}
+				}
+			}
+		}
+
+		return $ordered_data;
 	}
 
 	/**
@@ -154,8 +178,8 @@ class TTFMAKE_Section_Definitions {
 			$clean_data['columns-order'] = array_map( array( 'TTFMAKE_Builder_Save', 'clean_section_id' ), explode( ',', $data['columns-order'] ) );
 		}
 
-		if ( isset( $data['background-image']['image-id'] ) ) {
-			$clean_data['background-image'] = ttfmake_sanitize_image_id( $data['background-image']['image-id'] );
+		if ( isset( $data['background-image'] ) ) {
+			$clean_data['background-image'] = ttfmake_sanitize_image_id( $data['background-image'] );
 		}
 
 		if ( isset( $data['darken'] ) && $data['darken'] == 1 ) {
@@ -339,7 +363,16 @@ class TTFMAKE_Section_Definitions {
 			),
 		);
 
+		/**
+		 * Filter the definitions of the Banner slide configuration inputs.
+		 *
+		 * @since 1.4.0.
+		 *
+		 * @param array    $inputs    The input definition array.
+		 */
 		$inputs = apply_filters( 'make_banner_slide_configuration', $inputs );
+
+		// Sort the config in case 3rd party code added another input
 		ksort( $inputs, SORT_NUMERIC );
 
 		return $inputs;
