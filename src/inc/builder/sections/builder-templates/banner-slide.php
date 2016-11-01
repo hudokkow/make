@@ -60,44 +60,8 @@ $overlay_id  = 'ttfmake-overlay-' . $combined_id;
 
 	get_template_part( '/inc/builder/core/templates/overlay', 'header' );
 
-	/**
-	 * Filter the definitions of the Banner slide configuration inputs.
-	 *
-	 * @since 1.4.0.
-	 *
-	 * @param array    $inputs    The input definition array.
-	 */
-	$inputs = apply_filters( 'make_banner_slide_configuration', array(
-		100 => array(
-			'type'    => 'select',
-			'name'    => 'alignment',
-			'label'   => __( 'Content position', 'make' ),
-			'default' => 'none',
-			'options' => array(
-				'none'  => __( 'None', 'make' ),
-				'left'  => __( 'Left', 'make' ),
-				'right' => __( 'Right', 'make' ),
-			),
-		),
-		200 => array(
-			'type'    => 'checkbox',
-			'label'   => __( 'Darken background to improve readability', 'make' ),
-			'name'    => 'darken',
-			'default' => 0
-		),
-		300 => array(
-			'type'    => 'color',
-			'label'   => __( 'Background color', 'make' ),
-			'name'    => 'background-color',
-			'class'   => 'ttfmake-gallery-background-color ttfmake-configuration-color-picker',
-			'default' => '',
-		),
-	) );
-
-	// Sort the config in case 3rd party code added another input
-	ksort( $inputs, SORT_NUMERIC );
-
 	// Print the inputs
+	$inputs = $ttfmake_section_data['section']['config']['item'];
 	$output = '';
 
 	foreach ( $inputs as $input ) {
