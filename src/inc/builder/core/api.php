@@ -75,7 +75,7 @@ class TTFMAKE_Sections {
 	 * @param  string    $description         Section description.
 	 * @param  string    $icon                URL to the icon for the display.
 	 * @param  string    $save_callback       Function to save the content.
-	 * @param  array     $builder_template    An array (section[, item]) of paths to the template(s) used in the builder.
+	 * @param  array     $builder_template    A path or array (section[, item]) of paths to the template(s) used in the builder.
 	 * @param  string    $display_template    Path to the template used for the frontend.
 	 * @param  int       $order               The order in which to display the item.
 	 * @param  string    $path                The path to the template files.
