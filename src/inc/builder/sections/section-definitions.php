@@ -425,6 +425,8 @@ class TTFMAKE_Section_Definitions {
 		}
 
 		if ( isset( $data['banner-slides'] ) && is_array( $data['banner-slides'] ) ) {
+			$clean_data['banner-slides'] = array();
+
 			foreach ( $data['banner-slides'] as $slide ) {
 				$id = $slide['id'];
 
@@ -432,27 +434,29 @@ class TTFMAKE_Section_Definitions {
 					continue;
 				}
 
-				$clean_data['banner-slides'][ $id ]['id'] = $id;
+				$clean_slide_data = array( 'id' => $id );
 
 				if ( isset( $slide['content'] ) ) {
-					$clean_data['banner-slides'][ $id ]['content'] = sanitize_post_field( 'post_content', $slide['content'], ( get_post() ) ? get_the_ID() : 0, 'db' );
+					$clean_slide_data['content'] = sanitize_post_field( 'post_content', $slide['content'], ( get_post() ) ? get_the_ID() : 0, 'db' );
 				}
 
 				if ( isset( $slide['background-color'] ) ) {
-					$clean_data['banner-slides'][ $id ]['background-color'] = maybe_hash_hex_color( $slide['background-color'] );
+					$clean_slide_data['background-color'] = maybe_hash_hex_color( $slide['background-color'] );
 				}
 
-				$clean_data['banner-slides'][ $id ]['darken'] = ( isset( $slide['darken'] ) && 1 === (int) $slide['darken'] ) ? 1 : 0;
+				$clean_slide_data['darken'] = ( isset( $slide['darken'] ) && 1 === (int) $slide['darken'] ) ? 1 : 0;
 
 				if ( isset( $slide['image-id'] ) ) {
-					$clean_data['banner-slides'][ $id ]['image-id'] = ttfmake_sanitize_image_id( $slide['image-id'] );
+					$clean_slide_data['image-id'] = ttfmake_sanitize_image_id( $slide['image-id'] );
 				}
 
-				$clean_data['banner-slides'][ $id ]['alignment'] = ( isset( $slide['alignment'] ) && in_array( $slide['alignment'], array( 'none', 'left', 'right' ) ) ) ? $slide['alignment'] : 'none';
+				$clean_slide_data['alignment'] = ( isset( $slide['alignment'] ) && in_array( $slide['alignment'], array( 'none', 'left', 'right' ) ) ) ? $slide['alignment'] : 'none';
 
 				if ( isset( $slide['state'] ) ) {
-					$clean_data['banner-slides'][ $id ]['state'] = ( in_array( $slide['state'], array( 'open', 'closed' ) ) ) ? $slide['state'] : 'open';
+					$clean_slide_data['state'] = ( in_array( $slide['state'], array( 'open', 'closed' ) ) ) ? $slide['state'] : 'open';
 				}
+
+				array_push( $clean_data['banner-slides'], $clean_slide_data );
 			}
 		}
 
@@ -467,10 +471,12 @@ class TTFMAKE_Section_Definitions {
 			}
 
 			if ( isset( $section['banner-slides'] ) && is_array( $section['banner-slides'] ) ) {
-				foreach ( $section['banner-slides'] as $slide_id => $slide ) {
+				foreach ( $section['banner-slides'] as $s => $slide ) {
+					$slide_id = $slide['id'];
+
 					if ( isset( $slide['image-id'] ) && ( $image_id = intval( $slide['image-id'] ) ) > 0 ) {
 						$image = ttfmake_get_image_src( $image_id, 'large' );
-						$ordered_data[$section_id]['banner-slides'][$slide_id]['image-url'] = $image[0];
+						$ordered_data[$section_id]['banner-slides'][$s]['image-url'] = $image[0];
 					}
 				}
 			}
