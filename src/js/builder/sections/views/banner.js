@@ -5,15 +5,19 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 	'use strict';
 
 	oneApp.BannerView = oneApp.SectionView.extend({
+		itemViews: [],
 
 		events: function() {
 			return _.extend({}, oneApp.SectionView.prototype.events, {
-				'click .ttfmake-add-slide' : 'addSlide',
+				'click .ttfmake-add-slide' : 'onSlideAdd',
 				'model-item-change': 'onSlideChange',
 				'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 				'keyup .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 				'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
-				'change .ttfmake-configuration-overlay select': 'updateSelectField'
+				'change .ttfmake-configuration-overlay select': 'updateSelectField',
+				'view-ready': 'onViewReady',
+				'slide-sort': 'onSlideSort',
+				'color-picker-change': 'onColorPickerChange'
 			});
 		},
 
@@ -48,54 +52,86 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			}
 		},
 
+		onViewReady: function(e) {
+			e.stopPropagation();
+
+			this.initializeSlideSortables();
+			oneApp.initColorPicker(this);
+			_(this.itemViews).each(function(slideView) {
+				slideView.$el.trigger('view-ready');
+			});
+		},
+
 		onSlideChange: function() {
 			this.model.trigger('change');
+		},
+
+		onSlideSort: function(e, ids) {
+			e.stopPropagation();
+
+			var slides = _(this.model.get('banner-slides'));
+			var sortedSlides = _(ids).map(function(id) {
+				return slides.findWhere({id: id});
+			});
+
+			this.model.set('banner-slides', sortedSlides);
 		},
 
 		render: function () {
 			oneApp.SectionView.prototype.render.apply(this, arguments);
 
-			// Initialize the views when the app starts up
-			oneApp.initBannerSlideViews(this);
+			var slides = this.model.get('banner-slides'),
+					self = this;
+
+			if (slides.length == 0) {
+				$('.ttfmake-add-slide', this.$el).trigger('click', {type: 'pseudo'});
+				return this;
+			}
+
+			_(slides).each(function (slideModel) {
+				var slideView = self.addSlide(slideModel);
+			});
 
 			return this;
 		},
 
-		addSlide: function (evt, params) {
+		addSlide: function(slideModel) {
+			// Build the view
+			var slideView = new oneApp.BannerSlideView({
+				model: slideModel,
+			});
+
+			// Append view
+			var html = slideView.render().el;
+			$('.ttfmake-banner-slides-stage', this.$el).append(html);
+
+			// Store view
+			this.itemViews.push(slideView);
+
+			return slideView;
+		},
+
+		onSlideAdd: function (evt, params) {
 			evt.preventDefault();
 
 			var slideModelDefaults = ttfMakeSectionDefaults['banner-item'] || {};
 			var slideModelAttributes = _(slideModelDefaults).extend({
-				id: new Date().getTime(),
+				id: new Date().getTime().toString(),
 				parentID: this.getParentID()
 			});
-
 			var slideModel = new oneApp.BannerSlideModel(slideModelAttributes);
+			var slideView = this.addSlide(slideModel);
+			slideView.$el.trigger('view-ready');
 
 			var slides = this.model.get('banner-slides');
 			slides.push(slideModel);
 			this.model.set('banner-slides', slides);
 
-			// Create view
-			var view = new oneApp.BannerSlideView({
-				model: slideModel
-			});
+			oneApp.scrollToAddedView(slideView);
+		},
 
-			// Append view
-			var html = view.render().el;
-			$('.ttfmake-banner-slides-stage', this.$el).append(html);
-
-			// Only scroll and focus if not triggered by the pseudo event
-			if ( ! params ) {
-				// Scroll to added view and focus first input
-				oneApp.scrollToAddedView(view);
-			}
-
-			// Initiate the color picker
-			oneApp.initializeBannerSlidesColorPicker(view);
-
-			// Add the section value to the sortable order
-			oneApp.addOrderValue(view.model.get('id'), $('.ttfmake-banner-slide-order', $(view.$el).parents('.ttfmake-banner-slides')));
+		onColorPickerChange: function(e, data) {
+			this.model.set(data.modelAttr, data.color);
 		},
 
 		getParentID: function() {
@@ -103,87 +139,81 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				id = idAttr.replace('ttfmake-section-', '');
 
 			return parseInt(id, 10);
+		},
+
+		initializeSlideSortables: function() {
+			var $selector = $('.ttfmake-banner-slides-stage', this.$el);
+			var self = this;
+
+			$selector.sortable({
+				handle: '.ttfmake-sortable-handle',
+				placeholder: 'sortable-placeholder',
+				forcePlaceholderSizeType: true,
+				distance: 2,
+				tolerance: 'pointer',
+				start: function (event, ui) {
+					// Set the height of the placeholder to that of the sorted item
+					var $item = $(ui.item.get(0)),
+						$stage = $item.parents('.ttfmake-banner-slides-stage');
+
+					$('.sortable-placeholder', $stage).height($item.height());
+				},
+				stop: function (event, ui) {
+					var $item = $(ui.item.get(0)),
+						$stage = $item.parents('.ttfmake-banner-slides'),
+						$orderInput = $('.ttfmake-banner-slide-order', $stage);
+
+					var ids = $(this).sortable('toArray', {attribute: 'data-id'});
+					self.$el.trigger('slide-sort', [ids]);
+				}
+			});
 		}
 	});
-
-	// Makes banner slides sortable
-	oneApp.initializeBannerSlidesSortables = function(view) {
-		var $selector;
-		view = view || '';
-
-		if (view.$el) {
-			$selector = $('.ttfmake-banner-slides-stage', view.$el);
-		} else {
-			$selector = $('.ttfmake-banner-slides-stage');
-		}
-
-		$selector.sortable({
-			handle: '.ttfmake-sortable-handle',
-			placeholder: 'sortable-placeholder',
-			forcePlaceholderSizeType: true,
-			distance: 2,
-			tolerance: 'pointer',
-			start: function (event, ui) {
-				// Set the height of the placeholder to that of the sorted item
-				var $item = $(ui.item.get(0)),
-					$stage = $item.parents('.ttfmake-banner-slides-stage');
-
-				$('.sortable-placeholder', $stage).height($item.height());
-			},
-			stop: function (event, ui) {
-				var $item = $(ui.item.get(0)),
-					$stage = $item.parents('.ttfmake-banner-slides'),
-					$orderInput = $('.ttfmake-banner-slide-order', $stage);
-
-				oneApp.setOrder($(this).sortable('toArray', {attribute: 'data-id'}), $orderInput);
-			}
-		});
-	};
 
 	// Initialize the color picker
-	oneApp.initializeBannerSlidesColorPicker = function (view) {
-		var $selector;
-		view = view || '';
+	// oneApp.initializeBannerSlidesColorPicker = function (view) {
+	// 	var $selector;
+	// 	view = view || '';
 
-		if (view.$el) {
-			$selector = $('.ttfmake-configuration-color-picker', view.$el);
-		} else {
-			$selector = $('.ttfmake-configuration-color-picker');
-		}
+	// 	if (view.$el) {
+	// 		$selector = $('.ttfmake-configuration-color-picker', view.$el);
+	// 	} else {
+	// 		$selector = $('.ttfmake-configuration-color-picker');
+	// 	}
 
-		$selector.wpColorPicker();
-	};
+	// 	$selector.wpColorPicker();
+	// };
 
 	// Initialize the sortables
-	$oneApp.on('afterSectionViewAdded', function(evt, view) {
-		if ('banner' === view.model.get('section-type') && view.model.get('banner-slides').length == 0) {
-			// Add an initial slide item
-			$('.ttfmake-add-slide', view.$el).trigger('click', {type: 'pseudo'});
+	// $oneApp.on('afterSectionViewAdded', function(evt, view) {
+	// 	if ('banner' === view.model.get('section-type') && view.model.get('banner-slides').length == 0) {
+	// 		// Add an initial slide item
+	// 		$('.ttfmake-add-slide', view.$el).trigger('click', {type: 'pseudo'});
 
-			// Initialize the sortables
-			oneApp.initializeBannerSlidesSortables(view);
-		}
-	});
+	// 		// Initialize the sortables
+	// 		oneApp.initializeBannerSlidesSortables(view);
+	// 	}
+	// });
 
 	// Initialize available slides
-	oneApp.initBannerSlideViews = function (view) {
-		var slides = view.model.get('banner-slides');
+	// oneApp.initBannerSlideViews = function (view) {
+	// 	var slides = view.model.get('banner-slides');
 
-		_(slides).each(function (slideModel) {
-			// Build the view
-			var slideView = new oneApp.BannerSlideView({
-				model: slideModel,
-				// el: $('.ttfmake-banner-slides-stage', view.$el),
-				serverRendered: true
-			});
+	// 	_(slides).each(function (slideModel) {
+	// 		// Build the view
+	// 		var slideView = new oneApp.BannerSlideView({
+	// 			model: slideModel,
+	// 			// el: $('.ttfmake-banner-slides-stage', view.$el),
+	// 			serverRendered: true
+	// 		});
 
-			// Append view
-			var html = slideView.render().el;
-			$('.ttfmake-banner-slides-stage', view.$el).append(html);
+	// 		// Append view
+	// 		var html = slideView.render().el;
+	// 		$('.ttfmake-banner-slides-stage', view.$el).append(html);
 
-			oneApp.initializeBannerSlidesColorPicker(slideView);
-		});
+	// 		oneApp.initializeBannerSlidesColorPicker(slideView);
+	// 	});
 
-		oneApp.initializeBannerSlidesSortables();
-	};
+	// 	oneApp.initializeBannerSlidesSortables();
+	// };
 })(window, jQuery, _, oneApp, $oneApp);

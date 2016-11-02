@@ -13,7 +13,9 @@ var oneApp = oneApp || {};
 				'click .ttfmake-banner-slide-remove': 'removeItem',
 				'click .ttfmake-banner-slide-toggle': 'toggleSection',
 				'click .ttfmake-media-uploader-add': 'onMediaOpen',
-				'overlayClose': 'onOverlayClose'
+				'overlayClose': 'onOverlayClose',
+				'color-picker-change': 'onColorPickerChange',
+				'view-ready': 'onViewReady',
 			});
 		},
 
@@ -28,8 +30,21 @@ var oneApp = oneApp || {};
 			return this;
 		},
 
+		onViewReady: function(e) {
+			e.stopPropagation();
+
+			oneApp.initColorPicker(this);
+		},
+
 		onOverlayClose: function(e, textarea) {
 			this.model.set('content', $(textarea).val());
+			this.$el.trigger('model-item-change');
+		},
+
+		onColorPickerChange: function(e, data) {
+			e.stopPropagation();
+
+			this.model.set(data.modelAttr, data.color);
 			this.$el.trigger('model-item-change');
 		},
 

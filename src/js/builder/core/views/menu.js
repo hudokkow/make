@@ -59,7 +59,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			html = view.render().el;
 			this.$stage.append(html);
 
-			$oneApp.trigger('afterSectionViewAdded', view);
+			view.$el.trigger('view-ready');
 
 			// Scroll to added view and focus first input
 			oneApp.scrollToAddedView(view);

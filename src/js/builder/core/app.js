@@ -362,10 +362,10 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 						// pass data to trigger so it can be passed to model
 						var data = {
 							modelAttr: $input.attr('data-model-attr'),
-							color: $input.val()
+							color: ui.color.toString()
 						};
 
-						view.$el.trigger('color-picker-change', data);
+						$input.trigger('color-picker-change', data);
 					}
 				}
 			};
