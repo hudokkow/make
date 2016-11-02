@@ -39,7 +39,7 @@ $overlay_id  = 'ttfmake-overlay-' . $combined_id;
 			<?php esc_html_e( 'Configure slide', 'make' ); ?>
 		</span>
 	</a>
-	<a href="#" class="edit-content-link edit-banner-slide-link{{ get('content') != '' ? ' item-has-content': '' }}" title="<?php esc_attr_e( 'Edit content', 'make' ); ?>" data-textarea="ttfmake-content-<?php echo $combined_id; ?>">
+	<a href="#" class="edit-content-link edit-banner-slide-link{{ get('content') && get('content').length ? ' item-has-content': '' }}" title="<?php esc_attr_e( 'Edit content', 'make' ); ?>" data-textarea="ttfmake-content-<?php echo $combined_id; ?>">
 		<span>
 			<?php esc_html_e( 'Edit content', 'make' ); ?>
 		</span>
