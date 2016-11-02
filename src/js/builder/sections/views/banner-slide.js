@@ -12,7 +12,8 @@ var oneApp = oneApp || {};
 			return _.extend({}, oneApp.ItemView.prototype.events, {
 				'click .ttfmake-banner-slide-remove': 'removeItem',
 				'click .ttfmake-banner-slide-toggle': 'toggleSection',
-				'click .ttfmake-media-uploader-add': 'onMediaOpen'
+				'click .ttfmake-media-uploader-add': 'onMediaOpen',
+				'overlayClose': 'onOverlayClose'
 			});
 		},
 
@@ -25,6 +26,11 @@ var oneApp = oneApp || {};
 				.attr('id', this.idAttr)
 				.attr('data-id', this.model.get('id'));
 			return this;
+		},
+
+		onOverlayClose: function(e, textarea) {
+			this.model.set('content', $(textarea).val());
+			this.$el.trigger('model-item-change');
 		},
 
 		removeItem: function (evt) {

@@ -5,33 +5,40 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 	'use strict';
 
 	oneApp.OverlayView = Backbone.View.extend({
+		caller: null,
+
 		events: function() {
 			return _.extend({}, oneApp.SectionView.prototype.events, {
 				'click .ttfmake-overlay-close-action' : 'closeOnClick'
 			});
 		},
 
-		open: function() {
-			$oneApp.trigger('overlayOpen', this.$el);
+		open: function(view) {
+			this.caller = view;
+
 			this.$el.show();
 
 			// Auto focus on the editor
 			var focusOn = (oneApp.isVisualActive()) ? tinyMCE.get('make') : oneApp.cache.$makeTextArea;
 			focusOn.focus();
+
+			view.$el.trigger('overlayOpen');
 		},
 
 		close: function() {
-			$oneApp.trigger('overlayClose', this.$el);
 			this.$el.hide();
 
 			// Pass the new content to the iframe and textarea
-			oneApp.setTextArea(oneApp.getActiveTextAreaID());
+			var textAreaID = oneApp.getActiveTextAreaID();
+			oneApp.setTextArea(textAreaID);
 
 			if ('' !== oneApp.getActiveiframeID()) {
 				oneApp.filliframe(oneApp.getActiveiframeID());
 			}
 
 			this.toggleHasContent();
+			this.caller.$el.trigger('overlayClose', $('#' + textAreaID));
+			this.caller = null;
 		},
 
 		closeOnClick: function(e) {

@@ -18,9 +18,8 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			'click .ttfmake-section-toggle': 'toggleSection',
 			'click .ttfmake-section-remove': 'removeSection',
 			'keyup .ttfmake-section-header-title-input': 'constructHeader',
-			'click .ttfmake-media-uploader-add': 'onMediaOpen',
+			'click .ttfmake-media-uploader-add': 'onMediaAdd',
 			'color-picker-change': 'onColorPickerChange',
-			'click .edit-content-link': 'openTinyMCEOverlay',
 			'click .ttfmake-overlay-open': 'openConfigurationOverlay',
 			'click .ttfmake-overlay-close': 'closeConfigurationOverlay',
 			'mediaSelected': 'onMediaSelected',
@@ -126,7 +125,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			}
 		},
 
-		onMediaOpen: function(e) {
+		onMediaAdd: function(e) {
 			e.preventDefault();
 			oneApp.initUploader(this);
 		},
@@ -134,18 +133,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		onMediaSelected: function(e, attachment) {
 			this.model.set('background-image', attachment.id);
 			this.model.set('background-image-url', attachment.url);
-		},
-
-		openTinyMCEOverlay: function (evt) {
-			evt.preventDefault();
-			oneApp.tinymceOverlay.open();
-
-			var $target = $(evt.target),
-				iframeID = ($target.attr('data-iframe')) ? $target.attr('data-iframe') : '',
-				textAreaID = $target.attr('data-textarea');
-
-			oneApp.setActiveSectionID(this.model.get('id'));
-			oneApp.setMakeContentFromTextArea(iframeID, textAreaID);
 		},
 
 		openConfigurationOverlay: function (evt) {

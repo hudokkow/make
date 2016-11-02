@@ -39,7 +39,7 @@ $overlay_id  = 'ttfmake-overlay-' . $combined_id;
 			<?php esc_html_e( 'Configure slide', 'make' ); ?>
 		</span>
 	</a>
-	<a href="#" class="edit-content-link edit-banner-slide-link<?php if ( ! empty( $content ) ) : ?> item-has-content<?php endif; ?>" title="<?php esc_attr_e( 'Edit content', 'make' ); ?>" data-textarea="ttfmake-content-<?php echo $combined_id; ?>">
+	<a href="#" class="edit-content-link edit-banner-slide-link{{ get('content') != '' ? ' item-has-content': '' }}" title="<?php esc_attr_e( 'Edit content', 'make' ); ?>" data-textarea="ttfmake-content-<?php echo $combined_id; ?>">
 		<span>
 			<?php esc_html_e( 'Edit content', 'make' ); ?>
 		</span>
@@ -50,7 +50,7 @@ $overlay_id  = 'ttfmake-overlay-' . $combined_id;
 		</span>
 	</a>
 
-	<?php ttfmake_get_builder_base()->add_frame( $combined_id, $section_name . '[content]', $content, false ); ?>
+	<?php ttfmake_get_builder_base()->add_frame( $combined_id, 'content', $content, false ); ?>
 
 	<?php
 	global $ttfmake_overlay_class, $ttfmake_overlay_id, $ttfmake_overlay_title;

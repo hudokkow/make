@@ -8,6 +8,7 @@ var oneApp = oneApp || {};
 			events: {
 				'click .ttfmake-media-uploader-add': 'onMediaOpen',
 				'mediaSelected': 'onMediaSelected',
+				'click .edit-content-link': 'onContentEdit',
 				'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 				'keyup .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 				'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
@@ -65,6 +66,18 @@ var oneApp = oneApp || {};
 				this.model.set('image-id', attachment.id);
 				this.model.set('image-url', attachment.url);
 				this.$el.trigger('model-item-change');
+			},
+
+			onContentEdit: function(e) {
+				e.preventDefault();
+
+				oneApp.tinymceOverlay.open(this);
+
+				var $target = $(e.target),
+					iframeID = ($target.attr('data-iframe')) ? $target.attr('data-iframe') : '',
+					textAreaID = $target.attr('data-textarea');
+
+				oneApp.setMakeContentFromTextArea(iframeID, textAreaID);
 			}
 		});
 })(window, Backbone, jQuery, _, oneApp);
