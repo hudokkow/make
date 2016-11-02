@@ -135,21 +135,11 @@ class TTFMAKE_Section_Definitions {
 
 	public function get_text_section_data( $ordered_data ) {
 		foreach ( $ordered_data as $section_id => $section ) {
-			if ( isset( $section['background-image'] ) ) {
-				$image_id = intval( $section['background-image'] );
+			if ( isset( $section['background-image'] ) && ( $image_id = intval( $section['background-image'] ) ) > 0 ) {
 				$image = ttfmake_get_image_src( $image_id, 'large' );
 				$ordered_data[$section_id]['background-image-url'] = $image[0];
 			}
 
-			if ( isset( $section['columns'] ) && is_array( $section['columns'] ) ) {
-				foreach ( $section['columns'] as $column_id => $column ) {
-					if ( isset( $column['image-id'] ) ) {
-						$image_id = $column['image-id'];
-						$image = ttfmake_get_image_src( $image_id, 'large' );
-						$ordered_data[$section_id]['columns'][$column_id]['image-url'] = $image[0];
-					}
-				}
-			}
 		}
 
 		return $ordered_data;
@@ -471,16 +461,14 @@ class TTFMAKE_Section_Definitions {
 
 	public function get_banner_section_data( $ordered_data ) {
 		foreach ( $ordered_data as $section_id => $section ) {
-			if ( isset( $section['background-image'] ) ) {
-				$image_id = intval( $section['background-image'] );
+			if ( isset( $section['background-image'] ) && ( $image_id = intval( $section['background-image'] ) ) > 0 ) {
 				$image = ttfmake_get_image_src( $image_id, 'large' );
 				$ordered_data[$section_id]['background-image-url'] = $image[0];
 			}
 
 			if ( isset( $section['banner-slides'] ) && is_array( $section['banner-slides'] ) ) {
 				foreach ( $section['banner-slides'] as $slide_id => $slide ) {
-					if ( isset( $slide['image-id'] ) ) {
-						$image_id = $slide['image-id'];
+					if ( isset( $slide['image-id'] ) && ( $image_id = intval( $slide['image-id'] ) ) > 0 ) {
 						$image = ttfmake_get_image_src( $image_id, 'large' );
 						$ordered_data[$section_id]['banner-slides'][$slide_id]['image-url'] = $image[0];
 					}
