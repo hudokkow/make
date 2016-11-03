@@ -19,30 +19,10 @@ var oneApp = oneApp || {};
 			'background-style': '',
 			'columns-number': 3,
 			'columns': {
-				1: {
-					'image-link': '',
-					'image-id': '',
-					'title': '',
-					'content': ''
-				},
-				2: {
-					'image-link': '',
-					'image-id': '',
-					'title': '',
-					'content': ''
-				},
-				3: {
-					'image-link': '',
-					'image-id': '',
-					'title': '',
-					'content': ''
-				},
-				4: {
-					'image-link': '',
-					'image-id': '',
-					'title': '',
-					'content': ''
-				}
+				1: {},
+				2: {},
+				3: {},
+				4: {}
 			},
 			'columns-order': '1,2,3,4',
 			'darken': 0,

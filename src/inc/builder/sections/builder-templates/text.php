@@ -45,9 +45,9 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 		$iframe_id   = 'ttfmake-iframe-' . $section_id . '-' . $i;
 		$textarea_id = 'ttfmake-content-' . $section_id . '-' . $i;
 		$overlay_id  = 'ttfmake-overlay-' . $section_id . '-' . $i;
-		$link        = '{{ get("columns")['. $i .']["image-link"]';
-		$image_id    = '{{ get("columns")['. $i .']["image-id"]';
-		$title       = '{{ get("columns")['. $i .']["title"] }}';
+		$link        = '{{ get("columns")['. $i .']["image-link"] }}';
+		$image_id    = '{{ get("columns")['. $i .']["image-id"] }}';
+		$title       = '{{ get("columns")['. $i .']["title"] }}';		
 		$content     = '{{ get("columns")['. $i .']["content"] }}';
 
 		$item_has_content = ( ! empty( $content ) ) ? ' _item-has-content' : '';
@@ -115,7 +115,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 		</a>
 		<?php endforeach; ?>
 
-		<?php echo ttfmake_get_builder_base()->add_uploader( $column_name, ttfmake_sanitize_image_id( $image_id ), __( 'Set image', 'make' ) ); ?>
+		<?php echo ttfmake_get_builder_base()->add_uploader( $column_name, ttfmake_sanitize_image_id( $image_id ), __( 'Set image', 'make' ), 'columns', '['.$i.']["image-url"]' ); ?>
 		<?php ttfmake_get_builder_base()->add_frame( $section_id . '-' . $i, $column_name . '[content]', $content ); ?>
 
 		<?php
@@ -149,7 +149,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 				'type'    => 'section_title',
 				'name'    => 'title',
 				'label'   => __( 'Enter column title', 'make' ),
-				'default' => '{{ get("columns")['. $i .']["title"] }}',
+				'default' => '{{ get("columns")['. $i .']["title"] }}',				
 				'class'   => 'ttfmake-configuration-title',
 			),
 			200 => array(

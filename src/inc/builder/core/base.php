@@ -455,13 +455,13 @@ class TTFMAKE_Builder_Base {
 	 * @param  string    $title           Title for the media modal.
 	 * @return string                     Either return the string or echo it.
 	 */
-	public function add_uploader( $section_name, $image_id = 0, $title = '', $field_name = 'background-image-url' ) {
+	public function add_uploader( $section_name, $image_id = 0, $title = '', $field_name = 'background-image-url', $field_name_path = '' ) {
 		$image = ttfmake_get_image_src( $image_id, 'large' );
 		$title = ( ! empty( $title ) ) ? $title : esc_html__( 'Set image', 'make' );
 		ob_start();
-		?>
-		<div class="ttfmake-uploader{{ get('<?php echo $field_name; ?>') && ' ttfmake-has-image-set' || '' }}">
-			<div data-title="Ugly modal title" class="ttfmake-media-uploader-placeholder ttfmake-media-uploader-add" style="background-image: url({{ get('<?php echo $field_name; ?>') }});"></div>
+?>
+	<div class="ttfmake-uploader{{ get('<?php echo $field_name; ?>')<?php echo $field_name_path; ?> && ' ttfmake-has-image-set' || '' }}">
+	<div data-title="Ugly modal title" class="ttfmake-media-uploader-placeholder ttfmake-media-uploader-add" style="background-image: url({{ get('<?php echo $field_name; ?>')<?php echo $field_name_path; ?> }});"></div>
 		</div>
 	<?php
 		$output = ob_get_clean();

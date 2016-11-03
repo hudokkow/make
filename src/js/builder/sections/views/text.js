@@ -9,10 +9,54 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			return _.extend({}, oneApp.SectionView.prototype.events, {
 				'change .ttfmake-text-columns' : 'handleColumns',
 				'mouseup .ttfmake-text-column' : 'updateJSONOnSlide',
+				'model-item-change': 'onTextItemChange',
 				'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 				'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
 				'change .ttfmake-configuration-overlay select': 'updateSelectField'
 			});
+		},
+
+		render: function() {
+			oneApp.SectionView.prototype.render.apply(this, arguments);
+
+			var self = this;
+			var modelColumns = self.model.get('columns');
+
+			_(modelColumns).each(function(columnModel, index) {
+				var textItemModelDefaults = {
+					'image-link': '',
+					'image-id': '',
+					'title': '',
+					'content': ''
+				};
+
+				var textItemModelAttributes = _(textItemModelDefaults).extend({
+					id: new Date().getTime(),
+					parentID: self.model.get('id')
+				});
+
+				// extend TextItemModel attributes with actual model data
+				textItemModelAttributes = _(textItemModelAttributes).extend(columnModel);
+
+				var textItemModel = new oneApp.TextItemModel(textItemModelAttributes);
+				var textItemElSelector = '.ttfmake-text-column[data-id='+index+']';
+
+				// set TextItemModel attributes to matching model in TextModel
+				modelColumns[index] = textItemModel.attributes;
+
+				// create view
+				self['textItemView'+index] = new oneApp.TextItemView({
+					model: textItemModel,
+					elSelector: textItemElSelector
+				});
+
+				// set view element and render
+				self['textItemView'+index].setElement(self.$(textItemElSelector)).render();
+			});
+
+			self.model.set('columns', modelColumns);
+
+			return this;
 		},
 
 		handleColumns : function (evt) {
@@ -28,8 +72,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		updateInputField: function(evt) {
 			var $input				= $(evt.target);
 			var modelAttrName = $input.attr('data-model-attr');
-
-			console.log(modelAttrName);
 
 			if (typeof modelAttrName !== 'undefined') {
 				this.model.set(modelAttrName, $input.val());
@@ -56,6 +98,11 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			if (typeof modelAttrName !== 'undefined') {
 				this.model.set(modelAttrName, $select.val());
 			}
+		},
+
+		onTextItemChange: function(evt) {
+			console.log(evt);
+			this.model.trigger('change');
 		},
 	});
 
