@@ -125,7 +125,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 	oneApp.scrollToAddedView = function (view) {
 		// Scroll to the new section
 		oneApp.cache.$scrollHandle.animate({
-			scrollTop: parseInt($('#' + view.idAttr).offset().top, 10) - 32 - 9 // Offset + admin bar height + margin
+			scrollTop: view.$el.offset().top - 32 - 9 // Offset + admin bar height + margin
 		}, 800, 'easeOutQuad', function() {
 			oneApp.focusFirstInput(view);
 		});
