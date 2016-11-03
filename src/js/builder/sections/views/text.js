@@ -166,6 +166,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 					i;
 
 				oneApp.setOrder($(this).sortable('toArray', {attribute: 'data-id'}), $orderInput);
+				view.model.set('columns-order', $orderInput.val());
 
 				// Label the columns according to the position they are in
 				i = 1;
