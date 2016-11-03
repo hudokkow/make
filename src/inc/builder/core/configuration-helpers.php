@@ -86,7 +86,7 @@ function ttfmake_create_config_text( $section_name, $args, $section_data ) {
 		$current_value = '{{ get("'. $args['name'] .'") }}';
 	}
 
-	return  $label . '<input type="text" id="' . $id . '" name="' . $id . '" value="' . esc_attr( $current_value ) . '" data-model-attr="' . $args['name'] . '" />';
+	return  $label . '<input type="text" id="' . $id . '" name="' . $id . '" value="{{ get(\'' . $args['name'] . '\') }}" data-model-attr="' . $args['name'] . '" />';
 }
 endif;
 
