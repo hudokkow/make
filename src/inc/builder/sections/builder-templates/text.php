@@ -116,7 +116,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 		<?php endforeach; ?>
 
 		<?php echo ttfmake_get_builder_base()->add_uploader( $column_name, ttfmake_sanitize_image_id( $image_id ), __( 'Set image', 'make' ), 'columns', '['.$i.']["image-url"]' ); ?>
-		<?php ttfmake_get_builder_base()->add_frame( $section_id . '-' . $i, $column_name . '[content]', $content ); ?>
+		<?php ttfmake_get_builder_base()->add_frame( $section_id . '-' . $i, 'columns', '['.$i.']["content"]', $content ); ?>
 
 		<?php
 		/**

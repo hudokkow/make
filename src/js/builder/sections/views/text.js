@@ -26,6 +26,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				var textItemModelDefaults = {
 					'image-link': '',
 					'image-id': '',
+					'image-url': '',
 					'title': '',
 					'content': ''
 				};

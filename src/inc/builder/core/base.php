@@ -473,13 +473,14 @@ class TTFMAKE_Builder_Base {
 	 *
 	 * @since  1.4.0.
 	 *
-	 * @param  string    $id               The unique ID to identify the different areas.
-	 * @param  string    $textarea_name    The name of the textarea.
-	 * @param  string    $content          The content for the text area.
-	 * @param  bool      $iframe           Whether or not to add an iframe to preview content.
+	 * @param  string    $id					The unique ID to identify the different areas.
+	 * @param  string    $textarea_name			The name of the textarea.
+	 * @param  string	 $textarea_name_path	The array / path ot textarea
+	 * @param  string    $content				The content for the text area.
+	 * @param  bool      $iframe				Whether or not to add an iframe to preview content.
 	 * @return void
 	 */
-	public function add_frame( $id, $textarea_name, $content = '', $iframe = true ) {
+	public function add_frame( $id, $textarea_name, $textarea_name_path = '', $content = '', $iframe = true ) {
 		global $ttfmake_is_js_template;
 		$iframe_id   = 'ttfmake-iframe-' . $id;
 		$textarea_id = 'ttfmake-content-' . $id;
@@ -497,7 +498,7 @@ class TTFMAKE_Builder_Base {
 		</div>
 		<?php endif; ?>
 
-		<textarea id="<?php echo esc_attr( $textarea_id ); ?>" name="<?php echo esc_attr( $textarea_name ); ?>" data-model-attr="<?php echo esc_attr( $textarea_name ); ?>" style="display:none;">{{ get('<?php echo esc_attr( $textarea_name ); ?>') }}</textarea>
+		<textarea id="<?php echo esc_attr( $textarea_id ); ?>" name="<?php echo esc_attr( $textarea_name ); ?>" data-model-attr="<?php echo esc_attr( $textarea_name ); ?>" style="display:none;">{{ get('<?php echo esc_attr( $textarea_name ); ?>')<?php echo $textarea_name_path; ?> }}</textarea>
 
 		<?php if ( true !== $ttfmake_is_js_template && true === $iframe ) : ?>
 		<script type="text/javascript">

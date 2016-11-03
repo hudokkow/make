@@ -11,12 +11,18 @@ var oneApp = oneApp || {};
 
 		events: function() {
 			return _.extend({}, oneApp.ItemView.prototype.events, {
-				'click .ttfmake-media-uploader-add': 'onMediaOpen'
+				'click .ttfmake-media-uploader-add': 'onMediaOpen',
+				'overlayClose': 'onOverlayClose'
 			});
 		},
 
 		render: function () {
 			return this;
 		},
+
+		onOverlayClose: function(e, textarea) {
+			this.model.set('content', $(textarea).val());
+			this.$el.trigger('model-item-change');
+		}		
 	});
 })(window, Backbone, jQuery, _, oneApp);

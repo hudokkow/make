@@ -50,7 +50,7 @@ $overlay_id  = 'ttfmake-overlay-' . $combined_id;
 		</span>
 	</a>
 
-	<?php ttfmake_get_builder_base()->add_frame( $combined_id, 'content', $content, false ); ?>
+	<?php ttfmake_get_builder_base()->add_frame( $combined_id, 'content', '', $content, false ); ?>
 
 	<?php
 	global $ttfmake_overlay_class, $ttfmake_overlay_id, $ttfmake_overlay_title;

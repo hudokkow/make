@@ -200,6 +200,9 @@ class TTFMAKE_Section_Definitions {
 
 				if ( isset( $item['image-id'] ) ) {
 					$clean_data['columns'][ $id ]['image-id'] = ttfmake_sanitize_image_id( $item['image-id'] );
+					
+					$image = ttfmake_get_image_src( $item['image-id'], 'large' );
+					$clean_data['columns'][ $id ]['image-url'] = $image[0];
 				}
 
 				if ( isset( $item['content'] ) ) {
