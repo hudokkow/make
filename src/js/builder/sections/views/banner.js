@@ -17,6 +17,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				'change .ttfmake-configuration-overlay select': 'updateSelectField',
 				'view-ready': 'onViewReady',
 				'slide-sort': 'onSlideSort',
+				'slide-remove': 'onSlideRemove',
 				'color-picker-change': 'onColorPickerChange'
 			});
 		},
@@ -75,6 +76,11 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			});
 
 			this.model.set('banner-slides', sortedSlides);
+		},
+
+		onSlideRemove: function(e, slideView) {
+			var slides = this.model.get('banner-slides');
+			this.model.set('banner-slides', _(slides).without(slideView.model));
 		},
 
 		render: function () {

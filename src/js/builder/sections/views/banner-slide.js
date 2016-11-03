@@ -10,7 +10,7 @@ var oneApp = oneApp || {};
 
 		events: function() {
 			return _.extend({}, oneApp.ItemView.prototype.events, {
-				'click .ttfmake-banner-slide-remove': 'removeItem',
+				'click .ttfmake-banner-slide-remove': 'onSlideRemove',
 				'click .ttfmake-banner-slide-toggle': 'toggleSection',
 				'click .ttfmake-media-uploader-add': 'onMediaOpen',
 				'overlayClose': 'onOverlayClose',
@@ -48,7 +48,7 @@ var oneApp = oneApp || {};
 			this.$el.trigger('model-item-change');
 		},
 
-		removeItem: function (evt) {
+		onSlideRemove: function (evt) {
 			evt.preventDefault();
 
 			var $stage = this.$el.parents('.ttfmake-banner-slides'),
@@ -61,6 +61,7 @@ var oneApp = oneApp || {};
 				opacity: 'toggle',
 				height: 'toggle'
 			}, oneApp.options.closeSpeed, function() {
+				this.$el.trigger('slide-remove', this);
 				this.remove();
 			}.bind(this));
 		},
