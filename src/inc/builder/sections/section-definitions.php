@@ -200,7 +200,7 @@ class TTFMAKE_Section_Definitions {
 
 				if ( isset( $item['image-id'] ) ) {
 					$clean_data['columns'][ $id ]['image-id'] = ttfmake_sanitize_image_id( $item['image-id'] );
-					
+
 					$image = ttfmake_get_image_src( $item['image-id'], 'large' );
 					$clean_data['columns'][ $id ]['image-url'] = $image[0];
 				}
@@ -475,7 +475,8 @@ class TTFMAKE_Section_Definitions {
 
 			if ( isset( $section['banner-slides'] ) && is_array( $section['banner-slides'] ) ) {
 				foreach ( $section['banner-slides'] as $s => $slide ) {
-					$slide_id = $slide['id'];
+					// Handle legacy data layout
+					$slide_id = isset( $slide['id'] ) ? $slide['id']: $s;
 
 					if ( isset( $slide['image-id'] ) && ( $image_id = intval( $slide['image-id'] ) ) > 0 ) {
 						$image = ttfmake_get_image_src( $image_id, 'large' );
