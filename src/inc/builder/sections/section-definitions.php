@@ -430,12 +430,9 @@ class TTFMAKE_Section_Definitions {
 		if ( isset( $data['banner-slides'] ) && is_array( $data['banner-slides'] ) ) {
 			$clean_data['banner-slides'] = array();
 
-			foreach ( $data['banner-slides'] as $slide ) {
-				$id = $slide['id'];
-
-				if ( empty ( $id ) ) {
-					continue;
-				}
+			foreach ( $data['banner-slides'] as $s => $slide ) {
+				// Handle legacy data layout
+				$id = isset( $slide['id'] ) ? $slide['id']: $s;
 
 				$clean_slide_data = array( 'id' => $id );
 
