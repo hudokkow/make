@@ -473,7 +473,8 @@ class TTFMAKE_Section_Definitions {
 			if ( isset( $section['banner-slides'] ) && is_array( $section['banner-slides'] ) ) {
 				foreach ( $section['banner-slides'] as $s => $slide ) {
 					// Handle legacy data layout
-					$slide_id = isset( $slide['id'] ) ? $slide['id']: $s;
+					$id = isset( $slide['id'] ) ? $slide['id']: $s;
+					$ordered_data[$section_id]['banner-slides'][$s]['id'] = $id;
 
 					if ( isset( $slide['image-id'] ) && ( $image_id = intval( $slide['image-id'] ) ) > 0 ) {
 						$image = ttfmake_get_image_src( $image_id, 'large' );
