@@ -12,23 +12,35 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				'model-item-change': 'onTextItemChange',
 				'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 				'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
-				'change .ttfmake-configuration-overlay select': 'updateSelectField'
+				'change .ttfmake-configuration-overlay select': 'updateSelectField',
+				'columns-sort': 'onColumnsSort',
+				'view-ready': 'onViewReady'
 			});
 		},
 
 		render: function() {
-			oneApp.SectionView.prototype.render.apply(this, arguments);
-
 			var self = this;
 			var modelColumns = self.model.get('columns');
+			var columnsOrder = self.model.get('columns-order');
+			var sortedColumns = {1:{}, 2:{}, 3:{}, 4:{}};
 
-			_(modelColumns).each(function(columnModel, index) {
+			_(columnsOrder).each(function(id, index) {
+				console.log(index+1+':'+id);
+				sortedColumns[index+1] = modelColumns[id];
+			});
+
+			this.model.set('columns', sortedColumns);
+
+			oneApp.SectionView.prototype.render.apply(this, arguments);
+
+			_(sortedColumns).each(function(columnModel, index) {
 				var textItemModelDefaults = {
 					'image-link': '',
 					'image-id': '',
 					'image-url': '',
 					'title': '',
-					'content': ''
+					'content': '',
+					'index': ''
 				};
 
 				var textItemModelAttributes = _(textItemModelDefaults).extend({
@@ -43,7 +55,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				var textItemElSelector = '.ttfmake-text-column[data-id='+index+']';
 
 				// set TextItemModel attributes to matching model in TextModel
-				modelColumns[index] = textItemModel.attributes;
+				sortedColumns[index] = textItemModel.attributes;
 
 				// create view
 				self['textItemView'+index] = new oneApp.TextItemView({
@@ -55,9 +67,33 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				self['textItemView'+index].setElement(self.$(textItemElSelector)).render();
 			});
 
-			self.model.set('columns', modelColumns);
+			self.model.set('columns', sortedColumns);
 
 			return this;
+		},
+
+		onViewReady: function(e) {
+			e.stopPropagation();
+
+			this.initializeColumnsSortables();
+			this.initFrames();
+		},
+
+		initFrames: function(e) {
+			var link = oneApp.getFrameHeadLinks();
+
+			$('iframe', this.$el).each(function() {
+				var $this = $(this);
+
+				var id = $this.attr('id').replace('ttfmake-iframe-', '');
+				oneApp.initFrame(id, link);
+			});
+		},
+
+		onColumnsSort: function(e, ids) {
+			e.stopPropagation();
+
+			this.model.set('columns-order', ids);
 		},
 
 		handleColumns : function (evt) {
@@ -105,10 +141,40 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			console.log(evt);
 			this.model.trigger('change');
 		},
+
+		initializeColumnsSortables: function() {
+			var $selector = $('.ttfmake-text-columns-stage', this.$el);
+			var self = this;
+
+			$selector.sortable({
+				handle: '.ttfmake-sortable-handle',
+				placeholder: 'sortable-placeholder',
+				forcePlaceholderSizeType: true,
+				distance: 2,
+				tolerance: 'pointer',
+				start: function(event, ui) {
+					var $item = $(ui.item.get(0)),
+						$stage = $item.parents('.ttfmake-text-columns-stage');
+
+					$('.sortable-placeholder', $stage).height($item.height()).css({
+						'flex': $item.css('flex'),
+						'-webkit-flex': $item.css('-webkit-flex')
+					});;
+				},
+				stop: function(event, ui) {
+					var $item = $(ui.item.get(0));
+
+					console.log(self.$el.attr('data-id') + '-' + $item.attr('data-id'));
+
+					var ids = $(this).sortable('toArray', {attribute: 'data-id'});
+					self.$el.trigger('columns-sort', [ids]);
+				}
+			});
+		}
 	});
 
 	// Makes gallery items sortable
-	oneApp.initializeTextColumnSortables = function(view) {
+	/*oneApp.initializeTextColumnSortables = function(view) {
 		var $selector;
 		view = view || '';
 
@@ -165,7 +231,8 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 					column = $item.attr('data-id'),
 					i;
 
-				oneApp.setOrder($(this).sortable('toArray', {attribute: 'data-id'}), $orderInput);
+				var ids = $(this).sortable('toArray', {attribute: 'data-id'});
+				self.$el.trigger('text-sort', [ids]);
 
 				// Label the columns according to the position they are in
 				i = 1;
@@ -178,32 +245,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 				// Remove the temporary classes from stage
 				$columnsStage.removeClass('current-item-two-thirds current-item-one-third current-item-one-fourth current-item-three-fourths current-item-one-half');
-
-				setTimeout(function() {
-					oneApp.initFrame(id + '-' + column);
-				}, 100);
 			}
 		});
-	};
-
-	// Initialize the sortables
-	$oneApp.on('afterSectionViewAdded', function(evt, view) {
-		if ('text' === view.model.get('section-type')) {
-			oneApp.initializeTextColumnSortables(view);
-
-			// Initialize the iframes
-			var $frames = $('iframe', view.$el),
-				link = oneApp.getFrameHeadLinks(),
-				id, $this;
-
-			$.each($frames, function() {
-				$this = $(this);
-				id = $this.attr('id').replace('ttfmake-iframe-', '');
-				oneApp.initFrame(id, link);
-			});
-		}
-	});
-
-	// Initialize sortables for current columns
-	oneApp.initializeTextColumnSortables();
+	};*/
 })(window, jQuery, _, oneApp, $oneApp);

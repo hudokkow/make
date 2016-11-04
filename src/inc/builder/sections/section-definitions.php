@@ -165,7 +165,7 @@ class TTFMAKE_Section_Definitions {
 		$clean_data['title'] = $clean_data['label'] = ( isset( $data['title'] ) ) ? apply_filters( 'title_save_pre', $data['title'] ) : '';
 
 		if ( isset( $data['columns-order'] ) ) {
-			$clean_data['columns-order'] = array_map( array( 'TTFMAKE_Builder_Save', 'clean_section_id' ), explode( ',', $data['columns-order'] ) );
+			$clean_data['columns-order'] = $data['columns-order'];
 		}
 
 		if ( isset( $data['background-image'] ) ) {

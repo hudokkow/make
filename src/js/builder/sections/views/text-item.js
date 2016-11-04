@@ -17,6 +17,8 @@ var oneApp = oneApp || {};
 		},
 
 		render: function () {
+			this.$el.attr('data-model-id', this.model.get('id'));
+
 			return this;
 		},
 

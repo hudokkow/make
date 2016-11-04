@@ -19,12 +19,40 @@ var oneApp = oneApp || {};
 			'background-style': '',
 			'columns-number': 3,
 			'columns': {
-				1: {},
-				2: {},
-				3: {},
-				4: {}
+				1: {
+					'id': '',
+					'parentID': '',
+					'image-id': '',
+					'image-link': '',
+					'image-url': '',
+					'content': ''
+				},
+				2: {
+					'id': '',
+					'parentID': '',
+					'image-id': '',
+					'image-link': '',
+					'image-url': '',
+					'content': ''
+				},
+				3: {
+					'id': '',
+					'parentID': '',
+					'image-id': '',
+					'image-link': '',
+					'image-url': '',
+					'content': ''
+				},
+				4: {
+					'id': '',
+					'parentID': '',
+					'image-id': '',
+					'image-link': '',
+					'image-url': '',
+					'content': ''
+				}
 			},
-			'columns-order': '1,2,3,4',
+			'columns-order': ['1','2','3','4'],
 			'darken': 0,
 			'parallax-enable': 0,
 			'remove-space-below': 0,
