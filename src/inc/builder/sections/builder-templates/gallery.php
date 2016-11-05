@@ -20,14 +20,7 @@ $section_order    = ( ! empty( $ttfmake_section_data['data']['gallery-item-order
 ?>
 
 <div class="ttfmake-gallery-items">
-	<div class="ttfmake-gallery-items-stage ttfmake-gallery-columns-<?php echo absint( $columns ); ?>">
-		<?php foreach ( $section_order as $key => $section_id  ) : ?>
-			<?php if ( isset( $ttfmake_section_data['data']['gallery-items'][ $section_id ] ) ) : ?>
-				<?php global $ttfmake_gallery_id; $ttfmake_gallery_id = $section_id; ?>
-				<?php get_template_part( '/inc/builder/sections/builder-templates/gallery', 'item' ); ?>
-			<?php endif; ?>
-		<?php endforeach; ?>
-	</div>
+	<div class="ttfmake-gallery-items-stage ttfmake-gallery-columns-{{ get('columns') }}"></div>
 	<a href="#" class="ttfmake-add-item ttfmake-gallery-add-item-link" title="<?php esc_attr_e( 'Add new item', 'make' ); ?>">
 		<div class="ttfmake-gallery-add-item">
 			<span>

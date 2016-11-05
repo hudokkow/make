@@ -390,9 +390,9 @@ class TTFMAKE_Section_Definitions {
 			$clean_data['responsive'] = $data['responsive'];
 		}
 
-		if ( isset( $data['banner-slide-order'] ) ) {
-			$clean_data['banner-slide-order'] = array_map( array( 'TTFMAKE_Builder_Save', 'clean_section_id' ), explode( ',', $data['banner-slide-order'] ) );
-		}
+		// if ( isset( $data['banner-slide-order'] ) ) {
+		// 	$clean_data['banner-slide-order'] = array_map( array( 'TTFMAKE_Builder_Save', 'clean_section_id' ), explode( ',', $data['banner-slide-order'] ) );
+		// }
 
 		if ( isset( $data['background-image'] ) ) {
 			$clean_data['background-image'] = ttfmake_sanitize_image_id( $data['background-image'] );
@@ -463,7 +463,7 @@ class TTFMAKE_Section_Definitions {
 			Make()->scripts()->get_css_directory_uri() . '/builder/sections/images/gallery.png',
 			__( 'Display your images in various grid combinations.', 'make' ),
 			array( $this, 'save_gallery' ),
-			'sections/builder-templates/gallery',
+			array( 'sections/builder-templates/gallery', 'sections/builder-templates/gallery-item' ),
 			'sections/front-end-templates/gallery',
 			400,
 			get_template_directory() . '/inc/builder/',
@@ -547,7 +547,7 @@ class TTFMAKE_Section_Definitions {
 					'label'   => __( 'Background color', 'make' ),
 					'name'    => 'background-color',
 					'class'   => 'ttfmake-gallery-background-color ttfmake-configuration-color-picker',
-					'default' => '{{ get("background-color") }}',
+					'default' => '',
 				),
 			)
 		);
@@ -588,8 +588,8 @@ class TTFMAKE_Section_Definitions {
 			}
 		}
 
-		if ( isset( $data['background-image']['image-id'] ) ) {
-			$clean_data['background-image'] = ttfmake_sanitize_image_id( $data['background-image']['image-id'] );
+		if ( isset( $data['background-image'] ) ) {
+			$clean_data['background-image'] = ttfmake_sanitize_image_id( $data['background-image'] );
 		}
 
 		if ( isset( $data['title'] ) ) {
@@ -612,27 +612,36 @@ class TTFMAKE_Section_Definitions {
 			}
 		}
 
-		if ( isset( $data['gallery-item-order'] ) ) {
-			$clean_data['gallery-item-order'] = array_map( array( 'TTFMAKE_Builder_Save', 'clean_section_id' ), explode( ',', $data['gallery-item-order'] ) );
-		}
+		// if ( isset( $data['gallery-item-order'] ) ) {
+		// 	$clean_data['gallery-item-order'] = array_map( array( 'TTFMAKE_Builder_Save', 'clean_section_id' ), explode( ',', $data['gallery-item-order'] ) );
+		// }
 
 		if ( isset( $data['gallery-items'] ) && is_array( $data['gallery-items'] ) ) {
-			foreach ( $data['gallery-items'] as $id => $item ) {
+			$clean_data['gallery-items'] = array();
+
+			foreach ( $data['gallery-items'] as $i => $item ) {
+				// Handle legacy data layout
+				$id = isset( $item['id'] ) ? $item['id']: $i;
+
+				$clean_item_data = array( 'id' => $id );
+
 				if ( isset( $item['title'] ) ) {
-					$clean_data['gallery-items'][ $id ]['title'] = apply_filters( 'title_save_pre', $item['title'] );
+					$clean_item_data['title'] = apply_filters( 'title_save_pre', $item['title'] );
 				}
 
 				if ( isset( $item['link'] ) ) {
-					$clean_data['gallery-items'][ $id ]['link'] = esc_url_raw( $item['link'] );
+					$clean_item_data['link'] = esc_url_raw( $item['link'] );
 				}
 
 				if ( isset( $item['description'] ) ) {
-					$clean_data['gallery-items'][ $id ]['description'] = sanitize_post_field( 'post_content', $item['description'], ( get_post() ) ? get_the_ID() : 0, 'db' );
+					$clean_item_data['description'] = sanitize_post_field( 'post_content', $item['description'], ( get_post() ) ? get_the_ID() : 0, 'db' );
 				}
 
 				if ( isset( $item['image-id'] ) ) {
-					$clean_data['gallery-items'][ $id ]['image-id'] = ttfmake_sanitize_image_id( $item['image-id'] );
+					$clean_item_data['image-id'] = ttfmake_sanitize_image_id( $item['image-id'] );
 				}
+
+				array_push( $clean_data['gallery-items'], $clean_item_data );
 			}
 		}
 
@@ -698,6 +707,14 @@ class TTFMAKE_Section_Definitions {
 		if ( ! in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) ) || ! ttfmake_post_type_supports_builder( get_post_type() ) ) {
 			return;
 		}
+
+		wp_register_script(
+			'ttfmake-sections/js/models/gallery.js',
+			Make()->scripts()->get_js_directory_uri() . '/builder/sections/models/gallery.js',
+			array(),
+			TTFMAKE_VERSION,
+			true
+		);
 
 		wp_register_script(
 			'ttfmake-sections/js/models/gallery-item.js',
@@ -823,6 +840,7 @@ class TTFMAKE_Section_Definitions {
 
 		return array_merge( $deps, array(
 			'ttfmake-sections/js/views/item.js',
+			'ttfmake-sections/js/models/gallery.js',
 			'ttfmake-sections/js/models/gallery-item.js',
 			'ttfmake-sections/js/models/banner.js',
 			'ttfmake-sections/js/models/banner-slide.js',

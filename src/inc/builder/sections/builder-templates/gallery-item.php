@@ -6,7 +6,7 @@
 global $ttfmake_section_data, $ttfmake_is_js_template, $ttfmake_gallery_id;
 $section_name = 'ttfmake-section';
 if ( true === $ttfmake_is_js_template ) {
-	$section_name .= '[{{{ parentID }}}][gallery-items][{{{ id }}}]';
+	$section_name .= "[{{{ get('parentID') }}}][gallery-items][{{{ id }}}]";
 } else {
 	$section_name .= '[' . $ttfmake_section_data['data']['id'] . '][gallery-items][' . $ttfmake_gallery_id . ']';
 }
@@ -18,7 +18,7 @@ $description = ( isset( $ttfmake_section_data['data']['gallery-items'][ $ttfmake
 
 // Set up the combined section + slide ID
 $section_id  = ( isset( $ttfmake_section_data['data']['id'] ) ) ? $ttfmake_section_data['data']['id'] : '';
-$combined_id = ( true === $ttfmake_is_js_template ) ? '{{{ parentID }}}-{{{ id }}}' : $section_id . '-' . $ttfmake_gallery_id;
+$combined_id = ( true === $ttfmake_is_js_template ) ? "{{{ get('parentID') }}}-{{{ id }}}" : $section_id . '-' . $ttfmake_gallery_id;
 $overlay_id  = 'ttfmake-overlay-' . $combined_id;
 ?>
 
@@ -30,14 +30,14 @@ $overlay_id  = 'ttfmake-overlay-' . $combined_id;
 		<div class="sortable-background"></div>
 	</div>
 
-	<?php echo ttfmake_get_builder_base()->add_uploader( $section_name, ttfmake_sanitize_image_id( $image_id ), __( 'Set gallery image', 'make' ) ); ?>
+	<?php echo ttfmake_get_builder_base()->add_uploader( $section_name, ttfmake_sanitize_image_id( $image_id ), __( 'Set gallery image', 'make' ), 'image-url' ); ?>
 
 	<a href="#" class="configure-gallery-item-link ttfmake-overlay-open" title="<?php esc_attr_e( 'Configure item', 'make' ); ?>" data-overlay="#<?php echo $overlay_id; ?>">
 		<span>
 			<?php esc_html_e( 'Configure item', 'make' ); ?>
 		</span>
 	</a>
-	<a href="#" class="edit-content-link edit-gallery-item-link<?php if ( ! empty( $description ) ) : ?> item-has-content<?php endif; ?>" data-textarea="ttfmake-content-<?php echo $combined_id; ?>" title="<?php esc_attr_e( 'Edit content', 'make' ); ?>">
+	<a href="#" class="edit-content-link edit-gallery-item-link{{ get('description') && ' item-has-content' || ''}}" data-textarea="ttfmake-content-<?php echo $combined_id; ?>" title="<?php esc_attr_e( 'Edit content', 'make' ); ?>">
 		<span>
 			<?php esc_html_e( 'Edit content', 'make' ); ?>
 		</span>
@@ -48,7 +48,7 @@ $overlay_id  = 'ttfmake-overlay-' . $combined_id;
 		</span>
 	</a>
 
-	<?php ttfmake_get_builder_base()->add_frame( $combined_id, $section_name . '[description]', $description, false ); ?>
+	<?php ttfmake_get_builder_base()->add_frame( $combined_id, 'description', '', $description, false ); ?>
 
 	<?php
 	global $ttfmake_overlay_class, $ttfmake_overlay_id, $ttfmake_overlay_title;

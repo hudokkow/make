@@ -4,26 +4,31 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.GalleryItemView = Backbone.View.extend({
+	oneApp.GalleryItemView = oneApp.ItemView.extend({
 		template: '',
 		className: 'ttfmake-gallery-item',
 
-		events: {
-			'click .ttfmake-gallery-item-remove': 'removeItem'
+		events: function() {
+			return _.extend({}, oneApp.ItemView.prototype.events, {
+				'click .ttfmake-gallery-item-remove': 'removeItem',
+				'overlayClose': 'onOverlayClose',
+			});
 		},
 
 		initialize: function (options) {
-			this.model = options.model;
-			this.idAttr = 'ttfmake-gallery-item-' + this.model.get('id');
-			this.serverRendered = ( options.serverRendered ) ? options.serverRendered : false;
-			this.template = _.template($('#tmpl-ttfmake-gallery-item').html(), oneApp.templateSettings);
+			this.template = _.template(ttfMakeSectionTemplates['gallery-item']);
 		},
 
 		render: function () {
-			this.$el.html(this.template(this.model.toJSON()))
+			this.$el.html(this.template(this.model))
 				.attr('id', this.idAttr)
 				.attr('data-id', this.model.get('id'));
 			return this;
+		},
+
+		onOverlayClose: function(e, textarea) {
+			this.model.set('description', $(textarea).val());
+			this.$el.trigger('model-item-change');
 		},
 
 		removeItem: function (evt) {

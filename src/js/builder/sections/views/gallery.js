@@ -5,38 +5,101 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 	'use strict';
 
 	oneApp.GalleryView = oneApp.SectionView.extend({
+		itemViews: [],
+
 		events: function() {
 			return _.extend({}, oneApp.SectionView.prototype.events, {
-				'click .ttfmake-gallery-add-item' : 'addGalleryItem',
-				'change .ttfmake-gallery-columns' : 'handleColumns'
+				'click .ttfmake-gallery-add-item' : 'onItemAdd',
+				'model-item-change': 'onItemChange',
+				'change .ttfmake-gallery-columns' : 'handleColumns',
+				'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
+				'keyup .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
+				'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
+				'change .ttfmake-configuration-overlay select': 'updateSelectField',
 			});
 		},
 
-		addGalleryItem : function (evt, params) {
-			evt.preventDefault();
+		updateInputField: function(evt) {
+			var $input				= $(evt.target);
+			var modelAttrName = $input.attr('data-model-attr');
 
-			var view, html;
+			if (typeof modelAttrName !== 'undefined') {
+				this.model.set(modelAttrName, $input.val());
+			}
+		},
 
-			// Create view
-			view = new oneApp.GalleryItemView({
-				model: new oneApp.GalleryItemModel({
-					id: new Date().getTime(),
-					parentID: this.getParentID()
-				})
+		updateCheckbox: function(evt) {
+			var $checkbox = $(evt.target);
+			var modelAttrName = $checkbox.attr('data-model-attr');
+
+			if (typeof modelAttrName !== 'undefined') {
+				if ($checkbox.is(':checked')) {
+					this.model.set(modelAttrName, 1);
+				} else {
+					this.model.set(modelAttrName, 0);
+				}
+			}
+		},
+
+		updateSelectField: function(evt) {
+			var $select = $(evt.target);
+			var modelAttrName = $select.attr('data-model-attr');
+
+			if (typeof modelAttrName !== 'undefined') {
+				this.model.set(modelAttrName, $select.val());
+			}
+		},
+
+		render: function () {
+			oneApp.SectionView.prototype.render.apply(this, arguments);
+
+			var items = this.model.get('gallery-items'),
+					self = this;
+
+			_(items).each(function (itemModel) {
+				var itemView = self.addItem(itemModel);
 			});
 
-			// Append view
-			html = view.render().el;
+			return this;
+		},
+
+		addItem: function(itemModel) {
+			// Create view
+			var itemView = new oneApp.GalleryItemView({
+				model: itemModel
+			});
+
+			var html = itemView.render().el;
 			$('.ttfmake-gallery-items-stage', this.$el).append(html);
 
-			// Only scroll and focus if not triggered by the pseudo event
-			if ( ! params ) {
-				// Scroll to added view and focus first input
-				oneApp.scrollToAddedView(view);
-			}
+			// Store view
+			this.itemViews.push(itemView);
 
-			// Add the section value to the sortable order
-			oneApp.addOrderValue(view.model.get('id'), $('.ttfmake-gallery-item-order', $(view.$el).parents('.ttfmake-gallery-items')));
+			return itemView;
+		},
+
+		onItemAdd : function (evt) {
+			evt.preventDefault();
+
+			var itemModelDefaults = ttfMakeSectionDefaults['gallery-item'] || {};
+			var itemModelAttributes = _(itemModelDefaults).extend({
+				id: new Date().getTime().toString(),
+				parentID: this.getParentID()
+			});
+			var itemModel = new oneApp.GalleryItemModel(itemModelAttributes);
+			var itemView = this.addItem(itemModel);
+			itemView.$el.trigger('view-ready');
+
+			var items = this.model.get('gallery-items');
+			items.push(itemModel);
+			this.model.set('gallery-items', items);
+			this.model.trigger('change');
+
+			oneApp.scrollToAddedView(itemView);
+		},
+
+		onItemChange: function() {
+			this.model.trigger('change');
 		},
 
 		getParentID: function() {
