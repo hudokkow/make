@@ -20,36 +20,12 @@ var oneApp = oneApp || {};
 			'columns-number': 3,
 			'columns': {
 				1: {
-					'id': '',
-					'parentID': '',
-					'image-id': '',
-					'image-link': '',
-					'image-url': '',
-					'content': ''
 				},
 				2: {
-					'id': '',
-					'parentID': '',
-					'image-id': '',
-					'image-link': '',
-					'image-url': '',
-					'content': ''
 				},
 				3: {
-					'id': '',
-					'parentID': '',
-					'image-id': '',
-					'image-link': '',
-					'image-url': '',
-					'content': ''
 				},
 				4: {
-					'id': '',
-					'parentID': '',
-					'image-id': '',
-					'image-link': '',
-					'image-url': '',
-					'content': ''
 				}
 			},
 			'columns-order': ['1','2','3','4'],
@@ -57,6 +33,21 @@ var oneApp = oneApp || {};
 			'parallax-enable': 0,
 			'remove-space-below': 0,
 			'section-json': '{}'
+		},
+
+		parse: function(data) {
+			var attributes = _(data).clone();
+			var sortedColumns = _(attributes['columns']).clone();
+
+			_(attributes['columns-order']).each(function(id, index) {
+				var ourIndex = parseInt(index, 10)+1;
+
+				sortedColumns[ourIndex] = attributes['columns'][id];
+			});
+
+			attributes['columns'] = sortedColumns;
+
+			return attributes;
 		}
 	});
 

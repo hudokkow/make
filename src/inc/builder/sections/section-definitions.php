@@ -179,6 +179,14 @@ class TTFMAKE_Section_Definitions {
 
 		if ( isset( $data['columns'] ) && is_array( $data['columns'] ) ) {
 			foreach ( $data['columns'] as $id => $item ) {
+				if ( isset( $item['id'] ) ) {
+					$clean_data['columns'][ $id ]['id'] = $item['id'];
+				}
+				
+				if ( isset( $item['parentID'] ) ) {
+					$clean_data['columns'][ $id ]['parentID'] = $item['parentID'];
+				}
+
 				if ( isset( $item['title'] ) ) {
 					$clean_data['columns'][ $id ]['title'] = apply_filters( 'title_save_pre', $item['title'] );
 				}

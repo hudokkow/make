@@ -5,6 +5,8 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 	'use strict';
 
 	oneApp.TextView = oneApp.SectionView.extend({
+		itemViews: [],
+		
 		events: function() {
 			return _.extend({}, oneApp.SectionView.prototype.events, {
 				'change .ttfmake-text-columns' : 'handleColumns',
@@ -19,28 +21,24 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		},
 
 		render: function() {
-			var self = this;
-			var modelColumns = self.model.get('columns');
-			var columnsOrder = self.model.get('columns-order');
-			var sortedColumns = {1:{}, 2:{}, 3:{}, 4:{}};
-
-			_(columnsOrder).each(function(id, index) {
-				console.log(index+1+':'+id);
-				sortedColumns[index+1] = modelColumns[id];
-			});
-
-			this.model.set('columns', sortedColumns);
-
+			var modelColumns = _(this.model.get('columns'));
+			var dataColumns = _(modelColumns).clone();
+			
 			oneApp.SectionView.prototype.render.apply(this, arguments);
 
-			_(sortedColumns).each(function(columnModel, index) {
+			var self = this;
+
+			_(modelColumns).each(function(columnModel, index) {
+				var ourIndex = parseInt(index, 10);
+
 				var textItemModelDefaults = {
+					'id': '',
+					'parentID': '',
 					'image-link': '',
 					'image-id': '',
 					'image-url': '',
 					'title': '',
-					'content': '',
-					'index': ''
+					'content': ''
 				};
 
 				var textItemModelAttributes = _(textItemModelDefaults).extend({
@@ -52,22 +50,23 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				textItemModelAttributes = _(textItemModelAttributes).extend(columnModel);
 
 				var textItemModel = new oneApp.TextItemModel(textItemModelAttributes);
-				var textItemElSelector = '.ttfmake-text-column[data-id='+index+']';
+				var textItemElSelector = '.ttfmake-text-column[data-id='+ourIndex+']';
 
-				// set TextItemModel attributes to matching model in TextModel
-				sortedColumns[index] = textItemModel.attributes;
+				dataColumns[ourIndex] = textItemModel.attributes;
 
 				// create view
-				self['textItemView'+index] = new oneApp.TextItemView({
+				var itemView = new oneApp.TextItemView({
 					model: textItemModel,
 					elSelector: textItemElSelector
 				});
 
 				// set view element and render
-				self['textItemView'+index].setElement(self.$(textItemElSelector)).render();
+				itemView.setElement(self.$(textItemElSelector)).render();
+
+				self.itemViews.push(itemView);
 			});
 
-			self.model.set('columns', sortedColumns);
+			self.model.set('columns', dataColumns);
 
 			return this;
 		},
@@ -138,15 +137,15 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		},
 
 		onTextItemChange: function(evt) {
-			console.log(evt);
+			this.model.set('columns-order', ["1", "2", "3", "4"]);
 			this.model.trigger('change');
 		},
 
 		initializeColumnsSortables: function() {
-			var $selector = $('.ttfmake-text-columns-stage', this.$el);
+			var $sortableSelector = $('.ttfmake-text-columns-stage', this.$el);
 			var self = this;
 
-			$selector.sortable({
+			$sortableSelector.sortable({
 				handle: '.ttfmake-sortable-handle',
 				placeholder: 'sortable-placeholder',
 				forcePlaceholderSizeType: true,
@@ -156,15 +155,44 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 					var $item = $(ui.item.get(0)),
 						$stage = $item.parents('.ttfmake-text-columns-stage');
 
+					/**
+					 * Make Plus feature from here
+					 */
+					var addClass;
+
+					// If text item, potentially add class to stage
+					if ($item.hasClass('ttfmake-text-column')) {
+						if ($item.hasClass('ttfmake-column-width-two-thirds')) {
+							addClass = 'current-item-two-thirds';
+						} else if ($item.hasClass('ttfmake-column-width-one-third')) {
+							addClass = 'current-item-one-third';
+						} else if ($item.hasClass('ttfmake-column-width-one-fourth')) {
+							addClass = 'current-item-one-fourth';
+						} else if ($item.hasClass('ttfmake-column-width-three-fourths')) {
+							addClass = 'current-item-three-fourths';
+						} else if ($item.hasClass('ttfmake-column-width-one-half')) {
+							addClass = 'current-item-one-half';
+						}
+						
+						$stage.addClass(addClass);
+					}
+
 					$('.sortable-placeholder', $stage).height($item.height()).css({
 						'flex': $item.css('flex'),
 						'-webkit-flex': $item.css('-webkit-flex')
-					});;
+					});
 				},
 				stop: function(event, ui) {
-					var $item = $(ui.item.get(0));
+					var $item = $(ui.item.get(0)),
+						$stage = $item.parents('.ttfmake-text-columns-stage');
 
-					console.log(self.$el.attr('data-id') + '-' + $item.attr('data-id'));
+					var i = 1;
+
+					$('.ttfmake-text-column', $stage).each(function() {
+						$(this).removeClass('ttfmake-text-column-position-1 ttfmake-text-column-position-2 ttfmake-text-column-position-3 ttfmake-text-column-position-4')
+							.addClass('ttfmake-text-column-position-' + i);
+						i++;
+					});
 
 					var ids = $(this).sortable('toArray', {attribute: 'data-id'});
 					self.$el.trigger('columns-sort', [ids]);
@@ -172,80 +200,4 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			});
 		}
 	});
-
-	// Makes gallery items sortable
-	/*oneApp.initializeTextColumnSortables = function(view) {
-		var $selector;
-		view = view || '';
-
-		if (view.$el) {
-			$selector = $('.ttfmake-text-columns-stage', view.$el);
-		} else {
-			$selector = $('.ttfmake-text-columns-stage');
-		}
-
-		$selector.sortable({
-			handle: '.ttfmake-sortable-handle',
-			placeholder: 'sortable-placeholder',
-			forcePlaceholderSizeType: true,
-			distance: 2,
-			tolerance: 'pointer',
-			zIndex: 99999,
-			start: function (event, ui) {
-				// Set the height of the placeholder to that of the sorted item
-				var $item = $(ui.item.get(0)),
-					$stage = $item.parents('.ttfmake-text-columns-stage'),
-					addClass = '';
-
-				// If text item, potentially add class to stage
-				if ($item.hasClass('ttfmake-text-column')) {
-					if ($item.hasClass('ttfmake-column-width-two-thirds')) {
-						addClass = 'current-item-two-thirds';
-					} else if ($item.hasClass('ttfmake-column-width-one-third')) {
-						addClass = 'current-item-one-third';
-					} else if ($item.hasClass('ttfmake-column-width-one-fourth')) {
-						addClass = 'current-item-one-fourth';
-					} else if ($item.hasClass('ttfmake-column-width-three-fourths')) {
-						addClass = 'current-item-three-fourths';
-					} else if ($item.hasClass('ttfmake-column-width-one-half')) {
-						addClass = 'current-item-one-half';
-					}
-
-					$stage.addClass(addClass);
-				}
-
-				$('.sortable-placeholder', $stage)
-					.height(parseInt($item.height(), 10) - 2) // -2 to account for placeholder border
-					.css({
-						'flex': $item.css('flex'),
-						'-webkit-flex': $item.css('-webkit-flex')
-					});
-			},
-			stop: function (event, ui) {
-				var $item = $(ui.item.get(0)),
-					$section = $item.parents('.ttfmake-section'),
-					$stage = $('.ttfmake-section-body', $section),
-					$columnsStage = $item.parents('.ttfmake-text-columns-stage'),
-					$orderInput = $('.ttfmake-text-columns-order', $stage),
-					id = $section.attr('data-id'),
-					column = $item.attr('data-id'),
-					i;
-
-				var ids = $(this).sortable('toArray', {attribute: 'data-id'});
-				self.$el.trigger('text-sort', [ids]);
-
-				// Label the columns according to the position they are in
-				i = 1;
-				$('.ttfmake-text-column', $stage).each(function(){
-					$(this)
-						.removeClass('ttfmake-text-column-position-1 ttfmake-text-column-position-2 ttfmake-text-column-position-3 ttfmake-text-column-position-4')
-						.addClass('ttfmake-text-column-position-' + i);
-					i++;
-				});
-
-				// Remove the temporary classes from stage
-				$columnsStage.removeClass('current-item-two-thirds current-item-one-third current-item-one-fourth current-item-three-fourths current-item-one-half');
-			}
-		});
-	};*/
 })(window, jQuery, _, oneApp, $oneApp);

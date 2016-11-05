@@ -63,7 +63,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 			200 => array(
 				'label'              => __( 'Edit text column', 'make' ),
 				'href'               => '#',
-				'class'              => 'edit-content-link edit-text-column-link' . $item_has_content,
+				'class'              => 'edit-content-link edit-text-column-link {{ (get("columns")['. $i .']["content"]) ? "item-has-content" : "" }}',
 				'title'              => __( 'Edit content', 'make' ),
 				'other-a-attributes' => 'data-textarea="' . esc_attr( $textarea_id ) . '" data-iframe="' . esc_attr( $iframe_id ) . '"',
 			),
