@@ -51,7 +51,7 @@ var oneApp = oneApp || {};
 			var $stage = this.$el.parents('.ttfmake-banner-slides'),
 				$orderInput = $('.ttfmake-banner-slide-order', $stage);
 
-			oneApp.removeOrderValue(this.model.get('id'), $orderInput);
+			// oneApp.removeOrderValue(this.model.get('id'), $orderInput);
 
 			// Fade and slide out the section, then cleanup view
 			this.$el.animate({
