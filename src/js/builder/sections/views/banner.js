@@ -53,6 +53,24 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			}
 		},
 
+		render: function () {
+			oneApp.SectionView.prototype.render.apply(this, arguments);
+
+			var slides = this.model.get('banner-slides'),
+					self = this;
+
+			if (slides.length == 0) {
+				$('.ttfmake-add-slide', this.$el).trigger('click', {type: 'pseudo'});
+				return this;
+			}
+
+			_(slides).each(function (slideModel) {
+				var slideView = self.addSlide(slideModel);
+			});
+
+			return this;
+		},
+
 		onViewReady: function(e) {
 			e.stopPropagation();
 
@@ -83,28 +101,10 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.model.set('banner-slides', _(slides).without(slideView.model));
 		},
 
-		render: function () {
-			oneApp.SectionView.prototype.render.apply(this, arguments);
-
-			var slides = this.model.get('banner-slides'),
-					self = this;
-
-			if (slides.length == 0) {
-				$('.ttfmake-add-slide', this.$el).trigger('click', {type: 'pseudo'});
-				return this;
-			}
-
-			_(slides).each(function (slideModel) {
-				var slideView = self.addSlide(slideModel);
-			});
-
-			return this;
-		},
-
 		addSlide: function(slideModel) {
 			// Build the view
 			var slideView = new oneApp.BannerSlideView({
-				model: slideModel,
+				model: slideModel
 			});
 
 			// Append view
@@ -117,7 +117,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			return slideView;
 		},
 
-		onSlideAdd: function (evt, params) {
+		onSlideAdd: function (evt) {
 			evt.preventDefault();
 
 			var slideModelDefaults = ttfMakeSectionDefaults['banner-item'] || {};
@@ -132,6 +132,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			var slides = this.model.get('banner-slides');
 			slides.push(slideModel);
 			this.model.set('banner-slides', slides);
+			this.model.trigger('change');
 
 			oneApp.scrollToAddedView(slideView);
 		},

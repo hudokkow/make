@@ -12,7 +12,6 @@ var oneApp = oneApp || {};
 			return _.extend({}, oneApp.ItemView.prototype.events, {
 				'click .ttfmake-banner-slide-remove': 'onSlideRemove',
 				'click .ttfmake-banner-slide-toggle': 'toggleSection',
-				'click .ttfmake-media-uploader-add': 'onMediaOpen',
 				'overlayClose': 'onOverlayClose',
 				'color-picker-change': 'onColorPickerChange',
 				'view-ready': 'onViewReady',
