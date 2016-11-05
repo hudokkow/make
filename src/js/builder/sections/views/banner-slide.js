@@ -30,8 +30,6 @@ var oneApp = oneApp || {};
 		},
 
 		onViewReady: function(e) {
-			e.stopPropagation();
-
 			oneApp.initColorPicker(this);
 		},
 
