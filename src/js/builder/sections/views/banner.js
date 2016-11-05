@@ -16,7 +16,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
 				'change .ttfmake-configuration-overlay select': 'updateSelectField',
 				'view-ready': 'onViewReady',
-				'slide-sort': 'onSlideSort',
+				'item-sort': 'onSlideSort',
 				'slide-remove': 'onSlideRemove',
 				'color-picker-change': 'onColorPickerChange'
 			});
@@ -74,8 +74,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		onViewReady: function(e) {
 			e.stopPropagation();
 
-			this.initializeSlideSortables();
+			this.initializeSortables();
 			oneApp.initColorPicker(this);
+
 			_(this.itemViews).each(function(slideView) {
 				slideView.$el.trigger('view-ready');
 			});
@@ -148,7 +149,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			return parseInt(id, 10);
 		},
 
-		initializeSlideSortables: function() {
+		initializeSortables: function() {
 			var $selector = $('.ttfmake-banner-slides-stage', this.$el);
 			var self = this;
 
@@ -171,7 +172,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 						$orderInput = $('.ttfmake-banner-slide-order', $stage);
 
 					var ids = $(this).sortable('toArray', {attribute: 'data-id'});
-					self.$el.trigger('slide-sort', [ids]);
+					self.$el.trigger('item-sort', [ids]);
 				}
 			});
 		}
