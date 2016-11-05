@@ -49,6 +49,9 @@ class TTFMAKE_Section_Definitions {
 		$this->register_banner_section();
 		$this->register_gallery_section();
 
+		// Add image urls
+		add_filter( 'make_get_section_data', array ( $this, 'decorate_json_section_data' ), 1 );
+
 		// Add the section JS
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 
@@ -129,20 +132,6 @@ class TTFMAKE_Section_Definitions {
 				),
 			)
 		);
-
-		add_filter( 'make_get_section_data', array ( $this, 'get_text_section_data' ), 1 );
-	}
-
-	public function get_text_section_data( $ordered_data ) {
-		foreach ( $ordered_data as $section_id => $section ) {
-			if ( isset( $section['background-image'] ) && ( $image_id = intval( $section['background-image'] ) ) > 0 ) {
-				$image = ttfmake_get_image_src( $image_id, 'large' );
-				$ordered_data[$section_id]['background-image-url'] = $image[0];
-			}
-
-		}
-
-		return $ordered_data;
 	}
 
 	/**
@@ -324,8 +313,6 @@ class TTFMAKE_Section_Definitions {
 				'item' => $this->get_banner_slide_defaults(),
 			)
 		);
-
-		add_filter( 'make_get_section_data', array ( $this, 'get_banner_section_data' ), 1 );
 	}
 
 	private function get_banner_slide_defaults() {
@@ -462,31 +449,6 @@ class TTFMAKE_Section_Definitions {
 
 		return $clean_data;
 	}
-
-	public function get_banner_section_data( $ordered_data ) {
-		foreach ( $ordered_data as $section_id => $section ) {
-			if ( isset( $section['background-image'] ) && ( $image_id = intval( $section['background-image'] ) ) > 0 ) {
-				$image = ttfmake_get_image_src( $image_id, 'large' );
-				$ordered_data[$section_id]['background-image-url'] = $image[0];
-			}
-
-			if ( isset( $section['banner-slides'] ) && is_array( $section['banner-slides'] ) ) {
-				foreach ( $section['banner-slides'] as $s => $slide ) {
-					// Handle legacy data layout
-					$id = isset( $slide['id'] ) ? $slide['id']: $s;
-					$ordered_data[$section_id]['banner-slides'][$s]['id'] = $id;
-
-					if ( isset( $slide['image-id'] ) && ( $image_id = intval( $slide['image-id'] ) ) > 0 ) {
-						$image = ttfmake_get_image_src( $image_id, 'large' );
-						$ordered_data[$section_id]['banner-slides'][$s]['image-url'] = $image[0];
-					}
-				}
-			}
-		}
-
-		return $ordered_data;
-	}
-
 	/**
 	 * Register the gallery section.
 	 *
@@ -675,6 +637,52 @@ class TTFMAKE_Section_Definitions {
 		}
 
 		return $clean_data;
+	}
+
+
+	/**
+	 * Decorate the data with fields required from the builder models.
+	 *
+	 * @since  1.8.0.
+	 *
+	 * @param  array    $ordered_data    The data for the section.
+	 * @return array             		 The decorated data.
+	 */
+	public function decorate_json_section_data( $ordered_data ) {
+		foreach ( $ordered_data as $section_id => $section ) {
+			if ( isset( $section['background-image'] ) && ( $image_id = intval( $section['background-image'] ) ) > 0 ) {
+				$image = ttfmake_get_image_src( $image_id, 'large' );
+				$ordered_data[$section_id]['background-image-url'] = $image[0];
+			}
+
+			if ( isset( $section['banner-slides'] ) && is_array( $section['banner-slides'] ) ) {
+				foreach ( $section['banner-slides'] as $s => $slide ) {
+					// Handle legacy data layout
+					$id = isset( $slide['id'] ) ? $slide['id']: $s;
+					$ordered_data[$section_id]['banner-slides'][$s]['id'] = $id;
+
+					if ( isset( $slide['image-id'] ) && ( $image_id = intval( $slide['image-id'] ) ) > 0 ) {
+						$image = ttfmake_get_image_src( $image_id, 'large' );
+						$ordered_data[$section_id]['banner-slides'][$s]['image-url'] = $image[0];
+					}
+				}
+			}
+
+			if ( isset( $section['gallery-items'] ) && is_array( $section['gallery-items'] ) ) {
+				foreach ( $section['gallery-items'] as $s => $item ) {
+					// Handle legacy data layout
+					$id = isset( $item['id'] ) ? $item['id']: $s;
+					$ordered_data[$section_id]['gallery-items'][$s]['id'] = $id;
+
+					if ( isset( $item['image-id'] ) && ( $image_id = intval( $item['image-id'] ) ) > 0  ) {
+						$image = ttfmake_get_image_src( $image_id, 'large' );
+						$ordered_data[$section_id]['gallery-items'][$s]['image-url'] = $image[0];
+					}
+				}
+			}
+		}
+
+		return $ordered_data;
 	}
 
 	/**
