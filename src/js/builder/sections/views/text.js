@@ -52,7 +52,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				var textItemModel = new oneApp.TextItemModel(textItemModelAttributes);
 				var textItemElSelector = '.ttfmake-text-column[data-id='+ourIndex+']';
 
-				dataColumns[ourIndex] = textItemModel.attributes;
+				dataColumns[ourIndex] = textItemModel;
 
 				// create view
 				var itemView = new oneApp.TextItemView({
@@ -85,6 +85,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				var $this = $(this);
 
 				var id = $this.attr('id').replace('ttfmake-iframe-', '');
+
 				oneApp.initFrame(id, link);
 			});
 		},
@@ -137,7 +138,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		},
 
 		onTextItemChange: function(evt) {
-			this.model.set('columns-order', ["1", "2", "3", "4"]);
 			this.model.trigger('change');
 		},
 
@@ -195,6 +195,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 					});
 
 					var ids = $(this).sortable('toArray', {attribute: 'data-id'});
+
+					self.initFrames();
+
 					self.$el.trigger('columns-sort', [ids]);
 				}
 			});

@@ -48,6 +48,22 @@ var oneApp = oneApp || {};
 			attributes['columns'] = sortedColumns;
 
 			return attributes;
+		},
+
+		toJSON: function() {
+			var json = oneApp.SectionModel.prototype.toJSON.apply(this, arguments);
+			var copyColumns = _(json['columns']).clone();
+
+			_(json['columns']).each(function(column, index) {
+				if (column.hasOwnProperty('attributes')) {
+					console.log('ugh');
+					copyColumns[index] = column.attributes;
+				} else {
+					copyColumns[index] = column;
+				}
+			});
+
+			return json;
 		}
 	});
 
