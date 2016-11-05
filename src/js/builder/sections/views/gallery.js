@@ -18,6 +18,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				'click .ttfmake-gallery-add-item' : 'onItemAdd',
 				'model-item-change': 'onItemChange',
 				'item-sort': 'onItemSort',
+				'item-remove': 'onItemRemove',
 			});
 		},
 
@@ -128,6 +129,11 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 		onItemChange: function() {
 			this.model.trigger('change');
+		},
+
+		onItemRemove: function(e, itemView) {
+			var items = this.model.get('gallery-items');
+			this.model.set('gallery-items', _(items).without(itemView.model));
 		},
 
 		getParentID: function() {
