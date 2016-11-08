@@ -151,13 +151,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 				'label'   => __( 'Enter column title', 'make' ),
 				'default' => '{{ get("columns")['. $i .']["title"] }}',				
 				'class'   => 'ttfmake-configuration-title',
-			),
-			200 => array(
-				'type'    => 'text',
-				'name'    => 'image-link',
-				'label'   => __( 'Image link URL', 'make' ),
-				'default' => '{{ get("columns")['. $i .']["image-link"] }}',
-			),
+			)
 		) );
 
 		// Sort the config in case 3rd party code added another input
@@ -172,6 +166,13 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 				$output       .= ttfmake_create_input( $column_name, $input, $section_data );
 			}
 		}
+
+		$image_link_input_name = $section_id . '[columns][' . $i . '][image-link]';
+
+		$output .= '<div class="ttfmake-configuration-overlay-input-wrap">'; 
+		$output .= '<label for="' . $image_link_input_name . '">' . __( 'Image link URL', 'make' ) . '</label>';
+		$output .= '<input type="text" name="' . $image_link_input_name . '" id="' . $image_link_input_name . '" value="{{ get("columns")[' . $i . ']["image-link"] }}" data-model-attr="image-link">';
+		$output .= '</div>';
 
 		echo $output;
 
