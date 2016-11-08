@@ -410,18 +410,14 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 	$('body').on('click', '.ttfmake-remove-image-from-modal', function(evt){
 		evt.preventDefault();
 
-		var $parent = oneApp.$currentPlaceholder.parents('.ttfmake-uploader'),
-			$input = $('.ttfmake-media-uploader-value', $parent);
+		var $parent = oneApp.$currentPlaceholder.parents('.ttfmake-uploader');
 
 		// Remove the image
 		oneApp.$currentPlaceholder.css('background-image', '');
 		$parent.removeClass('ttfmake-has-image-set');
 
-		// Remove the value from the input
-		$input.removeAttr('value');
-
-		// Update section JSON after removing image
-		oneApp.updateSectionJSON();
+		// Trigger event on the uploader to propagate it to calling view
+		$parent.trigger('mediaRemoved')
 
 		wp.media.frames.frame.close();
 	});

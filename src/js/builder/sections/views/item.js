@@ -8,6 +8,7 @@ var oneApp = oneApp || {};
 			events: {
 				'click .ttfmake-media-uploader-add': 'onMediaOpen',
 				'mediaSelected': 'onMediaSelected',
+				'mediaRemoved': 'onMediaRemoved',
 				'click .edit-content-link': 'onContentEdit',
 				'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 				'keyup .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
@@ -65,6 +66,13 @@ var oneApp = oneApp || {};
 				e.stopPropagation();
 				this.model.set('image-id', attachment.id);
 				this.model.set('image-url', attachment.url);
+				this.$el.trigger('model-item-change');
+			},
+
+			onMediaRemoved: function(e) {
+				e.stopPropagation();
+				this.model.unset('image-id');
+				this.model.unset('image-url');
 				this.$el.trigger('model-item-change');
 			},
 

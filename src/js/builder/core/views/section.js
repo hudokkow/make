@@ -23,6 +23,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			'click .ttfmake-overlay-open': 'openConfigurationOverlay',
 			'click .ttfmake-overlay-close': 'closeConfigurationOverlay',
 			'mediaSelected': 'onMediaSelected',
+			'mediaRemoved': 'onMediaRemoved',
 		},
 
 		initialize: function (options) {
@@ -133,6 +134,13 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		onMediaSelected: function(e, attachment) {
 			this.model.set('background-image', attachment.id);
 			this.model.set('background-image-url', attachment.url);
+		},
+
+		onMediaRemoved: function(e) {
+			e.stopPropagation();
+
+			this.model.unset('background-image');
+			this.model.unset('background-image-url');
 		},
 
 		openConfigurationOverlay: function (evt) {
