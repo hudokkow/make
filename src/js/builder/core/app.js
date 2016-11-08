@@ -66,7 +66,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		// Set the val of the input
 		$input.val(order);
 	};
-/*
+
 	oneApp.addOrderValue = function (id, $input) {
 		var currentOrder = $input.val(),
 			currentOrderArray;
@@ -96,7 +96,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 		oneApp.setOrder(currentOrderArray, $input);
 	};
-*/
+
 	oneApp.initViews = function () {
 		var models = [];
 
