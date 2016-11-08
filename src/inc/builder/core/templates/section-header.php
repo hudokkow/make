@@ -47,9 +47,7 @@ $links = apply_filters( 'make_builder_section_links', $links );
 ksort( $links );
 ?>
 
-<?php if ( ! isset( $ttfmake_is_js_template ) || true !== $ttfmake_is_js_template ) : ?>
-<div class="ttfmake-section <?php if ( isset( $ttfmake_section_data['data']['state'] ) && 'open' === $ttfmake_section_data['data']['state'] ) echo 'ttfmake-section-open'; ?> ttfmake-section-<?php echo esc_attr( $ttfmake_section_data['section']['id'] ); ?>" id="<?php echo 'ttfmake-section-' . esc_attr( $ttfmake_section_data['data']['id'] ); ?>" data-id="<?php echo esc_attr( $ttfmake_section_data['data']['id'] ); ?>" data-section-type="<?php echo esc_attr( $ttfmake_section_data['section']['id'] ); ?>">
-<?php endif; ?>
+<div class="ttfmake-section{{ get('state') == 'open' && ' ttfmake-section-open' || ''}} ttfmake-section-{{ 'id' }}" id="ttfmake-section-{{ 'id' }}" data-id="{{ 'id' }}" data-section-type="{{ 'section-type' }}">
 	<?php
 	/**
 	 * Execute code before the section header is displayed.

@@ -33,14 +33,16 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			// Ensure that a model exists for the section, otherwise use the generic model
 			var modelClass = sectionType.charAt(0).toUpperCase() + sectionType.slice(1) + 'Model';
 			modelClass = (true === oneApp.hasOwnProperty(modelClass)) ? modelClass : 'SectionModel';
+			modelClass = oneApp[modelClass];
 
-			var modelDefaults = ttfMakeSectionDefaults[sectionType] || {};
-			var modelAttributes = _(modelDefaults).extend({
-				'section-type': sectionType,
-				'id': new Date().getTime()
-			});
+			var sectionDefaults = ttfMakeSectionDefaults[sectionType] || {};
+			var modelAttributes = _(modelClass.prototype.defaults)
+				.extend(sectionDefaults, {
+					'section-type': sectionType,
+					'id': new Date().getTime()
+				});
 
-			var model = new oneApp[modelClass](modelAttributes);
+			var model = new modelClass(modelAttributes);
 			oneApp.sections.add(model);
 		},
 

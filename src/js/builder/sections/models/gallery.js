@@ -7,6 +7,7 @@ var oneApp = oneApp || {};
 	oneApp.GalleryModel = oneApp.SectionModel.extend({
 		defaults: {
 			'section-type': 'gallery',
+			'state': 'open',
 			'gallery-items': [],
 		},
 

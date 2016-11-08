@@ -6,7 +6,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 	oneApp.SectionView = Backbone.View.extend({
 		template: '',
-		className: 'ttfmake-section ttfmake-section-open',
+		className: 'ttfmake-section',
 		$headerTitle: '',
 		$titleInput: '',
 		$titlePipe: '',
@@ -69,12 +69,12 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			if ($section.hasClass('ttfmake-section-open')) {
 				$sectionBody.slideUp(oneApp.options.closeSpeed, function() {
 					$section.removeClass('ttfmake-section-open');
-					self.model.set({'state': 'closed'});
+					self.model.set('state', 'closed');
 				});
 			} else {
 				$sectionBody.slideDown(oneApp.options.openSpeed, function() {
 					$section.addClass('ttfmake-section-open');
-					self.model.set({'state': 'open'});
+					self.model.set('state', 'open');
 				});
 			}
 		},

@@ -7,6 +7,7 @@ var oneApp = oneApp || {};
 	oneApp.BannerModel = oneApp.SectionModel.extend({
 		defaults: {
 			'section-type': 'banner',
+			'state': 'open',
 			'banner-slides': [],
 		},
 
