@@ -102,7 +102,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			var itemModelDefaults = ttfMakeSectionDefaults['gallery-item'] || {};
 			var itemModelAttributes = _(itemModelDefaults).extend({
 				id: new Date().getTime().toString(),
-				parentID: this.getParentID()
+				parentID: this.model.id
 			});
 			var itemModel = new oneApp.GalleryItemModel(itemModelAttributes);
 			var itemView = this.addItem(itemModel);
@@ -136,12 +136,12 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.model.set('gallery-items', _(items).without(itemView.model));
 		},
 
-		getParentID: function() {
-			var idAttr = this.$el.attr('id'),
-				id = idAttr.replace('ttfmake-section-', '');
+		// getParentID: function() {
+		// 	var idAttr = this.$el.attr('id'),
+		// 		id = idAttr.replace('ttfmake-section-', '');
 
-			return parseInt(id, 10);
-		},
+		// 	return parseInt(id, 10);
+		// },
 
 		initializeSortables: function() {
 			var $selector = $('.ttfmake-gallery-items-stage', this.$el);

@@ -122,7 +122,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			var slideModelDefaults = ttfMakeSectionDefaults['banner-item'] || {};
 			var slideModelAttributes = _(slideModelDefaults).extend({
 				id: new Date().getTime().toString(),
-				parentID: this.getParentID()
+				parentID: this.model.id
 			});
 			var slideModel = new oneApp.BannerSlideModel(slideModelAttributes);
 			var slideView = this.addSlide(slideModel);

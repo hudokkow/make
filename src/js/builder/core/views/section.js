@@ -43,16 +43,17 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.template = _.template(ttfMakeSectionTemplates[this.model.get('section-type')]);
 
 			this.model.bind('change', function() {
+				console.log(this.model.toJSON())
 				$('[name^="ttfmake-section-json"]', this.$el).val(JSON.stringify(this.model.toJSON()));
 			}, this);
 		},
 
 		render: function () {
-			this.$el.html(this.template(this.model))
-				.addClass('ttfmake-section-' + this.model.get('section-type'))
-				.attr('id', this.idAttr)
-				.attr('data-id', this.model.get('id'))
-				.attr('data-section-type', this.model.get('section-type'));
+			this.$el.html(this.template(this.model));
+				// .addClass('ttfmake-section-' + this.model.get('section-type'))
+				// .attr('id', this.idAttr)
+				// .attr('data-id', this.model.get('id'))
+				// .attr('data-section-type', this.model.get('section-type'));
 
 			return this;
 		},
