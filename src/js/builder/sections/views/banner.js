@@ -72,8 +72,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		},
 
 		onViewReady: function(e) {
-			e.stopPropagation();
-
 			this.initializeSortables();
 			oneApp.initColorPicker(this);
 
