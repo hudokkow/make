@@ -74,11 +74,12 @@ var oneApp = oneApp || {};
 
 			ids.each(function(id, index) {
 				var intIndex = parseInt(index, 10)+1;
+				var desiredColumn = _.findWhere(columns, {id: id});
 
 				if (columns.hasOwnProperty('attributes')) {
-					orderedColumns[intIndex] = columns[id].attributes;
+					orderedColumns[intIndex] = desiredColumn.attributes;
 				} else {
-					orderedColumns[intIndex] = columns[id];
+					orderedColumns[intIndex] = desiredColumn;
 				}
 			});
 

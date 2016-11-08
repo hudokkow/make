@@ -194,7 +194,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 						i++;
 					});
 
-					var ids = $(this).sortable('toArray', {attribute: 'data-id'});
+					var ids = $(this).sortable('toArray', {attribute: 'data-model-id'});
 
 					self.initFrames();
 
