@@ -93,7 +93,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		onColumnsSort: function(e, ids) {
 			e.stopPropagation();
 
-			this.model.set('columns-order', ids);
+			this.model.updateOrder(ids);
 		},
 
 		handleColumns : function (evt) {

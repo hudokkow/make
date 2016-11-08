@@ -46,6 +46,7 @@ var oneApp = oneApp || {};
 			});
 
 			attributes['columns'] = sortedColumns;
+			attributes['columns-order'] = ['1', '2', '3', '4'];
 
 			return attributes;
 		},
@@ -56,7 +57,6 @@ var oneApp = oneApp || {};
 
 			_(json['columns']).each(function(column, index) {
 				if (column.hasOwnProperty('attributes')) {
-					console.log('ugh');
 					copyColumns[index] = column.attributes;
 				} else {
 					copyColumns[index] = column;
@@ -64,6 +64,25 @@ var oneApp = oneApp || {};
 			});
 
 			return json;
+		},
+
+		updateOrder: function(ids) {
+			var ids = _(ids);			
+			var json = oneApp.SectionModel.prototype.toJSON.apply(this, arguments);
+			var columns = _(json['columns']).clone();
+			var orderedColumns = {1: {}, 2: {}, 3: {}, 4: {}};
+
+			ids.each(function(id, index) {
+				var intIndex = parseInt(index, 10)+1;
+
+				if (columns.hasOwnProperty('attributes')) {
+					orderedColumns[intIndex] = columns[id].attributes;
+				} else {
+					orderedColumns[intIndex] = columns[id];
+				}
+			});
+
+			this.set('columns', orderedColumns);
 		}
 	});
 
