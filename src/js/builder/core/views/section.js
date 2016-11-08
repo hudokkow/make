@@ -195,9 +195,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				$overlay = $this.parents('.ttfmake-overlay');
 
 			$overlay.hide();
-
-			oneApp.setActiveSectionID(this.model.get('id'));
-			oneApp.updateSectionJSON();
 		}
 	});
 })(window, Backbone, jQuery, _, oneApp, $oneApp);

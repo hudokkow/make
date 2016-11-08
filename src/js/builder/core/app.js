@@ -65,11 +65,8 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 		// Set the val of the input
 		$input.val(order);
-
-		oneApp.setActiveSectionID(sectionID);
-		oneApp.updateSectionJSON();
 	};
-
+/*
 	oneApp.addOrderValue = function (id, $input) {
 		var currentOrder = $input.val(),
 			currentOrderArray;
@@ -99,7 +96,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 		oneApp.setOrder(currentOrderArray, $input);
 	};
-
+*/
 	oneApp.initViews = function () {
 		var models = [];
 
@@ -205,20 +202,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		}
 	};
 
-	oneApp.setActiveSectionID = function(sectionID) {
-		if (sectionID) {
-			oneApp.activeSectionID = sectionID;
-		}
-	};
-
-	oneApp.getActiveSectionID = function() {
-		if (oneApp.hasOwnProperty('activeSectionID')) {
-			return oneApp.activeSectionID;
-		} else {
-			return '';
-		}
-	};
-
 	oneApp.isTextActive = function() {
 		return oneApp.cache.$makeEditor.hasClass('html-active');
 	};
@@ -280,21 +263,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		});
 	};
 
-	oneApp.updateSectionJSON = function() {
-		if (oneApp.hasOwnProperty('activeSectionID')) {
-			var sectionModel = oneApp.sections.get(oneApp.activeSectionID);
-			$('[name="ttfmake-section-json['+oneApp.activeSectionID+']"]').val(JSON.stringify(sectionModel.toJSON()));
-			// console.log(oneApp.activeSectionID, sectionModel.toJSON());
-		}
-
-		var serialized = $('[name*="ttfmake-section['+sectionID+']"]').serializeJSON();
-		var serializedTtfMakeSectionContent = serialized['ttfmake-section'][sectionID];
-		var serializedCleaned = serializedTtfMakeSectionContent;
-		$('[name="ttfmake-section-json['+sectionID+']"]').val(JSON.stringify(serializedCleaned));
-
-		return false;
-	};
-
 	oneApp.initUploader = function (view) {
 		var $uploader = $('.ttfmake-uploader', view.$el),
 				$placeholder = $('.ttfmake-media-uploader-placeholder:last', view.$el),
@@ -302,7 +270,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 				$add = $('.ttfmake-media-uploader-set-link:last', view.$el);
 
 		oneApp.$currentPlaceholder = $placeholder;
-		oneApp.setActiveSectionID(view.model.get('id'));
 
 		// If the media frame already exists, reopen it.
 		if (window['frame'] && 'function' === typeof frame.open) {
@@ -389,20 +356,20 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 				var sectionID = $this.attr('data-id');
 
 				// check if it's widgetized
-				if ($this.find('.ttfmp-widget-area-overlay-region-active').length) {
+				/*if ($this.find('.ttfmp-widget-area-overlay-region-active').length) {
 					oneApp.setActiveSectionID(sectionID);
 					oneApp.updateSectionJSON();
-				}
+				}*/
 			});
 
 			$('body').on('click', '.ttfmp-revert-widget-area', function() {
 				var $this = $(this);
 				var sectionID = $this.closest('.ttfmake-section').attr('data-id');
 
-				if (sectionID) {
+				/*if (sectionID) {
 					oneApp.setActiveSectionID(sectionID);
 					oneApp.updateSectionJSON();
-				}
+				}*/
 			});
 		}
 	});
