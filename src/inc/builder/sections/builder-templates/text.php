@@ -5,12 +5,10 @@
 
 ttfmake_load_section_header();
 
-global $ttfmake_section_data, $ttfmake_is_js_template;
-$section_id     = ( isset( $ttfmake_section_data['data']['id'] ) ) ? $ttfmake_section_data['data']['id'] : '{{ get("id") }}';
+global $ttfmake_section_data;
+$section_id     = '{{ get("id") }}';
 $section_name   = 'ttfmake-section[{{ get("id") }}]';
-$columns_number = '{{ get("columns-number") }}';
-$section_order  = ( ! empty( $ttfmake_section_data['data']['columns-order'] ) ) ? $ttfmake_section_data['data']['columns-order'] : range(1, 4);
-$columns_class  = '{{ get("columns-number") }}';
+$section_order  = range(1, 4);
 
 /**
  * Execute code before the columns select input is displayed.
@@ -38,7 +36,7 @@ do_action( 'make_section_text_after_columns_select', $ttfmake_section_data );
  * @param array    $ttfmake_section_data    The data for the section.
  */
 do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
-<div class="ttfmake-text-columns-stage ttfmake-text-columns-<?php echo $columns_class; ?>">
+<div class="ttfmake-text-columns-stage ttfmake-text-columns-{{ get('columns-number') }}">
 	<?php $j = 1; foreach ( $section_order as $key => $i ) : ?>
 	<?php
 		$column_name = $section_name . '[columns][' . $i . ']';
@@ -49,8 +47,6 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 		$image_id    = '{{ get("columns")['. $i .']["image-id"] }}';
 		$title       = '{{ get("columns")['. $i .']["title"] }}';		
 		$content     = '{{ get("columns")['. $i .']["content"] }}';
-
-		$item_has_content = ( ! empty( $content ) ) ? ' _item-has-content' : '';
 
 		$column_buttons = array(
 			100 => array(
@@ -167,7 +163,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 			}
 		}
 
-		$image_link_input_name = $section_id . '[columns][' . $i . '][image-link]';
+		$image_link_input_name = $section_name . '[columns][' . $i . '][image-link]';
 
 		$output .= '<div class="ttfmake-configuration-overlay-input-wrap">'; 
 		$output .= '<label for="' . $image_link_input_name . '">' . __( 'Image link URL', 'make' ) . '</label>';
