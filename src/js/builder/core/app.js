@@ -45,6 +45,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 					$frames = $('iframe', $item);
 
 				$item.css('-webkit-transform', '');
+
 				oneApp.setOrder( $(this).sortable('toArray', {attribute: 'data-id'}), oneApp.cache.$sectionOrder );
 
 				$.each($frames, function() {
