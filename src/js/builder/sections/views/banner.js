@@ -107,7 +107,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			});
 
 			// Append view
-			var html = slideView.render().el;
+			var html = slideView.render().$el.html();
 			$('.ttfmake-banner-slides-stage', this.$el).append(html);
 
 			// Store view
