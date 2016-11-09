@@ -60,7 +60,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 					self = this;
 
 			if (slides.length == 0) {
-				$('.ttfmake-add-slide', this.$el).trigger('click', {type: 'pseudo'});
+				$('.ttfmake-add-slide', this.$el).trigger('click', true);
 				return this;
 			}
 
@@ -116,8 +116,8 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			return slideView;
 		},
 
-		onSlideAdd: function (evt) {
-			evt.preventDefault();
+		onSlideAdd: function (e, pseudo) {
+			e.preventDefault();
 
 			var slideModelDefaults = ttfMakeSectionDefaults['banner-item'] || {};
 			var slideModelAttributes = _(slideModelDefaults).extend({
@@ -133,7 +133,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.model.set('banner-slides', slides);
 			this.model.trigger('change');
 
-			oneApp.scrollToAddedView(slideView);
+			if (!pseudo) {
+				oneApp.scrollToAddedView(slideView);
+			}
 		},
 
 		onColorPickerChange: function(e, data) {

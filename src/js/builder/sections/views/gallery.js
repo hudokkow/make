@@ -61,9 +61,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 			if (items.length == 0) {
 				var $addButton = $('.ttfmake-gallery-add-item', this.$el);
-				$addButton.trigger('click', {type: 'pseudo'});
-				$addButton.trigger('click', {type: 'pseudo'});
-				$addButton.trigger('click', {type: 'pseudo'});
+				$addButton.trigger('click', true);
+				$addButton.trigger('click', true);
+				$addButton.trigger('click', true);
 				return this;
 			}
 
@@ -96,8 +96,8 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			return itemView;
 		},
 
-		onItemAdd : function (evt) {
-			evt.preventDefault();
+		onItemAdd : function (e, pseudo) {
+			e.preventDefault();
 
 			var itemModelDefaults = ttfMakeSectionDefaults['gallery-item'] || {};
 			var itemModelAttributes = _(itemModelDefaults).extend({
@@ -113,7 +113,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.model.set('gallery-items', items);
 			this.model.trigger('change');
 
-			oneApp.scrollToAddedView(itemView);
+			if (!pseudo) {
+				oneApp.scrollToAddedView(itemView);
+			}
 		},
 
 		onItemSort: function(e, ids) {
