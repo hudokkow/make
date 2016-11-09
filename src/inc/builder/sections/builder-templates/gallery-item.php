@@ -10,7 +10,7 @@ $combined_id = "{{ get('parentID') }}-{{ id }}";
 $overlay_id  = "ttfmake-overlay-" . $combined_id;
 ?>
 
-<div class="ttfmake-gallery-item" id="ttfmake-gallery-item-<?php echo esc_attr( $ttfmake_gallery_id ); ?>" data-id="<?php echo esc_attr( $ttfmake_gallery_id ); ?>" data-section-type="gallery-item">
+<div class="ttfmake-gallery-item" id="ttfmake-gallery-item-{{ id }}" data-id="{{ id }}" data-section-type="gallery-item">
 
 	<div title="<?php esc_attr_e( 'Drag-and-drop this item into place', 'make' ); ?>" class="ttfmake-sortable-handle">
 		<div class="sortable-background"></div>

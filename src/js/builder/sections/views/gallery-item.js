@@ -5,8 +5,6 @@ var oneApp = oneApp || {};
 	'use strict';
 
 	oneApp.GalleryItemView = oneApp.ItemView.extend({
-		template: '',
-		className: 'ttfmake-gallery-item',
 
 		events: function() {
 			return _.extend({}, oneApp.ItemView.prototype.events, {
@@ -21,8 +19,7 @@ var oneApp = oneApp || {};
 
 		render: function () {
 			this.$el.html(this.template(this.model))
-				.attr('id', this.idAttr)
-				.attr('data-id', this.model.get('id'));
+
 			return this;
 		},
 
@@ -36,8 +33,6 @@ var oneApp = oneApp || {};
 
 			var $stage = this.$el.parents('.ttfmake-gallery-items'),
 				$orderInput = $('.ttfmake-gallery-item-order', $stage);
-
-			// oneApp.removeOrderValue(this.model.get('id'), $orderInput);
 
 			// Fade and slide out the section, then cleanup view
 			this.$el.animate({

@@ -136,13 +136,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.model.set('gallery-items', _(items).without(itemView.model));
 		},
 
-		// getParentID: function() {
-		// 	var idAttr = this.$el.attr('id'),
-		// 		id = idAttr.replace('ttfmake-section-', '');
-
-		// 	return parseInt(id, 10);
-		// },
-
 		initializeSortables: function() {
 			var $selector = $('.ttfmake-gallery-items-stage', this.$el);
 			var self = this;
