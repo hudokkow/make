@@ -75,7 +75,7 @@
 .ttfmake-text-columns-1 > .ttfmake-text-column > .ttfmake-sortable-handle {
 	display: none;
 }
-.ttfmake-text-columns-1 > .ttfmake-text-column > .column-buttons {
+.ttfmake-text-columns-1 .ttfmake-text-column .column-buttons {
     top: 0;
 }
 /*---------------------------------------------------------
