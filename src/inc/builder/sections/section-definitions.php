@@ -648,10 +648,6 @@ class TTFMAKE_Section_Definitions {
 			}
 		}
 
-		// if ( isset( $data['gallery-item-order'] ) ) {
-		// 	$clean_data['gallery-item-order'] = array_map( array( 'TTFMAKE_Builder_Save', 'clean_section_id' ), explode( ',', $data['gallery-item-order'] ) );
-		// }
-
 		if ( isset( $data['gallery-items'] ) && is_array( $data['gallery-items'] ) ) {
 			$clean_data['gallery-items'] = array();
 
@@ -701,6 +697,18 @@ class TTFMAKE_Section_Definitions {
 			}
 
 			if ( isset( $section['banner-slides'] ) && is_array( $section['banner-slides'] ) ) {
+				if ( isset( $section['banner-slide-order'] ) ) {
+					$ordered_items = array();
+
+					foreach ( $section['banner-slide-order'] as $item_id ) {
+						array_push( $ordered_items, $section['banner-slides'][$item_id] );
+					}
+
+					$ordered_data[$section_id]['banner-slides'] = $ordered_items;
+					$section = $ordered_data[$section_id];
+					unset( $section['banner-slide-order'] );
+				}
+
 				foreach ( $section['banner-slides'] as $s => $slide ) {
 					// Handle legacy data layout
 					$id = isset( $slide['id'] ) ? $slide['id']: $s;
@@ -714,6 +722,18 @@ class TTFMAKE_Section_Definitions {
 			}
 
 			if ( isset( $section['gallery-items'] ) && is_array( $section['gallery-items'] ) ) {
+				if ( isset( $section['gallery-item-order'] ) ) {
+					$ordered_items = array();
+
+					foreach ( $section['gallery-item-order'] as $item_id ) {
+						array_push( $ordered_items, $section['gallery-items'][$item_id] );
+					}
+
+					$ordered_data[$section_id]['gallery-items'] = $ordered_items;
+					$section = $ordered_data[$section_id];
+					unset( $section['gallery-item-order'] );
+				}
+
 				foreach ( $section['gallery-items'] as $s => $item ) {
 					// Handle legacy data layout
 					$id = isset( $item['id'] ) ? $item['id']: $s;
