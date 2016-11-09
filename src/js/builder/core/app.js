@@ -69,33 +69,33 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 	};
 
 	oneApp.addOrderValue = function (id, $input) {
-		var currentOrder = $input.val(),
-			currentOrderArray;
+		// var currentOrder = $input.val(),
+		// 	currentOrderArray;
 
-		if ('' === currentOrder) {
-			currentOrderArray = [id];
-		} else {
-			currentOrderArray = currentOrder.split(',');
-			currentOrderArray.push(id);
-		}
+		// if ('' === currentOrder) {
+		// 	currentOrderArray = [id];
+		// } else {
+		// 	currentOrderArray = currentOrder.split(',');
+		// 	currentOrderArray.push(id);
+		// }
 
-		oneApp.setOrder(currentOrderArray, $input);
+		// oneApp.setOrder(currentOrderArray, $input);
 	};
 
 	oneApp.removeOrderValue = function (id, $input) {
-		var currentOrder = $input.val(),
-			currentOrderArray;
+		// var currentOrder = $input.val(),
+		// 	currentOrderArray;
 
-		if ('' === currentOrder) {
-			currentOrderArray = [];
-		} else {
-			currentOrderArray = currentOrder.split(',');
-			currentOrderArray = _.reject(currentOrderArray, function (item) {
-				return id.toString() === item.toString();
-			});
-		}
+		// if ('' === currentOrder) {
+		// 	currentOrderArray = [];
+		// } else {
+		// 	currentOrderArray = currentOrder.split(',');
+		// 	currentOrderArray = _.reject(currentOrderArray, function (item) {
+		// 		return id.toString() === item.toString();
+		// 	});
+		// }
 
-		oneApp.setOrder(currentOrderArray, $input);
+		// oneApp.setOrder(currentOrderArray, $input);
 	};
 
 	oneApp.initViews = function () {

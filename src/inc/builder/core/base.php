@@ -215,8 +215,19 @@ class TTFMAKE_Builder_Base {
 
 		// Add the sort input
 		$section_order = get_post_meta( $post_local->ID, '_ttfmake-section-ids', true );
-		$section_order = ( ! empty( $section_order ) ) ? implode( ',', $section_order ) : '';
-		echo '<input type="hidden" value="' . esc_attr( $section_order ) . '" name="ttfmake-section-order" id="ttfmake-section-order" />';
+
+		if ( ! empty( $section_order ) ) {
+			$ordered_sections = array();
+
+			foreach ( $section_order as $section_id ) {
+				array_push( $ordered_sections, $section_data[$section_id] );
+			}
+
+			$section_data = $ordered_sections;
+		}
+
+		// $section_order = ( ! empty( $section_order ) ) ? implode( ',', $section_order ) : '';
+		// echo '<input type="hidden" value="' . esc_attr( $section_order ) . '" name="ttfmake-section-order" id="ttfmake-section-order" />';
 
 		// Expose saved sections data to JS
 		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionData', $section_data );

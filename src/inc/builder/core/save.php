@@ -52,7 +52,7 @@ class TTFMAKE_Builder_Save {
 	 */
 	public function __construct() {
 		// Only add filters when the builder is being saved
-		if ( isset( $_POST[ 'ttfmake-builder-nonce' ] ) && wp_verify_nonce( $_POST[ 'ttfmake-builder-nonce' ], 'save' ) && isset( $_POST['ttfmake-section-order'] ) ) {
+		if ( isset( $_POST[ 'ttfmake-builder-nonce' ] ) && wp_verify_nonce( $_POST[ 'ttfmake-builder-nonce' ], 'save' ) ) {
 			// Save the post's meta data
 			add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 
@@ -94,7 +94,7 @@ class TTFMAKE_Builder_Save {
 		}
 
 		// Process and save data
-		if ( isset( $_POST[ 'ttfmake-builder-nonce' ] ) && wp_verify_nonce( $_POST[ 'ttfmake-builder-nonce' ], 'save' ) && isset( $_POST['ttfmake-section-order'] ) ) {
+		if ( isset( $_POST[ 'ttfmake-builder-nonce' ] ) && wp_verify_nonce( $_POST[ 'ttfmake-builder-nonce' ], 'save' ) ) {
 			$this->save_data( $this->get_sanitized_sections(), $post_id );
 		}
 	}
@@ -105,27 +105,15 @@ class TTFMAKE_Builder_Save {
 	 * @since  1.0.0.
 	 *
 	 * @param  array     $sections     The section data submitted to the server.
-	 * @param  string    $order        The comma separated list of the section order.
 	 * @return array                   Array of cleaned section data.
 	 */
-	public function prepare_data( $sections, $order ) {
-		$ordered_sections    = array();
+	public function prepare_data( $sections ) {
 		$clean_sections      = array();
 		$registered_sections = ttfmake_get_sections();
 
-		// Get the order in which to process the sections
-		$order = explode( ',', $order );
-
-		// Sort the sections into the proper order
-		foreach ( $order as $value ) {
-			if ( isset( $sections[ $value ] ) ) {
-				$ordered_sections[ $value ] = $sections[ $value ];
-			}
-		}
-
 		// Call the save callback for each section
-		foreach ( $ordered_sections as $id => $values ) {
-			if ( isset( $registered_sections[ $values['section-type'] ]['save_callback'] ) && true === $this->is_save_callback_callable( $registered_sections[ $values['section-type'] ] ) ) {
+		foreach ( $sections as $section ) {
+			if ( isset( $registered_sections[ $section['section-type'] ]['save_callback'] ) && true === $this->is_save_callback_callable( $registered_sections[ $section['section-type'] ] ) ) {
 				/**
 				 * Filter the prepared data for an individual section.
 				 *
@@ -138,9 +126,10 @@ class TTFMAKE_Builder_Save {
 				 * @param array  $data            The raw section data.
 				 * @param string $section_type    The type of section being handled.
 				 */
-				$clean_sections[ $id ]                 = apply_filters( 'make_prepare_data_section', call_user_func_array( $registered_sections[ $values['section-type'] ]['save_callback'], array( $values ) ), $values, $values['section-type'] );
-				$clean_sections[ $id ]['state']        = ( isset( $values['state'] ) ) ? sanitize_key( $values['state'] ) : 'open';
-				$clean_sections[ $id ]['section-type'] = $values['section-type'];
+				$id = $section['id'];
+				$clean_sections[ $id ]                 = apply_filters( 'make_prepare_data_section', call_user_func_array( $registered_sections[ $section['section-type'] ]['save_callback'], array( $section ) ), $section, $section['section-type'] );
+				$clean_sections[ $id ]['state']        = ( isset( $section['state'] ) ) ? sanitize_key( $section['state'] ) : 'open';
+				$clean_sections[ $id ]['section-type'] = $section['section-type'];
 				$clean_sections[ $id ]['id']           = $id;
 			}
 		}
@@ -152,9 +141,8 @@ class TTFMAKE_Builder_Save {
 		 *
 		 * @param array    $clean_sections    The clean sections.
 		 * @param array    $sections          The raw sections.
-		 * @param array    $order             The order for the sections.
 		 */
-		return apply_filters( 'make_prepare_data', $clean_sections, $sections, $order );
+		return apply_filters( 'make_prepare_data', $clean_sections, $sections );
 	}
 
 	/**
@@ -653,17 +641,15 @@ class TTFMAKE_Builder_Save {
 	 */
 	public function get_sanitized_sections() {
 		if ( empty( $this->_sanitized_sections ) ) {
-			if ( isset( $_POST['ttfmake-section-order'] ) ) {
-				$data = ( isset( $_POST['ttfmake-section-json'] ) ) ? $_POST['ttfmake-section-json'] : array();
+			$data = ( isset( $_POST['ttfmake-section-json'] ) ) ? $_POST['ttfmake-section-json'] : array();
 
-				if ( !empty( $data ) ) {
-					foreach ( $data as $section_id => $section_data ) {
-						$data[$section_id] = json_decode( stripslashes ( $section_data ), true );
-					}
+			if ( !empty( $data ) ) {
+				foreach ( $data as $section_id => $section_data ) {
+					$data[$section_id] = json_decode( stripslashes ( $section_data ), true );
 				}
-
-				$this->_sanitized_sections = $this->prepare_data( $data, $_POST['ttfmake-section-order'] );
 			}
+
+			$this->_sanitized_sections = $this->prepare_data( $data );
 		}
 
 		return $this->_sanitized_sections;
