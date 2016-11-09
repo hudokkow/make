@@ -18,7 +18,8 @@ var oneApp = oneApp || {};
 		},
 
 		render: function () {
-			this.$el.html(this.template(this.model))
+			var html = this.template(this.model)
+			this.setElement(html);
 
 			return this;
 		},

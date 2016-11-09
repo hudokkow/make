@@ -87,7 +87,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				model: itemModel
 			});
 
-			var html = itemView.render().$el.html();
+			var html = itemView.render().el;
 			$('.ttfmake-gallery-items-stage', this.$el).append(html);
 
 			// Store view
