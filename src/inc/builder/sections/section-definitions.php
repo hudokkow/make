@@ -182,7 +182,7 @@ class TTFMAKE_Section_Definitions {
 				if ( isset( $item['id'] ) ) {
 					$clean_data['columns'][ $id ]['id'] = $item['id'];
 				}
-				
+
 				if ( isset( $item['parentID'] ) ) {
 					$clean_data['columns'][ $id ]['parentID'] = $item['parentID'];
 				}
@@ -398,10 +398,6 @@ class TTFMAKE_Section_Definitions {
 			$clean_data['responsive'] = $data['responsive'];
 		}
 
-		// if ( isset( $data['banner-slide-order'] ) ) {
-		// 	$clean_data['banner-slide-order'] = array_map( array( 'TTFMAKE_Builder_Save', 'clean_section_id' ), explode( ',', $data['banner-slide-order'] ) );
-		// }
-
 		if ( isset( $data['background-image'] ) ) {
 			$clean_data['background-image'] = ttfmake_sanitize_image_id( $data['background-image'] );
 		}
@@ -557,8 +553,40 @@ class TTFMAKE_Section_Definitions {
 					'class'   => 'ttfmake-gallery-background-color ttfmake-configuration-color-picker',
 					'default' => '',
 				),
+
+				'item' => $this->get_gallery_item_defaults(),
 			)
 		);
+	}
+
+	private function get_gallery_item_defaults() {
+		/**
+		 * Filter the definitions of the Gallery item configuration inputs.
+		 *
+		 * @since 1.4.0.
+		 *
+		 * @param array    $inputs    The input definition array.
+		 */
+		$inputs = apply_filters( 'make_gallery_item_configuration', array(
+			100 => array(
+				'type'    => 'section_title',
+				'name'    => 'title',
+				'label'   => __( 'Enter item title', 'make' ),
+				'default' => '',
+				'class'   => 'ttfmake-configuration-title',
+			),
+			200 => array(
+				'type'    => 'text',
+				'name'    => 'link',
+				'label'   => __( 'Item link URL', 'make' ),
+				'default' => '',
+			),
+		) );
+
+		// Sort the config in case 3rd party code added another input
+		ksort( $inputs, SORT_NUMERIC );
+
+		return $inputs;
 	}
 
 	/**

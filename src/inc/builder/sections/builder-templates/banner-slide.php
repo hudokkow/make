@@ -5,7 +5,7 @@
 
 global $ttfmake_section_data, $ttfmake_slide_id;
 
-$section_name = "[{{ get('parentID') }}][banner-slides][{{ id }}]";
+$section_name = "ttfmake-section[{{ get('parentID') }}][banner-slides][{{ id }}]";
 $combined_id = "{{ get('parentID') }}-{{ id }}";
 $overlay_id  = "ttfmake-overlay-" . $combined_id;
 ?>

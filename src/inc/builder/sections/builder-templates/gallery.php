@@ -5,18 +5,7 @@
 
 ttfmake_load_section_header();
 
-global $ttfmake_section_data, $ttfmake_is_js_template;
-$section_name     = ttfmake_get_section_name( $ttfmake_section_data, $ttfmake_is_js_template );
-$columns          = ( isset( $ttfmake_section_data['data']['columns'] ) ) ? $ttfmake_section_data['data']['columns'] : 3;
-$caption_color    = ( isset( $ttfmake_section_data['data']['caption-color'] ) ) ? $ttfmake_section_data['data']['caption-color'] : 'light';
-$captions         = ( isset( $ttfmake_section_data['data']['captions'] ) ) ? $ttfmake_section_data['data']['captions'] : 'reveal';
-$aspect           = ( isset( $ttfmake_section_data['data']['aspect'] ) ) ? $ttfmake_section_data['data']['aspect'] : 'square';
-$title            = ( isset( $ttfmake_section_data['data']['title'] ) ) ? $ttfmake_section_data['data']['title'] : '';
-$background_image = ( isset( $ttfmake_section_data['data']['background-image'] ) ) ? $ttfmake_section_data['data']['background-image'] : 0;
-$background_color = ( isset( $ttfmake_section_data['data']['background-color'] ) ) ? $ttfmake_section_data['data']['background-color'] : '';
-$background_style = ( isset( $ttfmake_section_data['data']['background-style'] ) ) ? $ttfmake_section_data['data']['background-style'] : 'tile';
-$darken           = ( isset( $ttfmake_section_data['data']['darken'] ) ) ? $ttfmake_section_data['data']['darken'] : 0;
-$section_order    = ( ! empty( $ttfmake_section_data['data']['gallery-item-order'] ) ) ? $ttfmake_section_data['data']['gallery-item-order'] : array();
+global $ttfmake_section_data;
 ?>
 
 <div class="ttfmake-gallery-items">
@@ -28,9 +17,6 @@ $section_order    = ( ! empty( $ttfmake_section_data['data']['gallery-item-order
 			</span>
 		</div>
 	</a>
-
-	<input type="hidden" value="<?php echo esc_attr( implode( ',', $section_order ) ); ?>" name="<?php echo $section_name; ?>[gallery-item-order]" class="ttfmake-gallery-item-order" />
 </div>
 
-<input type="hidden" class="ttfmake-section-state" name="<?php echo $section_name; ?>[state]" value="<?php if ( isset( $ttfmake_section_data['data']['state'] ) ) echo esc_attr( $ttfmake_section_data['data']['state'] ); else echo 'open'; ?>" />
 <?php ttfmake_load_section_footer();
