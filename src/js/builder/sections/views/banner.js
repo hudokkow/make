@@ -13,46 +13,11 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			return _.extend({}, oneApp.SectionView.prototype.events, {
 				'click .ttfmake-add-slide' : 'onSlideAdd',
 				'model-item-change': 'onSlideChange',
-				'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
-				'keyup .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
-				'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
-				'change .ttfmake-configuration-overlay select': 'updateSelectField',
 				'view-ready': 'onViewReady',
 				'item-sort': 'onSlideSort',
 				'slide-remove': 'onSlideRemove',
 				'color-picker-change': 'onColorPickerChange'
 			});
-		},
-
-		updateInputField: function(evt) {
-			var $input				= $(evt.target);
-			var modelAttrName = $input.attr('data-model-attr');
-
-			if (typeof modelAttrName !== 'undefined') {
-				this.model.set(modelAttrName, $input.val());
-			}
-		},
-
-		updateCheckbox: function(evt) {
-			var $checkbox = $(evt.target);
-			var modelAttrName = $checkbox.attr('data-model-attr');
-
-			if (typeof modelAttrName !== 'undefined') {
-				if ($checkbox.is(':checked')) {
-					this.model.set(modelAttrName, 1);
-				} else {
-					this.model.set(modelAttrName, 0);
-				}
-			}
-		},
-
-		updateSelectField: function(evt) {
-			var $select = $(evt.target);
-			var modelAttrName = $select.attr('data-model-attr');
-
-			if (typeof modelAttrName !== 'undefined') {
-				this.model.set(modelAttrName, $select.val());
-			}
 		},
 
 		render: function () {
