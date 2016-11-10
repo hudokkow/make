@@ -5,7 +5,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 	'use strict';
 
 	// Kickoff Backbone App
-	new oneApp.MenuView();
+	var menuView = new oneApp.MenuView();
 
 	oneApp.options = {
 		openSpeed : 400,
@@ -46,7 +46,10 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 				$item.css('-webkit-transform', '');
 
-				oneApp.setOrder( $(this).sortable('toArray', {attribute: 'data-id'}), oneApp.cache.$sectionOrder );
+				// oneApp.setOrder( $(this).sortable('toArray', {attribute: 'data-id'}), oneApp.cache.$sectionOrder );
+
+				var ids = $(this).sortable('toArray', {attribute: 'data-id'});
+				menuView.$el.trigger('section-sort', [ids]);
 
 				$.each($frames, function() {
 					var id = $(this).attr('id').replace('ttfmake-iframe-', '');

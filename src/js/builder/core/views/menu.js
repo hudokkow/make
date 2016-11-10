@@ -20,14 +20,15 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		},
 
 		events: {
-			'click .ttfmake-menu-list-item-link': 'addSection'
+			'click .ttfmake-menu-list-item-link': 'onSectionAdd',
+			'section-sort': 'onSectionSort',
 		},
 
-		addSection: function (evt) {
-			evt.preventDefault();
+		onSectionAdd: function (e) {
+			e.preventDefault();
 
-			var $evt = $(evt),
-				$target = $($evt.get(0).currentTarget),
+			var $e = $(e),
+				$target = $($e.get(0).currentTarget),
 				sectionType = $target.attr('data-section').replace(/\W/g, ''); // Get and sanitize section
 
 			// Ensure that a model exists for the section, otherwise use the generic model
@@ -44,6 +45,14 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 			var model = new modelClass(modelAttributes);
 			oneApp.sections.add(model);
+		},
+
+		onSectionSort: function(e, ids) {
+			var sortedSections = _(ids).map(function(id) {
+				return oneApp.sections.findWhere({id: id});
+			});
+
+			oneApp.sections.reset(sortedSections);
 		},
 
 		addOne: function (section) {
