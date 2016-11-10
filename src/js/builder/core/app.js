@@ -46,8 +46,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 				$item.css('-webkit-transform', '');
 
-				// oneApp.setOrder( $(this).sortable('toArray', {attribute: 'data-id'}), oneApp.cache.$sectionOrder );
-
 				var ids = $(this).sortable('toArray', {attribute: 'data-id'});
 				menuView.$el.trigger('section-sort', [ids]);
 
@@ -59,46 +57,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 				});
 			}
 		});
-	};
-
-	oneApp.setOrder = function (order, $input) {
-		var sectionID = $input.closest('.ttfmake-section').attr('data-id');
-
-		// Use a comma separated list
-		order = order.join();
-
-		// Set the val of the input
-		$input.val(order);
-	};
-
-	oneApp.addOrderValue = function (id, $input) {
-		// var currentOrder = $input.val(),
-		// 	currentOrderArray;
-
-		// if ('' === currentOrder) {
-		// 	currentOrderArray = [id];
-		// } else {
-		// 	currentOrderArray = currentOrder.split(',');
-		// 	currentOrderArray.push(id);
-		// }
-
-		// oneApp.setOrder(currentOrderArray, $input);
-	};
-
-	oneApp.removeOrderValue = function (id, $input) {
-		// var currentOrder = $input.val(),
-		// 	currentOrderArray;
-
-		// if ('' === currentOrder) {
-		// 	currentOrderArray = [];
-		// } else {
-		// 	currentOrderArray = currentOrder.split(',');
-		// 	currentOrderArray = _.reject(currentOrderArray, function (item) {
-		// 		return id.toString() === item.toString();
-		// 	});
-		// }
-
-		// oneApp.setOrder(currentOrderArray, $input);
 	};
 
 	oneApp.initViews = function () {

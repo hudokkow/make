@@ -177,28 +177,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		}
 	});
 
-	// Initialize the color picker
-	// oneApp.initializeGalleryItemColorPicker = function (view) {
-	// 	var $selector;
-	// 	view = view || '';
-
-	// 	if (view.$el) {
-	// 		$selector = $('.ttfmake-gallery-background-color', view.$el);
-	// 	} else {
-	// 		$selector = $('.ttfmake-gallery-background-color');
-	// 	}
-
-	// 	$selector.wpColorPicker();
-	// };
-
-	// // Initialize the sortables
-	// $oneApp.on('afterSectionViewAdded', function(evt, view) {
-	// 	if ('gallery' === view.model.get('section-type')) {
-	// 		// Initialize the sortables and picker
-	// 		// oneApp.initializeGalleryItemColorPicker(view);
-	// 	}
-	// });
-
 	// Set the classes for the elements
 	oneApp.setClearClasses = function ($el) {
 		var columns = $('.ttfmake-gallery-columns', $el).val(),
