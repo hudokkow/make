@@ -8,7 +8,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 	oneApp.TextView = oneApp.views.text = oneApp.SectionView.extend({
 		itemViews: [],
-		
+
 		events: function() {
 			return _.extend({}, oneApp.SectionView.prototype.events, {
 				'change .ttfmake-text-columns' : 'handleColumns',
@@ -25,7 +25,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		render: function() {
 			var modelColumns = _(this.model.get('columns'));
 			var dataColumns = _(modelColumns).clone();
-			
+
 			oneApp.SectionView.prototype.render.apply(this, arguments);
 
 			var self = this;
@@ -175,7 +175,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 						} else if ($item.hasClass('ttfmake-column-width-one-half')) {
 							addClass = 'current-item-one-half';
 						}
-						
+
 						$stage.addClass(addClass);
 					}
 

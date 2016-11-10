@@ -104,7 +104,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 		addSlide: function(slideModel) {
 			// Build the view
-			var slideView = new oneApp.BannerSlideView({
+			var slideView = new oneApp.views['banner-slide']({
 				model: slideModel
 			});
 
@@ -126,7 +126,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				id: new Date().getTime().toString(),
 				parentID: this.model.id
 			});
-			var slideModel = new oneApp.BannerSlideModel(slideModelAttributes);
+			var slideModel = new oneApp.models['banner-slide'](slideModelAttributes);
 			var slideView = this.addSlide(slideModel);
 			slideView.$el.trigger('view-ready');
 

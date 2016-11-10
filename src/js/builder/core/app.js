@@ -64,18 +64,9 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 		if (typeof ttfMakeSectionData === 'object') {
 			_.forEach(ttfMakeSectionData, function(sectionData, sectionID) {
-				var sectionModel,
-						modelViewName,
-						view,
-						viewName,
-						sectionType = sectionData['section-type'];
-
-				// Ensure that a model exists for the section, otherwise use the generic model
-				var modelClass = sectionType.charAt(0).toUpperCase() + sectionType.slice(1) + 'Model';
-				modelClass = (true === oneApp.hasOwnProperty(modelClass)) ? modelClass : 'SectionModel';
-
-				sectionModel	= new oneApp[modelClass](sectionData, {parse: true});
-				modelViewName = sectionModel.get('viewName') + 'View';
+				var sectionType = sectionData['section-type'];
+				var modelClass = oneApp.models[sectionType];
+				var sectionModel	= new modelClass(sectionData, {parse: true});
 				oneApp.sections.add(sectionModel);
 			});
 		}

@@ -51,10 +51,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		render: function () {
 			var html = this.template(this.model);
 			this.setElement(html);
-				// .addClass('ttfmake-section-' + this.model.get('section-type'))
-				// .attr('id', this.idAttr)
-				// .attr('data-id', this.model.get('id'))
-				// .attr('data-section-type', this.model.get('section-type'));
 
 			return this;
 		},

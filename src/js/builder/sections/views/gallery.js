@@ -85,7 +85,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 		addItem: function(itemModel) {
 			// Create view
-			var itemView = new oneApp.GalleryItemView({
+			var itemView = new oneApp.views['gallery-item']({
 				model: itemModel
 			});
 
@@ -106,7 +106,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				id: new Date().getTime().toString(),
 				parentID: this.model.id
 			});
-			var itemModel = new oneApp.GalleryItemModel(itemModelAttributes);
+			var itemModel = new oneApp.models['gallery-item'](itemModelAttributes);
 			var itemView = this.addItem(itemModel);
 			itemView.$el.trigger('view-ready');
 

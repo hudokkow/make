@@ -69,7 +69,7 @@ var oneApp = oneApp || {};
 		},
 
 		updateOrder: function(ids) {
-			var ids = _(ids);			
+			var ids = _(ids);
 			var json = oneApp.SectionModel.prototype.toJSON.apply(this, arguments);
 			var columns = _(json['columns']).clone();
 			var orderedColumns = {1: {}, 2: {}, 3: {}, 4: {}};

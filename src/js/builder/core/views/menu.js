@@ -6,13 +6,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 	oneApp.MenuView = Backbone.View.extend({
 		el: '#ttfmake-menu',
-
 		$stage: $('#ttfmake-stage'),
-
 		$document: $(window.document),
-
 		$scrollHandle: $('html, body'),
-
 		$pane: $('.ttfmake-menu-pane'),
 
 		initialize: function () {
@@ -27,15 +23,8 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		onSectionAdd: function (e) {
 			e.preventDefault();
 
-			var $e = $(e),
-				$target = $($e.get(0).currentTarget),
-				sectionType = $target.attr('data-section').replace(/\W/g, ''); // Get and sanitize section
-
-			// Ensure that a model exists for the section, otherwise use the generic model
-			var modelClass = sectionType.charAt(0).toUpperCase() + sectionType.slice(1) + 'Model';
-			modelClass = (true === oneApp.hasOwnProperty(modelClass)) ? modelClass : 'SectionModel';
-			modelClass = oneApp[modelClass];
-
+			var sectionType = $(e.currentTarget).data('section');
+			var modelClass = oneApp.models[sectionType];
 			var sectionDefaults = ttfMakeSectionDefaults[sectionType] || {};
 			var modelAttributes = _(modelClass.prototype.defaults)
 				.extend(sectionDefaults, {
@@ -56,27 +45,17 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		},
 
 		addOne: function (section) {
-			// Ensure that a view exists for the section, otherwise show the generic view
-			var modelViewName = section.get('viewName') + 'View',
-				viewName = (true === oneApp.hasOwnProperty(modelViewName)) ? modelViewName : 'SectionView',
-				view, html;
-
-			// Create view
-			view = new oneApp[viewName]({
+			var viewClass = oneApp.views[section.get('section-type')];
+			var view = new viewClass({
 				model: section
 			});
 
-			// Append view
-			html = view.render().el;
+			var html = view.render().el;
 			this.$stage.append(html);
-
 			view.$el.trigger('view-ready');
 
-			// Scroll to added view and focus first input
 			oneApp.scrollToAddedView(view);
-
 			oneApp.sections.toggleStageClass();
-			oneApp.addOrderValue(section.get('id'), oneApp.cache.$sectionOrder);
 		},
 
 		menuToggle: function(evt) {
