@@ -696,6 +696,21 @@ class TTFMAKE_Section_Definitions {
 				$ordered_data[$section_id]['background-image-url'] = $image[0];
 			}
 
+			if ( isset( $section['columns'] ) && is_array( $section['columns'] ) ) {
+				if ( isset( $section['columns'] ) ) {
+					$ordered_items = array();
+
+					foreach ( $section['columns-order'] as $column_position ) {
+						$column_position = intval($column_position);
+						$ordered_items[$column_position] = $section['columns'][$column_position];
+					}
+
+					$ordered_data[$section_id]['columns'] = $ordered_items;
+					$section = $ordered_data[$section_id];
+					unset( $section['columns-order'] );
+				}
+			}
+
 			if ( isset( $section['banner-slides'] ) && is_array( $section['banner-slides'] ) ) {
 				if ( isset( $section['banner-slide-order'] ) ) {
 					$ordered_items = array();

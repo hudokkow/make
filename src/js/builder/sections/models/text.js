@@ -37,32 +37,12 @@ var oneApp = oneApp || {};
 			'section-json': '{}'
 		},
 
-		parse: function(data) {
-			var attributes = _(data).clone();
-			var sortedColumns = _(attributes['columns']).clone();
-
-			_(attributes['columns-order']).each(function(id, index) {
-				var ourIndex = parseInt(index, 10)+1;
-
-				sortedColumns[ourIndex] = attributes['columns'][id];
-			});
-
-			attributes['columns'] = sortedColumns;
-			attributes['columns-order'] = ['1', '2', '3', '4'];
-
-			return attributes;
-		},
-
 		toJSON: function() {
 			var json = oneApp.SectionModel.prototype.toJSON.apply(this, arguments);
 			var copyColumns = _(json['columns']).clone();
 
 			_(json['columns']).each(function(column, index) {
-				if (column.hasOwnProperty('attributes')) {
-					copyColumns[index] = column.attributes;
-				} else {
-					copyColumns[index] = column;
-				}
+				copyColumns[index] = column.attributes;
 			});
 
 			return json;
