@@ -4,7 +4,9 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.BannerSlideView = oneApp.ItemView.extend({
+	oneApp.views = oneApp.views || {}
+
+	oneApp.BannerSlideView = oneApp.views['banner-slide'] = oneApp.ItemView.extend({
 
 		events: function() {
 			return _.extend({}, oneApp.ItemView.prototype.events, {

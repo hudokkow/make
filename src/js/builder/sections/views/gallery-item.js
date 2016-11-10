@@ -4,7 +4,9 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.GalleryItemView = oneApp.ItemView.extend({
+	oneApp.views = oneApp.views || {}
+
+	oneApp.GalleryItemView = oneApp.views['gallery-item'] = oneApp.ItemView.extend({
 
 		events: function() {
 			return _.extend({}, oneApp.ItemView.prototype.events, {

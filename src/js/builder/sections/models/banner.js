@@ -4,7 +4,9 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.BannerModel = oneApp.SectionModel.extend({
+	oneApp.models = oneApp.models || {};
+
+	oneApp.BannerModel = oneApp.models.banner = oneApp.SectionModel.extend({
 		defaults: {
 			'section-type': 'banner',
 			'state': 'open',

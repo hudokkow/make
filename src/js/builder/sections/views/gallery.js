@@ -4,7 +4,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 (function (window, $, _, oneApp, $oneApp) {
 	'use strict';
 
-	oneApp.GalleryView = oneApp.SectionView.extend({
+	oneApp.views = oneApp.views || {}
+
+	oneApp.GalleryView = oneApp.views.gallery = oneApp.SectionView.extend({
 		itemViews: [],
 
 		events: function() {

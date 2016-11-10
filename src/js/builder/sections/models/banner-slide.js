@@ -4,7 +4,9 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.BannerSlideModel = Backbone.Model.extend({
+	oneApp.models = oneApp.models || {};
+
+	oneApp.BannerSlideModel = oneApp.models['banner-slide'] = Backbone.Model.extend({
 		defaults: {
 			id: '',
 			parentID: '',

@@ -4,7 +4,9 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.GalleryModel = oneApp.SectionModel.extend({
+	oneApp.models = oneApp.models || {};
+
+	oneApp.GalleryModel = oneApp.models.gallery = oneApp.SectionModel.extend({
 		defaults: {
 			'section-type': 'gallery',
 			'state': 'open',

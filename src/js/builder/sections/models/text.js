@@ -4,7 +4,9 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.TextModel = oneApp.SectionModel.extend({
+	oneApp.models = oneApp.models || {};
+
+	oneApp.TextModel = oneApp.models.text = oneApp.SectionModel.extend({
 		defaults: {
 			'id': '',
 			'label': '',

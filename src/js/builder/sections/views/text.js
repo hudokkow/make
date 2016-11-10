@@ -4,7 +4,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 (function (window, $, _, oneApp, $oneApp) {
 	'use strict';
 
-	oneApp.TextView = oneApp.SectionView.extend({
+	oneApp.views = oneApp.views || {}
+
+	oneApp.TextView = oneApp.views.text = oneApp.SectionView.extend({
 		itemViews: [],
 		
 		events: function() {

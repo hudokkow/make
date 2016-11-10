@@ -4,7 +4,9 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.TextItemModel = Backbone.Model.extend({
+	oneApp.models = oneApp.models || {};
+
+	oneApp.TextItemModel = oneApp.models['text-item'] = Backbone.Model.extend({
 		defaults: {
 			id: '',
 			parentID: '',

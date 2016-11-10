@@ -4,7 +4,9 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.GalleryItemModel = Backbone.Model.extend({
+	oneApp.models = oneApp.models || {};
+
+	oneApp.GalleryItemModel = oneApp.models['gallery-item'] = Backbone.Model.extend({
 		defaults: {
 			id: '',
 			parentID: ''

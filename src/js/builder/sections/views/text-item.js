@@ -4,7 +4,9 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	oneApp.TextItemView = oneApp.ItemView.extend({
+	oneApp.views = oneApp.views || {}
+
+	oneApp.TextItemView = oneApp.views['text-item'] = oneApp.ItemView.extend({
 		el: '',
 		elSelector: '',
 		className: 'ttfmake-text-column',
