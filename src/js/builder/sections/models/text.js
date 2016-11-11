@@ -42,7 +42,11 @@ var oneApp = oneApp || {};
 			var copyColumns = _(json['columns']).clone();
 
 			_(json['columns']).each(function(column, index) {
-				copyColumns[index] = column.attributes;
+				if (column.hasOwnProperty('attributes')) {
+					copyColumns[index] = column.attributes;
+				} else {
+					copyColumns[index] = column;
+				}
 			});
 
 			return json;
