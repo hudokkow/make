@@ -89,13 +89,12 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				return;
 			}
 
-			oneApp.removeOrderValue(this.model.get('id'), oneApp.cache.$sectionOrder);
-
 			// Fade and slide out the section, then cleanup view and reset stage on complete
 			this.$el.animate({
 				opacity: 'toggle',
 				height: 'toggle'
 			}, oneApp.options.closeSpeed, function() {
+				oneApp.sections.remove(this.model);
 				this.remove();
 				oneApp.sections.toggleStageClass();
 				$oneApp.trigger('afterSectionViewRemoved', this);
