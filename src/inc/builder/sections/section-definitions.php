@@ -205,6 +205,10 @@ class TTFMAKE_Section_Definitions {
 				if ( isset( $item['content'] ) ) {
 					$clean_data['columns'][ $id ]['content'] = sanitize_post_field( 'post_content', $item['content'], ( get_post() ) ? get_the_ID() : 0, 'db' );
 				}
+
+				if ( isset( $item['size'] ) ) {
+					$clean_data['columns'][ $id ]['size'] = esc_attr( $item['size'] );
+				}
 			}
 		}
 

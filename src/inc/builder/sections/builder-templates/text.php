@@ -87,7 +87,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 		 */
 		$column_classes = apply_filters( 'ttfmake-text-column-classes', 'ttfmake-text-column ttfmake-text-column-position-' . $j, $i, $ttfmake_section_data );
 	?>
-	<div class="<?php echo esc_attr( $column_classes ); ?>" data-id="<?php echo $i; ?>">
+	<div class="ttfmake-text-column ttfmake-text-column-position-<?php echo $i; ?>{{ (get('columns')[<?php echo $i; ?>]['size']) ? ' ttfmake-column-width-'+get('columns')[<?php echo $i; ?>]['size'] : '' }}" data-id="<?php echo $i; ?>">
 		<div title="<?php esc_attr_e( 'Drag-and-drop this column into place', 'make' ); ?>" class="ttfmake-sortable-handle">
 			<div class="sortable-background column-sortable-background"></div>
 		</div>
@@ -176,17 +176,18 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 		?>
 	</div>
 	<?php $j++; endforeach; ?>
+
+	<?php
+	/**
+	 * Execute code after all columns are displayed.
+	 *
+	 * @since 1.2.3.
+	 *
+	 * @param array    $ttfmake_section_data    The data for the section.
+	 */
+	do_action( 'make_section_text_after_columns', $ttfmake_section_data );
+	?>
 </div>
-<?php
-/**
- * Execute code after all columns are displayed.
- *
- * @since 1.2.3.
- *
- * @param array    $ttfmake_section_data    The data for the section.
- */
-do_action( 'make_section_text_after_columns', $ttfmake_section_data );
-?>
 
 <div class="clear"></div>
 <input type="hidden" value="{{ get('columns-order') }}" name="<?php echo $section_name; ?>[columns-order]" class="ttfmake-text-columns-order" />
