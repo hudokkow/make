@@ -209,6 +209,10 @@ class TTFMAKE_Section_Definitions {
 				if ( isset( $item['size'] ) ) {
 					$clean_data['columns'][ $id ]['size'] = esc_attr( $item['size'] );
 				}
+
+				if ( isset( $item['sidebar-label'] ) ) {
+					$clean_data['columns'][ $id ]['sidebar-label'] = $item['sidebar-label'];
+				}
 			}
 		}
 
