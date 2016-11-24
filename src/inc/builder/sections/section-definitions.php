@@ -31,20 +31,13 @@ class TTFMAKE_Section_Definitions {
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
+			self::$instance->register();
 		}
 
 		return self::$instance;
 	}
 
-	/**
-	 * Register the sections.
-	 *
-	 * @since  1.0.0.
-	 *
-	 * @return TTFMAKE_Section_Definitions
-	 */
-	public function __construct() {
-		// Register all of the sections via the section API
+	public function register() {
 		$text_section = MAKE_Builder_Sections_Columns_Definition::register();
 
 		$this->register_banner_section();

@@ -615,7 +615,7 @@ class TTFMAKE_Builder_Base {
 
 		// Expose section template strings to JS
 		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionTemplates', $templates );
-		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionDefaults', $section_defaults );
+		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionDefaults', ttfmake_get_section_definitions()->get_section_defaults() );
 
 		unset( $GLOBALS['ttfmake_is_js_template'] );
 

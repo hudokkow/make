@@ -13,8 +13,6 @@ class MAKE_Builder_Sections_Columns_Definition {
 	/**
 	 * The one instance of MAKE_Builder_Sections_Columns_Definition.
 	 *
-	 * @since 1.0.0.
-	 *
 	 * @var   MAKE_Builder_Sections_Columns_Definition
 	 */
 	private static $instance;
@@ -25,8 +23,6 @@ class MAKE_Builder_Sections_Columns_Definition {
 	 * Note that in 1.4.0, the "text" section was renamed to "columns". In order to provide good back compatibility,
 	 * only the section label is changed to "Columns". All other internal references for this section will remain as
 	 * "text".
-	 *
-	 * @since  1.0.0.
 	 *
 	 * @return void
 	 */
@@ -52,7 +48,7 @@ class MAKE_Builder_Sections_Columns_Definition {
 			$this->get_settings()
 		);
 
-		// Add additional dependencies to the Builder JS
+		add_filter( 'make_section_defaults', array( $this, 'section_defaults' ) );
 		add_filter( 'make_builder_js_dependencies', array( $this, 'add_js_dependencies' ) );
 	}
 
@@ -63,13 +59,14 @@ class MAKE_Builder_Sections_Columns_Definition {
 				'name'  => 'title',
 				'label' => __( 'Enter section title', 'make' ),
 				'class' => 'ttfmake-configuration-title ttfmake-section-header-title-input',
+				'default' => ttfmake_get_section_default( 'title', 'text' ),
 			),
 			200 => array(
 				'type'    => 'select',
 				'name'    => 'columns-number',
 				'class'   => 'ttfmake-text-columns',
 				'label'   => __( 'Columns', 'make' ),
-				'default' => 3,
+				'default' => ttfmake_get_section_default( 'columns-number', 'text' ),
 				'options' => array(
 					1 => 1,
 					2 => 2,
@@ -81,19 +78,20 @@ class MAKE_Builder_Sections_Columns_Definition {
 				'type'  => 'image',
 				'name'  => 'background-image',
 				'label' => __( 'Background image', 'make' ),
-				'class' => 'ttfmake-configuration-media'
+				'class' => 'ttfmake-configuration-media',
+				'default' => ttfmake_get_section_default( 'background-image', 'text' ),
 			),
 			400 => array(
 				'type'    => 'checkbox',
 				'label'   => __( 'Darken background to improve readability', 'make' ),
 				'name'    => 'darken',
-				'default' => 0,
+				'default' => ttfmake_get_section_default( 'darken', 'text' ),
 			),
 			500 => array(
 				'type'    => 'select',
 				'name'    => 'background-style',
 				'label'   => __( 'Background style', 'make' ),
-				'default' => 'tile',
+				'default' => ttfmake_get_section_default( 'background-style', 'text' ),
 				'options' => array(
 					'tile'  => __( 'Tile', 'make' ),
 					'cover' => __( 'Cover', 'make' ),
@@ -104,15 +102,39 @@ class MAKE_Builder_Sections_Columns_Definition {
 				'label'   => __( 'Background color', 'make' ),
 				'name'    => 'background-color',
 				'class'   => 'ttfmake-text-background-color ttfmake-configuration-color-picker',
-				'default' => ''
+				'default' => ttfmake_get_section_default( 'background-color', 'text' ),
 			),
 		);
 	}
 
+	public function get_defaults() {
+		return array(
+			'title' => '',
+			'columns-number' => 3,
+			'background-image' => '',
+			'darken' => 0,
+			'background-style' => 'tile',
+			'background-color' => ''
+		);
+	}
+
+	/**
+	 * Add new section defaults.
+	 *
+	 * @hooked filter make_section_defaults
+	 *
+	 * @param array $defaults    The default section defaults.
+	 *
+	 * @return array             The augmented section defaults.
+	 */
+	public function section_defaults( $defaults ) {
+		$defaults['text'] = $this->get_defaults();
+
+		return $defaults;
+	}
+
 	/**
 	 * Save the data for the text section.
-	 *
-	 * @since  1.0.0.
 	 *
 	 * @param  array    $data    The data from the $_POST array for the section.
 	 * @return array             The cleaned data.
