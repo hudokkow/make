@@ -116,9 +116,14 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			$sortableSelector.sortable({
 				handle: '.ttfmake-sortable-handle',
 				placeholder: 'sortable-placeholder',
+				items: '.ttfmake-text-column',
 				forcePlaceholderSizeType: true,
 				distance: 2,
+				zIndex: 99999,
 				tolerance: 'pointer',
+				create: function() {
+					self.$el.trigger('columns-sortable-init');
+				},
 				start: function(event, ui) {
 					var $item = $(ui.item.get(0)),
 						$stage = $item.parents('.ttfmake-text-columns-stage');

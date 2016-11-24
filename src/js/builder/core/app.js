@@ -308,16 +308,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 					oneApp.updateSectionJSON();
 				}*/
 			});
-
-			$('body').on('click', '.ttfmp-revert-widget-area', function() {
-				var $this = $(this);
-				var sectionID = $this.closest('.ttfmake-section').attr('data-id');
-
-				/*if (sectionID) {
-					oneApp.setActiveSectionID(sectionID);
-					oneApp.updateSectionJSON();
-				}*/
-			});
 		}
 	});
 
