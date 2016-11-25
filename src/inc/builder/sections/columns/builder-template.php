@@ -45,7 +45,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 		$overlay_id  = 'ttfmake-overlay-' . $section_id . '-' . $i;
 		$link        = '{{ get("columns")['. $i .']["image-link"] }}';
 		$image_id    = '{{ get("columns")['. $i .']["image-id"] }}';
-		$title       = '{{ get("columns")['. $i .']["title"] }}';		
+		$title       = '{{ get("columns")['. $i .']["title"] }}';
 		$content     = '{{ get("columns")['. $i .']["content"] }}';
 
 		$column_buttons = array(
@@ -145,7 +145,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 				'type'    => 'section_title',
 				'name'    => 'title',
 				'label'   => __( 'Enter column title', 'make' ),
-				'default' => '{{ get("columns")['. $i .']["title"] }}',				
+				'default' => '{{ get("columns")['. $i .']["title"] }}',
 				'class'   => 'ttfmake-configuration-title',
 			)
 		) );
@@ -165,7 +165,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 
 		$image_link_input_name = $section_name . '[columns][' . $i . '][image-link]';
 
-		$output .= '<div class="ttfmake-configuration-overlay-input-wrap">'; 
+		$output .= '<div class="ttfmake-configuration-overlay-input-wrap">';
 		$output .= '<label for="' . $image_link_input_name . '">' . __( 'Image link URL', 'make' ) . '</label>';
 		$output .= '<input type="text" name="' . $image_link_input_name . '" id="' . $image_link_input_name . '" value="{{ get("columns")[' . $i . ']["image-link"] }}" data-model-attr="image-link">';
 		$output .= '</div>';
