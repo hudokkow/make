@@ -15,13 +15,12 @@ $links = array(
 );
 
 if ( ! empty( $ttfmake_section_data['section']['config'] ) ) {
-	$id = ( true === $ttfmake_is_js_template ) ? '{{{ id }}}' : esc_attr( $ttfmake_section_data['data']['id'] );
 	$links[25] = array(
 		'href'  => '#',
 		'class' => 'ttfmake-section-configure ttfmake-overlay-open',
 		'label' => __( 'Configure section', 'make' ),
 		'title' => __( 'Configure section', 'make' ),
-		'other' => 'data-overlay="#ttfmake-overlay-' . $id . '"'
+		'other' => 'data-overlay="#ttfmake-overlay-{{ id }}"'
 	);
 }
 

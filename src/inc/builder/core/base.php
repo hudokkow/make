@@ -216,6 +216,7 @@ class TTFMAKE_Builder_Base {
 		// Add the sort input
 		$section_order = get_post_meta( $post_local->ID, '_ttfmake-section-ids', true );
 
+		// Handle legacy section order, if present
 		if ( ! empty( $section_order ) ) {
 			$ordered_sections = array();
 
@@ -226,9 +227,8 @@ class TTFMAKE_Builder_Base {
 			$section_data = $ordered_sections;
 		}
 
-		// $section_order = ( ! empty( $section_order ) ) ? implode( ',', $section_order ) : '';
-		// echo '<input type="hidden" value="' . esc_attr( $section_order ) . '" name="ttfmake-section-order" id="ttfmake-section-order" />';
-
+		// Expose section defaults to JS
+		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionDefaults', ttfmake_get_section_definitions()->get_section_defaults() );
 		// Expose saved sections data to JS
 		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionData', $section_data );
 
@@ -584,55 +584,12 @@ class TTFMAKE_Builder_Base {
 	 * @return void
 	 */
 	public function print_templates() {
-		global $hook_suffix, $typenow, $ttfmake_is_js_template;
-		$ttfmake_is_js_template = true;
+		global $hook_suffix, $typenow;
 
 		// Only show when adding/editing pages
 		if ( ! ttfmake_post_type_supports_builder( $typenow ) || ! in_array( $hook_suffix, array( 'post.php', 'post-new.php' ) )) {
 			return;
 		}
-
-		// Print the templates
-		$templates = array();
-		$section_defaults = array();
-
-		foreach ( ttfmake_get_sections() as $section ) {
-			$html = $this->load_section( $section, array(), true );
-
-			// Check if the template is a simple or a parent + child one
-			if ( is_string( $html) ) {
-				$templates[$section['id']] = $html;
-			} else {
-				$templates[$section['id']] = $html[0];
-				$templates[$section['id'] . '-item'] = $html[1];
-			}
-
-			$section_field_defaults = array();
-
-			foreach ( $section['config'] as $key => $section_field ) {
-				if ('item' !== $key) {
-					$section_default = array_key_exists('default', $section_field ) ? $section_field['default']: '';
-					$section_field_defaults[$section_field['name']] = $section_default;
-				} else {
-					$section_item_defaults = array();
-
-					foreach ( $section['config']['item'] as $item_field ) {
-						$item_default = array_key_exists('default', $item_field ) ? $item_field['default']: '';
-						$section_item_defaults[$item_field['name']] = $item_default;
-					}
-
-					$section_defaults[$section['id'] . '-item'] = $section_item_defaults;
-				}
-			}
-
-			$section_defaults[$section['id']] = $section_field_defaults;
-		}
-
-		// Expose section template strings to JS
-		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionTemplates', $templates );
-		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionDefaults', ttfmake_get_section_definitions()->get_section_defaults() );
-
-		unset( $GLOBALS['ttfmake_is_js_template'] );
 
 		// Load the overlay for TinyMCE
 		get_template_part( '/inc/builder/core/templates/overlay', 'tinymce' );
