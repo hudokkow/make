@@ -56,7 +56,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 			var slides = _(this.model.get('banner-slides'));
 			var sortedSlides = _(ids).map(function(id) {
-				return slides.findWhere({id: id});
+				return slides.find(function(slide) {
+					return slide.id.toString() == id.toString()
+				});
 			});
 
 			this.model.set('banner-slides', sortedSlides);
@@ -86,7 +88,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		onSlideAdd: function (e, pseudo) {
 			e.preventDefault();
 
-			var slideModelDefaults = ttfMakeSectionDefaults['banner-item'] || {};
+			var slideModelDefaults = ttfMakeSectionDefaults['banner-slide'] || {};
 			var slideModelAttributes = _(slideModelDefaults).extend({
 				id: new Date().getTime().toString(),
 				parentID: this.model.id

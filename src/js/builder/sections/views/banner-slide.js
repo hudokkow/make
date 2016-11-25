@@ -19,7 +19,7 @@ var oneApp = oneApp || {};
 		},
 
 		initialize: function (options) {
-			this.template = _.template(ttfMakeSectionTemplates['banner-item']);
+			this.template = _.template(ttfMakeSectionTemplates['banner-slide']);
 		},
 
 		render: function () {
@@ -35,6 +35,8 @@ var oneApp = oneApp || {};
 		},
 
 		onOverlayClose: function(e, textarea) {
+			e.stopPropagation();
+
 			this.model.set('content', $(textarea).val());
 			this.$el.trigger('model-item-change');
 		},
@@ -49,8 +51,7 @@ var oneApp = oneApp || {};
 		onSlideRemove: function (evt) {
 			evt.preventDefault();
 
-			var $stage = this.$el.parents('.ttfmake-banner-slides'),
-				$orderInput = $('.ttfmake-banner-slide-order', $stage);
+			var $stage = this.$el.parents('.ttfmake-banner-slides');
 
 			// Fade and slide out the section, then cleanup view
 			this.$el.animate({

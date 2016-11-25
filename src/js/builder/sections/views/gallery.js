@@ -90,7 +90,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 			var items = _(this.model.get('gallery-items'));
 			var sortedItems = _(ids).map(function(id) {
-				return items.findWhere({id: id});
+				return items.find(function(item) {
+					return item.id.toString() == id.toString()
+				});
 			});
 
 			this.model.set('gallery-items', sortedItems);

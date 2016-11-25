@@ -27,6 +27,8 @@ var oneApp = oneApp || {};
 		},
 
 		onOverlayClose: function(e, textarea) {
+			e.stopPropagation();
+
 			this.model.set('description', $(textarea).val());
 			this.$el.trigger('model-item-change');
 		},

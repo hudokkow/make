@@ -25,6 +25,8 @@ var oneApp = oneApp || {};
 		},
 
 		onOverlayClose: function(e, textarea) {
+			e.stopPropagation();
+
 			this.model.set('content', $(textarea).val());
 			this.$el.trigger('model-item-change');
 		}

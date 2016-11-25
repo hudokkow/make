@@ -10,7 +10,7 @@ var oneApp = oneApp || {};
 		defaults: {
 			id: '',
 			parentID: '',
-			'section-type': 'bannerslide'
+			'section-type': 'banner-slide'
 		}
 	});
 

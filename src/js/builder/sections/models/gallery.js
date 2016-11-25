@@ -16,7 +16,6 @@ var oneApp = oneApp || {};
 		parse: function(data) {
 			var attributes = _(data).clone();
 			attributes['gallery-items'] = _(attributes['gallery-items'])
-				.values()
 				.map(function(item) {
 					var itemModel = new oneApp.GalleryItemModel(item);
 					itemModel.set('parentID', data.id);
