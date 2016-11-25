@@ -87,4 +87,4 @@ ksort( $links );
 	</div>
 	<div class="clear"></div>
 	<div class="ttfmake-section-body">
-		<input type="hidden" value="<?php echo $ttfmake_section_data['section']['id']; ?>" name="<?php echo ttfmake_get_section_name( $ttfmake_section_data, $ttfmake_is_js_template ); ?>[section-type]" />
+		<input type="hidden" value="<?php echo $ttfmake_section_data['section']['id']; ?>" name="<?php echo ttfmake_get_section_name( $ttfmake_section_data, true ); ?>[section-type]" />
