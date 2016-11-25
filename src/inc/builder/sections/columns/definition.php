@@ -41,14 +41,15 @@ class MAKE_Builder_Sections_Columns_Definition {
 			Make()->scripts()->get_css_directory_uri() . '/builder/sections/images/text.png',
 			__( 'Create rearrangeable columns of content and images.', 'make' ),
 			array( $this, 'save' ),
-			'sections/builder-templates/text',
-			'sections/front-end-templates/text',
+			'sections/columns/builder-template',
+			'sections/columns/frontend-template',
 			100,
 			get_template_directory() . '/inc/builder/',
 			$this->get_settings()
 		);
 
 		add_filter( 'make_section_defaults', array( $this, 'section_defaults' ) );
+		add_filter( 'make_get_section_json', array ( $this, 'get_section_json' ), 10, 2 );
 		add_filter( 'make_builder_js_dependencies', array( $this, 'add_js_dependencies' ) );
 	}
 
@@ -133,8 +134,33 @@ class MAKE_Builder_Sections_Columns_Definition {
 		return $defaults;
 	}
 
+	public function get_section_json( $data, $type ) {
+		if ( $type == 'text' ) {
+			if ( isset( $data['background-image'] ) && ( $image_id = intval( $data['background-image'] ) ) > 0 ) {
+				$image = ttfmake_get_image_src( $image_id, 'large' );
+				$data['background-image-url'] = $image[0];
+			}
+
+			if ( isset( $data['columns'] ) && is_array( $data['columns'] ) ) {
+				if ( isset( $data['columns-order'] ) ) {
+					$ordered_items = array();
+
+					foreach ( $data['columns-order'] as $column_position ) {
+						$column_position = intval($column_position);
+						$ordered_items[$column_position] = $data['columns'][$column_position];
+					}
+
+					$data['columns'] = $ordered_items;
+					unset( $data['columns-order'] );
+				}
+			}
+		}
+
+		return $data;
+	}
+
 	/**
-	 * Save the data for the text section.
+	 * Save the data for the section.
 	 *
 	 * @param  array    $data    The data from the $_POST array for the section.
 	 * @return array             The cleaned data.
@@ -222,7 +248,7 @@ class MAKE_Builder_Sections_Columns_Definition {
 		}
 
 		wp_register_script(
-			'ttfmake-sections/js/models/text.js',
+			'builder-models-text',
 			Make()->scripts()->get_js_directory_uri() . '/builder/sections/models/text.js',
 			array(),
 			TTFMAKE_VERSION,
@@ -230,15 +256,7 @@ class MAKE_Builder_Sections_Columns_Definition {
 		);
 
 		wp_register_script(
-			'ttfmake-sections/js/views/text.js',
-			Make()->scripts()->get_js_directory_uri() . '/builder/sections/views/text.js',
-			array(),
-			TTFMAKE_VERSION,
-			true
-		);
-
-		wp_register_script(
-			'ttfmake-sections/js/models/text-item.js',
+			'builder-models-text-item',
 			Make()->scripts()->get_js_directory_uri() . '/builder/sections/models/text-item.js',
 			array(),
 			TTFMAKE_VERSION,
@@ -246,18 +264,26 @@ class MAKE_Builder_Sections_Columns_Definition {
 		);
 
 		wp_register_script(
-			'ttfmake-sections/js/views/text-item.js',
-			Make()->scripts()->get_js_directory_uri() . '/builder/sections/views/text-item.js',
+			'builder-views-text',
+			Make()->scripts()->get_js_directory_uri() . '/builder/sections/views/text.js',
 			array(),
 			TTFMAKE_VERSION,
 			true
 		);
 
+		wp_register_script(
+			'builder-views-text-item',
+			Make()->scripts()->get_js_directory_uri() . '/builder/sections/views/text-item.js',
+			array( 'builder-views-item' ),
+			TTFMAKE_VERSION,
+			true
+		);
+
 		return array_merge( $deps, array(
-			'ttfmake-sections/js/models/text.js',
-			'ttfmake-sections/js/models/text-item.js',
-			'ttfmake-sections/js/views/text-item.js',
-			'ttfmake-sections/js/views/text.js'
+			'builder-models-text',
+			'builder-models-text-item',
+			'builder-views-text',
+			'builder-views-text-item'
 		) );
 	}
 }
