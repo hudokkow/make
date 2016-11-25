@@ -230,7 +230,7 @@ class TTFMAKE_Builder_Base {
 		// Expose section defaults to JS
 		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionDefaults', ttfmake_get_section_definitions()->get_section_defaults() );
 		// Expose saved sections data to JS
-		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionData', $section_data );
+		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionData', ttfmake_get_section_json_data( $section_data ) );
 
 		// Fetch templates
 		$templates = array();
@@ -1056,5 +1056,15 @@ if ( ! function_exists( 'ttfmake_register_placeholder_image' ) ) :
 function ttfmake_register_placeholder_image( $id, $data ) {
 	global $ttfmake_placeholder_images;
 	$ttfmake_placeholder_images[ $id ] = $data;
+}
+endif;
+
+if ( ! function_exists( 'ttfmake_get_section_json' ) ) :
+function ttfmake_get_section_json_data( $data = array() ) {
+	foreach ($data as $s => $section) {
+		$data[$s] = apply_filters( 'make_get_section_json', $section, $section['section-type'] );
+	}
+
+	return $data;
 }
 endif;
