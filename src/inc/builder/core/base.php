@@ -906,7 +906,7 @@ if ( ! function_exists( 'ttfmake_get_section_name' ) ) :
  * @return string                       The name of the section.
  */
 function ttfmake_get_section_name( $data, $is_js_template ) {
-	$name = 'ttfmake-section';
+	$name = 'ttfmake-section[{{ id }}]';
 
 	if ( $is_js_template ) {
 		$name .= '[{{{ id }}}]';
