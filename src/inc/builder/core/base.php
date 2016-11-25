@@ -236,7 +236,12 @@ class TTFMAKE_Builder_Base {
 		$templates = array();
 		foreach ( ttfmake_get_sections() as $section ) {
 			$template = $this->load_section( $section, array(), true );
-			$templates[$section['id']] = $template;
+
+			if ( !is_array( $template ) ) {
+				$templates[$section['id']] = $template;
+			} else {
+				$templates = array_merge( $templates, $template );
+			}
 		}
 
 		// Expose section template strings to JS
