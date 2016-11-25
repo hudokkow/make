@@ -231,6 +231,16 @@ class TTFMAKE_Builder_Base {
 
 		// Expose saved sections data to JS
 		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionData', $section_data );
+
+		// Fetch templates
+		$templates = array();
+		foreach ( ttfmake_get_sections() as $section ) {
+			$template = $this->load_section( $section, array(), true );
+			$templates[$section['id']] = $template;
+		}
+
+		// Expose section template strings to JS
+		wp_localize_script( 'ttfmake-builder', 'ttfMakeSectionTemplates', $templates );
 	}
 
 	/**
@@ -546,18 +556,23 @@ class TTFMAKE_Builder_Base {
 			'section' => $section,
 		);
 
-		// Include the template
-		$template = ttfmake_load_section_template(
-			$ttfmake_section_data['section']['builder_template'],
-			$ttfmake_section_data['section']['path'],
-			$return
-		);
+		$templates = $ttfmake_section_data['section']['builder_template'];
+		$path = $ttfmake_section_data['section']['path'];
+
+		if ( !is_array( $templates ) ) {
+			$templates = array ( $templates );
+		}
+
+		foreach ( $templates as $key => $template ) {
+			// Include the template
+			$templates[$key] = ttfmake_load_section_template( $template, $path, $return );
+		}
 
 		// Destroy the variable as a good citizen does
 		unset( $GLOBALS['ttfmake_section_data'] );
 
 		if ( $return ) {
-			return $template;
+			return count( $templates ) == 1 ? $templates[0]: $templates;
 		}
 	}
 
@@ -856,14 +871,6 @@ if ( ! function_exists( 'ttfmake_load_section_template' ) ) :
  * @param  boolean   $return  Specifies if the template should be included or returned as string.
  */
 function ttfmake_load_section_template( $slug, $path, $return = false ) {
-	// Handle [section, item] template definition
-	if ( is_array( $slug ) ) {
-		return array(
-			ttfmake_load_section_template( $slug[0], $path, $return ),
-			ttfmake_load_section_template( $slug[1], $path, $return )
-		);
-	}
-
 	$templates = array(
 		$slug . '.php',
 		trailingslashit( $path ) . $slug . '.php'
