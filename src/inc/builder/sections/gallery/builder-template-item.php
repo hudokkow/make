@@ -45,7 +45,7 @@ $overlay_id  = "ttfmake-overlay-" . $combined_id;
 	get_template_part( '/inc/builder/core/templates/overlay', 'header' );
 
 	// Print the inputs
-	$inputs = $ttfmake_section_data['section']['config']['item'];
+	$inputs = $ttfmake_section_data['section']['item'];
 	$output = '';
 
 	foreach ( $inputs as $input ) {

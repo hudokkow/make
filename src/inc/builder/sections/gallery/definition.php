@@ -48,7 +48,8 @@ class MAKE_Builder_Sections_Gallery_Definition {
 			'sections/gallery/frontend-template',
 			400,
 			get_template_directory() . '/inc/builder/',
-			$this->get_settings()
+			$this->get_settings(),
+			array( 'item' => $this->get_item_settings() )
 		);
 
 		add_filter( 'make_section_defaults', array( $this, 'section_defaults' ) );
@@ -140,9 +141,7 @@ class MAKE_Builder_Sections_Gallery_Definition {
 				'name'    => 'background-color',
 				'class'   => 'ttfmake-gallery-background-color ttfmake-configuration-color-picker',
 				'default' => ttfmake_get_section_default( 'background-color', 'gallery' )
-			),
-
-			'item' => $this->get_item_settings(),
+			)
 		);
 	}
 

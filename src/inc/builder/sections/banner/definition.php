@@ -48,7 +48,8 @@ class MAKE_Builder_Sections_Banner_Definition {
 			'sections/banner/frontend-template',
 			300,
 			get_template_directory() . '/inc/builder/',
-			$this->get_settings()
+			$this->get_settings(),
+			array( 'slide' => $this->get_banner_slide_settings() )
 		);
 
 		add_filter( 'make_section_defaults', array( $this, 'section_defaults' ) );
@@ -146,9 +147,7 @@ class MAKE_Builder_Sections_Banner_Definition {
 				'name'    => 'background-color',
 				'class'   => 'ttfmake-gallery-background-color ttfmake-configuration-color-picker',
 				'default' => ttfmake_get_section_default( 'background-color', 'banner' ),
-			),
-
-			'item' => $this->get_banner_slide_settings(),
+			)
 		);
 	}
 
