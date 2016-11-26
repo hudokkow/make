@@ -12,7 +12,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		$pane: $('.ttfmake-menu-pane'),
 
 		initialize: function () {
-			this.listenTo(oneApp.sections, 'add', this.addOne);
+			this.listenTo(oneApp.sections, 'section-added', this.addOne);
 		},
 
 		events: {
@@ -33,7 +33,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				});
 
 			var model = new modelClass(modelAttributes);
-			oneApp.sections.add(model);
+			oneApp.sections.add(model, false);
 		},
 
 		onSectionSort: function(e, ids) {
@@ -44,7 +44,8 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			oneApp.sections.reset(sortedSections);
 		},
 
-		addOne: function (section) {
+		addOne: function (section, isOnLoad) {
+			console.log(arguments);
 			var viewClass = oneApp.views[section.get('section-type')];
 			var view = new viewClass({
 				model: section
@@ -54,7 +55,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.$stage.append(html);
 			view.$el.trigger('view-ready');
 
-			oneApp.scrollToAddedView(view);
+			if (!isOnLoad) {
+				oneApp.scrollToAddedView(view);
+			}
 			oneApp.sections.toggleStageClass();
 		},
 

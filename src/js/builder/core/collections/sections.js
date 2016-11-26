@@ -20,6 +20,10 @@ var oneApp = oneApp || {};
 					scrollTop: $('#ttfmake-menu').offset().top
 				}, oneApp.options.closeSpeed);
 			}
+		},
+
+		add: function(section, isOnLoad) {
+			this.trigger('section-added', section, isOnLoad);
 		}
 	});
 

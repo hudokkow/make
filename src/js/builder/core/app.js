@@ -67,7 +67,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 				var sectionType = sectionData['section-type'];
 				var modelClass = oneApp.models[sectionType];
 				var sectionModel	= new modelClass(sectionData, {parse: true});
-				oneApp.sections.add(sectionModel);
+				oneApp.sections.add(sectionModel, true);
 			});
 		}
 	};
