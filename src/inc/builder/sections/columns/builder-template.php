@@ -158,8 +158,7 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 
 		foreach ( $inputs as $input ) {
 			if ( isset( $input['type'] ) && isset( $input['name'] ) ) {
-				$section_data  = ( isset( $ttfmake_section_data['data']['columns'][ $i ] ) ) ? $ttfmake_section_data['data']['columns'][ $i ] : array();
-				$output       .= ttfmake_create_input( $column_name, $input, $section_data );
+				$output       .= ttfmake_create_input( $column_name, $input, array() );
 			}
 		}
 
@@ -191,5 +190,5 @@ do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
 
 <div class="clear"></div>
 <input type="hidden" value="{{ get('columns-order') }}" name="<?php echo $section_name; ?>[columns-order]" class="ttfmake-text-columns-order" />
-<input type="hidden" class="ttfmake-section-state" name="<?php echo $section_name; ?>[state]" value="<?php if ( isset( $ttfmake_section_data['data']['state'] ) ) echo esc_attr( $ttfmake_section_data['data']['state'] ); else echo '{{ get("state") }}'; ?>" />
+<input type="hidden" class="ttfmake-section-state" name="<?php echo $section_name; ?>[state]" value="{{ get('state') }}" />
 <?php ttfmake_load_section_footer();
