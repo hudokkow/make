@@ -910,14 +910,14 @@ if ( ! function_exists( 'ttfmake_get_section_name' ) ) :
  * @param  array     $is_js_template    Whether a JS template is being printed or not.
  * @return string                       The name of the section.
  */
-function ttfmake_get_section_name( $data, $is_js_template ) {
+function ttfmake_get_section_name( $data, $is_js_template = true ) {
 	$name = 'ttfmake-section[{{ id }}]';
 
-	if ( $is_js_template ) {
-		$name .= '[{{{ id }}}]';
-	} else {
-		$name .= '[' . $data['data']['id'] . ']';
-	}
+	// if ( $is_js_template ) {
+	// 	$name .= '[{{{ id }}}]';
+	// } else {
+	// 	$name .= '[' . $data['data']['id'] . ']';
+	// }
 
 	/**
 	 * Alter section name.
@@ -928,7 +928,7 @@ function ttfmake_get_section_name( $data, $is_js_template ) {
 	 * @param array     $data              The section data.
 	 * @param bool      $is_js_template    Whether or not this is in the context of a JS template.
 	 */
-	return apply_filters( 'make_get_section_name', $name, $data, $is_js_template );
+	return apply_filters( 'make_get_section_name', $name, $data, true );
 }
 endif;
 
