@@ -80,9 +80,25 @@ class TTFMAKE_Sections {
 	 * @param  int       $order               The order in which to display the item.
 	 * @param  string    $path                The path to the template files.
 	 * @param  array     $config              Array of configuration options for the section.
+	 * @param  array     $custom              Array of additional custom data to be appended to the section.
 	 * @return void
 	 */
-	public function add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order, $path, $config = array() ) {
+	public function add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order, $path, $config = array(), $custom = array() ) {
+
+		$section = array(
+			'id'               => $id,
+			'label'            => $label,
+			'icon'             => $icon,
+			'description'      => $description,
+			'save_callback'    => $save_callback,
+			'builder_template' => $builder_template,
+			'display_template' => $display_template,
+			'order'            => $order,
+			'path'             => $path,
+			'config'           => $config,
+		);
+
+		$section = array_merge( $custom, $section );
 
 		/**
 		 * Allow the added sections to be filtered.
@@ -94,18 +110,7 @@ class TTFMAKE_Sections {
 		 *
 		 * @param array    $section    The section being added.
 		 */
-		$this->_sections[ $id ] = apply_filters( 'make_add_section', array(
-			'id'               => $id,
-			'label'            => $label,
-			'icon'             => $icon,
-			'description'      => $description,
-			'save_callback'    => $save_callback,
-			'builder_template' => $builder_template,
-			'display_template' => $display_template,
-			'order'            => $order,
-			'path'             => $path,
-			'config'           => $config,
-		) );
+		$this->_sections[ $id ] = apply_filters( 'make_add_section', $section );
 	}
 
 	/**
@@ -196,10 +201,11 @@ if ( ! function_exists( 'ttfmake_add_section' ) ) :
  * @param  int       $order               The order in which to display the item.
  * @param  string    $path                The path to the template files.
  * @param  array     $config              Array of configuration options for the section.
+ * @param  array     $custom              Array of additional custom data to be appended to the section.
  * @return void
  */
-function ttfmake_add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order, $path, $config = array() ) {
-	ttfmake_get_sections_class()->add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order, $path, $config );
+function ttfmake_add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order, $path, $config = array(), $custom = array() ) {
+	ttfmake_get_sections_class()->add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order, $path, $config, $custom );
 }
 endif;
 
