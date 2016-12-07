@@ -60,7 +60,13 @@ var oneApp = oneApp || {};
 
 			ids.each(function(id, index) {
 				var intIndex = parseInt(index, 10)+1;
-				var desiredColumn = _.findWhere(columns, {id: id});
+				var desiredColumn;
+
+				_.each(columns, function(model) {
+					if (model.get('id') === parseInt(id, 10)) {
+						desiredColumn = model;
+					}
+				});
 
 				if (columns.hasOwnProperty('attributes')) {
 					orderedColumns[intIndex] = desiredColumn.attributes;

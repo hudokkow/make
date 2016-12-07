@@ -37,7 +37,8 @@ var oneApp = oneApp || {};
 					'image-id': '',
 					'image-url': '',
 					'title': '',
-					'content': ''
+					'content': '',
+					'size': 'one-third'
 				};
 
 				var textItemModelAttributes = _(textItemModelDefaults).extend({
