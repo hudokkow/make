@@ -1,7 +1,7 @@
 /* global Backbone, jQuery, _, wp:true */
-var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
+var oneApp = oneApp || {};
 
-(function (window, Backbone, $, _, oneApp, $oneApp) {
+(function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
 	oneApp.views = oneApp.views || {};
@@ -36,9 +36,6 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.model = options.model;
 			this.idAttr = 'ttfmake-section-' + this.model.get('id');
 			this.serverRendered = ( options.serverRendered ) ? options.serverRendered : false;
-
-			// Allow custom init functions
-			$oneApp.trigger('viewInit', this);
 
 			_.templateSettings = {
 				evaluate   : /<#([\s\S]+?)#>/g,
@@ -98,7 +95,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				oneApp.builder.sections.remove(this.model);
 				this.remove();
 				oneApp.builder.toggleStageClass();
-				$oneApp.trigger('afterSectionViewRemoved', this);
+				oneApp.builder.$el.trigger('afterSectionViewRemoved', this);
 			}.bind(this));
 		},
 
@@ -162,7 +159,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 			oneApp.builder.initColorPicker(this);
 
-			$oneApp.trigger('ttfOverlayOpened', [this.model.get('section-type'), $overlay]);
+			// $oneApp.trigger('ttfOverlayOpened', [this.model.get('section-type'), $overlay]);
 		},
 
 		onColorPickerChange: function(evt, data) {
@@ -229,4 +226,4 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			}
 		}
 	});
-})(window, Backbone, jQuery, _, oneApp, $oneApp);
+})(window, Backbone, jQuery, _, oneApp);

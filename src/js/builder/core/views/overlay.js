@@ -1,5 +1,5 @@
 /* global jQuery, _ */
-var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
+var oneApp = oneApp || {};
 
 (function (window, $, _, oneApp) {
 	'use strict';

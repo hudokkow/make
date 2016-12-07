@@ -1,7 +1,7 @@
 /* global jQuery, _ */
-var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
+var oneApp = oneApp || {};
 
-(function (window, $, _, oneApp, $oneApp) {
+(function (window, $, _, oneApp) {
 	'use strict';
 
 	oneApp.views = oneApp.views || {}
@@ -145,4 +145,4 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			$stage.addClass('ttfmake-gallery-columns-' + parseInt(columns, 10));
 		}
 	});
-})(window, jQuery, _, oneApp, $oneApp);
+})(window, jQuery, _, oneApp);

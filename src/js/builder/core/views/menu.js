@@ -1,7 +1,7 @@
 /* global Backbone, jQuery, _, ttfmakeBuilderData, setUserSetting, deleteUserSetting */
-var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
+var oneApp = oneApp || {};
 
-(function (window, Backbone, $, _, oneApp, $oneApp) {
+(function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
 	oneApp.views = oneApp.views || {};
@@ -55,4 +55,4 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			}
 		}
 	});
-})(window, Backbone, jQuery, _, oneApp, $oneApp);
+})(window, Backbone, jQuery, _, oneApp);
