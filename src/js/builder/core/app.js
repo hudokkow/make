@@ -1,273 +1,337 @@
 /*global jQuery, tinyMCE, switchEditors */
 var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
-(function ($, oneApp, ttfMakeFrames) {
+(function ($, Backbone, oneApp, ttfMakeFrames) {
 	'use strict';
 
-	// Kickoff Backbone App
-	var menuView = new oneApp.MenuView();
+	// Builder root view
+	var MakeBuilder = Backbone.View.extend({
+		activeTextAreaID: '',
+		activeiframeID: '',
+		tinymceOverlay: false,
 
-	oneApp.options = {
-		openSpeed : 400,
-		closeSpeed: 250
-	};
+		$stage: false,
+		$makeTextArea: false,
+		$makeEditor: false,
+		$currentPlaceholder: false,
+		$scrollHandle: false,
 
-	oneApp.cache = {
-		$sectionOrder: $('#ttfmake-section-order'),
-		$scrollHandle: $('html, body'),
-		$makeEditor: $('#wp-make-wrap'),
-		$makeTextArea: $('#make')
-	};
+		options: {
+			openSpeed : 400,
+			closeSpeed: 250
+		},
 
-	oneApp.templateSettings = {
-		evaluate   : /<#([\s\S]+?)#>/g,
-		interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
-		escape     : /\{\{([^\}]+?)\}\}(?!\})/g
-	};
+		events: {
+			'section-created': 'onSectionCreated',
+			'section-sort': 'onSectionSort',
+		},
 
-	oneApp.initSortables = function () {
-		$('.ttfmake-stage').sortable({
-			handle: '.ttfmake-section-header',
-			placeholder: 'sortable-placeholder',
-			forcePlaceholderSizeType: true,
-			distance: 2,
-			tolerance: 'pointer',
-			start: function (event, ui) {
-				// Set the height of the placeholder to that of the sorted item
-				var $item = $(ui.item.get(0)),
-					$stage = $item.parents('.ttfmake-stage');
+		initialize: function(options) {
+			Backbone.View.prototype.initialize.apply(this, arguments);
+		},
 
-				$item.css('-webkit-transform', 'translateZ(0)');
-				$('.sortable-placeholder', $stage).height(parseInt($item.height(), 10) - 2);
-			},
-			stop: function (event, ui) {
-				var $item = $(ui.item.get(0)),
-					$frames = $('iframe', $item);
+		render: function() {
+			this.$stage = $('#ttfmake-stage');
+			this.$makeTextArea = $('#make');
+			this.$makeEditor = $('#wp-make-wrap');
+			this.$scrollHandle = $('html, body');
 
-				$item.css('-webkit-transform', '');
+			this.sections = new oneApp.collections.section();
 
-				var ids = $(this).sortable('toArray', {attribute: 'data-id'});
-				menuView.$el.trigger('section-sort', [ids]);
-
-				$.each($frames, function() {
-					var id = $(this).attr('id').replace('ttfmake-iframe-', '');
-					setTimeout(function() {
-						oneApp.initFrame(id);
-					}, 100);
-				});
+			if (typeof ttfMakeSectionData === 'object') {
+				this.sections.reset(ttfMakeSectionData, {parse: true});
 			}
-		});
-	};
 
-	oneApp.initViews = function () {
-		var models = [];
+			var sectionView;
+			this.sections.forEach(function(section) {
+				sectionView = this.addSectionView(section);
+			}, this);
 
-		if (typeof ttfMakeSectionData === 'object') {
-			_.forEach(ttfMakeSectionData, function(sectionData, sectionID) {
-				var sectionType = sectionData['section-type'];
-				var modelClass = oneApp.models[sectionType];
-				var sectionModel	= new modelClass(sectionData, {parse: true});
-				oneApp.sections.add(sectionModel, true);
+			this.initSortables();
+			this.initOverlayViews();
+			this.initFrames();
+
+			if (sectionView) {
+				this.scrollToSectionView(sectionView);
+			}
+
+			return this;
+		},
+
+		onSectionCreated: function(e, sectionType) {
+			var modelClass = oneApp.models[sectionType];
+			var sectionDefaults = ttfMakeSectionDefaults[sectionType] || {};
+			var modelAttributes = _(modelClass.prototype.defaults)
+				.extend(sectionDefaults, {
+					'section-type': sectionType,
+					'id': new Date().getTime()
+				});
+
+			var model = new modelClass(modelAttributes);
+			this.sections.add(model);
+
+			var sectionView = this.addSectionView(model);
+			this.scrollToSectionView(sectionView);
+			this.toggleStageClass();
+		},
+
+		onSectionSort: function(e, ids) {
+			var sortedSections = _(ids).map(function(id) {
+				return this.sections.findWhere({id: id});
+			}, this);
+
+			this.sections.reset(sortedSections);
+		},
+
+		addSectionView: function (section) {
+			var viewClass = oneApp.views[section.get('section-type')];
+			var view = new viewClass({
+				model: section
 			});
-		}
-	};
 
-	oneApp.scrollToAddedView = function (view) {
-		// Scroll to the new section
-		oneApp.cache.$scrollHandle.animate({
-			scrollTop: view.$el.offset().top - 32 - 9 // Offset + admin bar height + margin
-		}, 800, 'easeOutQuad', function() {
-			oneApp.focusFirstInput(view);
-		});
-	};
+			var html = view.render().el;
+			this.$stage.append(html);
+			view.$el.trigger('view-ready');
 
-	oneApp.focusFirstInput = function (view) {
-		$('input[type="text"]', view.$el).not('.wp-color-picker').first().focus();
-	};
+			return view;
+		},
 
-	oneApp.filliframe = function (iframeID) {
-		var iframe = document.getElementById(iframeID),
-			iframeContent = iframe.contentDocument ? iframe.contentDocument : iframe.contentWindow.document,
-			iframeBody = $('body', iframeContent),
-			content;
+		toggleStageClass: function() {
+			if (this.sections.length > 0) {
+				this.$stage.removeClass('ttfmake-stage-closed');
+			} else {
+				this.$stage.addClass('ttfmake-stage-closed');
+				$('html, body').animate({
+					scrollTop: $('#ttfmake-menu').offset().top
+				}, this.options.closeSpeed);
+			}
+		},
 
-		content = oneApp.getMakeContent();
-
-		// Since content is being displayed in the iframe, run it through autop
-		content = switchEditors.wpautop(oneApp.wrapShortcodes(content));
-
-		iframeBody.html(content);
-	};
-
-	oneApp.setTextArea = function (textAreaID) {
-		$('#' + textAreaID).val(oneApp.getMakeContent());
-	};
-
-	oneApp.getMakeContent = function () {
-		var content = '';
-
-		if (oneApp.isVisualActive()) {
-			content = tinyMCE.get('make').getContent();
-		} else {
-			content = oneApp.cache.$makeTextArea.val();
-		}
-
-		return content;
-	};
-
-	oneApp.setMakeContent = function (content) {
-		if (oneApp.isVisualActive()) {
-			tinyMCE.get('make').setContent(switchEditors.wpautop(content));
-		} else {
-			oneApp.cache.$makeTextArea.val(switchEditors.pre_wpautop(content));
-		}
-	};
-
-	oneApp.setMakeContentFromTextArea = function (iframeID, textAreaID) {
-		var textAreaContent = $('#' + textAreaID).val();
-
-		oneApp.setActiveiframeID(iframeID);
-		oneApp.setActiveTextAreaID(textAreaID);
-		oneApp.setMakeContent(textAreaContent);
-	};
-
-	oneApp.setActiveiframeID = function(iframeID) {
-		oneApp.activeiframeID = iframeID;
-	};
-
-	oneApp.setActiveTextAreaID = function(textAreaID) {
-		oneApp.activeTextAreaID = textAreaID;
-	};
-
-	oneApp.getActiveiframeID = function() {
-		if (oneApp.hasOwnProperty('activeiframeID')) {
-			return oneApp.activeiframeID;
-		} else {
-			return '';
-		}
-	};
-
-	oneApp.getActiveTextAreaID = function() {
-		if (oneApp.hasOwnProperty('activeTextAreaID')) {
-			return oneApp.activeTextAreaID;
-		} else {
-			return '';
-		}
-	};
-
-	oneApp.isTextActive = function() {
-		return oneApp.cache.$makeEditor.hasClass('html-active');
-	};
-
-	oneApp.isVisualActive = function() {
-		return oneApp.cache.$makeEditor.hasClass('tmce-active');
-	};
-
-	oneApp.initFrames = function() {
-		if (ttfMakeFrames.length > 0) {
-			var link = oneApp.getFrameHeadLinks();
-
-			// Add content and CSS
-			_.each(ttfMakeFrames, function(id) {
-				oneApp.initFrame(id, link);
+		scrollToSectionView: function (view) {
+			// Scroll to the new section
+			var self = this;
+			this.$scrollHandle.animate({
+				scrollTop: view.$el.offset().top - 32 - 9 // Offset + admin bar height + margin
+			}, 800, 'easeOutQuad', function() {
+				self.focusFirstInput(view);
 			});
-		}
-	};
+		},
 
-	oneApp.initFrame = function(id, link) {
-		var content = $('#ttfmake-content-' + id).val(),
-			iframe = document.getElementById('ttfmake-iframe-' + id),
-			iframeContent = iframe.contentDocument ? iframe.contentDocument : iframe.contentWindow.document,
-			iframeHead = $('head', iframeContent),
-			iframeBody = $('body', iframeContent);
+		initSortables: function () {
+			this.$stage.sortable({
+				handle: '.ttfmake-section-header',
+				placeholder: 'sortable-placeholder',
+				forcePlaceholderSizeType: true,
+				distance: 2,
+				tolerance: 'pointer',
 
-		link = link || oneApp.getFrameHeadLinks();
+				start: function (event, ui) {
+					// Set the height of the placeholder to that of the sorted item
+					var $item = $(ui.item.get(0)),
+						$stage = $item.parents('.ttfmake-stage');
 
-		iframeHead.html(link);
-		iframeBody.html(switchEditors.wpautop(oneApp.wrapShortcodes(content)));
+					$item.css('-webkit-transform', 'translateZ(0)');
+					$('.sortable-placeholder', $stage).height(parseInt($item.height(), 10) - 2);
+				},
 
-		// Firefox hack
-		// @link http://stackoverflow.com/a/24686535
-		$(iframe).on('load', function() {
-			$(this).contents().find('head').html(link);
-			$(this).contents().find('body').html(switchEditors.wpautop(oneApp.wrapShortcodes(content)));
-		});
-	};
+				stop: function (event, ui) {
+					var $item = $(ui.item.get(0)),
+						$frames = $('iframe', $item),
+						self = this;
 
-	oneApp.getFrameHeadLinks = function() {
-		var scripts = tinyMCEPreInit.mceInit.make.content_css.split(','),
-			link = '';
+					$item.css('-webkit-transform', '');
 
-		// Create the CSS links for the head
-		_.each(scripts, function(e) {
-			link += '<link type="text/css" rel="stylesheet" href="' + e + '" />';
-		});
+					var ids = $(this).sortable('toArray', {attribute: 'data-id'});
+					$item.trigger('section-sort', [ids]);
 
-		return link;
-	};
+					$.each($frames, function() {
+						var id = $(this).attr('id').replace('ttfmake-iframe-', '');
 
-	oneApp.wrapShortcodes = function(content) {
-		return content.replace(/^(<p>)?(\[.*\])(<\/p>)?$/gm, '<div class="shortcode-wrapper">$2</div>');
-	};
+						setTimeout(function() {
+							self.initFrame(id);
+						}, 100);
+					});
+				}
+			});
+		},
 
-	oneApp.initUploader = function (view) {
-		var $uploader = $('.ttfmake-uploader', view.$el),
-				$placeholder = $('.ttfmake-media-uploader-placeholder:last', view.$el),
-				$remove = $('.ttfmake-media-uploader-remove:last', view.$el),
-				$add = $('.ttfmake-media-uploader-set-link:last', view.$el);
+		filliframe: function (iframeID) {
+			var iframe = document.getElementById(iframeID);
+			var iframeContent = iframe.contentDocument ? iframe.contentDocument : iframe.contentWindow.document;
+			var iframeBody = $('body', iframeContent);
+			var content = this.getMakeContent();
 
-		oneApp.$currentPlaceholder = $placeholder;
+			// Since content is being displayed in the iframe, run it through autop
+			content = switchEditors.wpautop(this.wrapShortcodes(content));
 
-		// If the media frame already exists, reopen it.
-		if (window['frame'] && 'function' === typeof frame.open) {
+			iframeBody.html(content);
+		},
+
+		getMakeContent: function () {
+			var content = '';
+
+			if (this.isVisualActive()) {
+				content = tinyMCE.get('make').getContent();
+			} else {
+				content = this.$makeTextArea.val();
+			}
+
+			return content;
+		},
+
+		setMakeContent: function (content) {
+			if (this.isVisualActive()) {
+				tinyMCE.get('make').setContent(switchEditors.wpautop(content));
+			} else {
+				this.$makeTextArea.val(switchEditors.pre_wpautop(content));
+			}
+		},
+
+		focusFirstInput: function (view) {
+			$('input[type="text"]', view.$el).not('.wp-color-picker').first().focus();
+		},
+
+		setTextArea: function (textAreaID) {
+			$('#' + textAreaID).val(this.getMakeContent());
+		},
+
+		setMakeContentFromTextArea: function (iframeID, textAreaID) {
+			var textAreaContent = $('#' + textAreaID).val();
+
+			this.setActiveiframeID(iframeID);
+			this.setActiveTextAreaID(textAreaID);
+			this.setMakeContent(textAreaContent);
+		},
+
+		setActiveiframeID: function(iframeID) {
+			this.activeiframeID = iframeID;
+		},
+
+		setActiveTextAreaID: function(textAreaID) {
+			this.activeTextAreaID = textAreaID;
+		},
+
+		getActiveiframeID: function() {
+			return this.activeiframeID;
+		},
+
+		getActiveTextAreaID: function() {
+			return this.activeTextAreaID;
+		},
+
+		isTextActive: function() {
+			return this.$makeEditor.hasClass('html-active');
+		},
+
+		isVisualActive: function() {
+			return this.$makeEditor.hasClass('tmce-active');
+		},
+
+		initFrames: function() {
+			if (ttfMakeFrames.length > 0) {
+				var link = this.getFrameHeadLinks();
+
+				// Add content and CSS
+				_.each(ttfMakeFrames, function(id) {
+					this.initFrame(id, link);
+				}, this);
+			}
+		},
+
+		initFrame: function(id, link) {
+			var content = $('#ttfmake-content-' + id).val(),
+				iframe = $('#ttfmake-iframe-' + id)[0],
+				iframeContent = iframe.contentDocument ? iframe.contentDocument : iframe.contentWindow.document,
+				iframeHead = $('head', iframeContent),
+				iframeBody = $('body', iframeContent);
+
+			link = link || this.getFrameHeadLinks();
+
+			iframeHead.html(link);
+			iframeBody.html(switchEditors.wpautop(this.wrapShortcodes(content)));
+
+			// Firefox hack
+			// @link http://stackoverflow.com/a/24686535
+
+			var self = this;
+			$(iframe).on('load', function() {
+				$(this).contents().find('head').html(link);
+				$(this).contents().find('body').html(switchEditors.wpautop(self.wrapShortcodes(content)));
+			});
+		},
+
+		getFrameHeadLinks: function() {
+			var scripts = tinyMCEPreInit.mceInit.make.content_css.split(','),
+				link = '';
+
+			// Create the CSS links for the head
+			_.each(scripts, function(e) {
+				link += '<link type="text/css" rel="stylesheet" href="' + e + '" />';
+			});
+
+			return link;
+		},
+
+		wrapShortcodes: function(content) {
+			return content.replace(/^(<p>)?(\[.*\])(<\/p>)?$/gm, '<div class="shortcode-wrapper">$2</div>');
+		},
+
+		initOverlayViews: function () {
+			this.tinymceOverlay = new oneApp.views.overlay({
+				el: $('#ttfmake-tinymce-overlay')
+			});
+		},
+
+		initUploader: function (view) {
+			var $uploader = $('.ttfmake-uploader', view.$el),
+					$placeholder = $('.ttfmake-media-uploader-placeholder:last', view.$el),
+					$remove = $('.ttfmake-media-uploader-remove:last', view.$el),
+					$add = $('.ttfmake-media-uploader-set-link:last', view.$el);
+
+			this.$currentPlaceholder = $placeholder;
+
+			// If the media frame already exists, reopen it.
+			if (window['frame'] && 'function' === typeof frame.open) {
+				frame.open();
+				return;
+			}
+
+			// Create the media frame.
+			var frame = wp.media.frames.frame = wp.media({
+				title: view.$el.data('title'),
+				className: 'media-frame ttfmake-builder-uploader',
+				multiple: false
+			});
+
+			// When an image is selected, run a callback.
+			frame.on('select', function () {
+				// We set multiple to false so only get one image from the uploader
+				var attachment = frame.state().get('selection').first().toJSON();
+				// Remove the attachment caption
+				attachment.caption = '';
+				// Build the image
+				var props = wp.media.string.props({}, attachment);
+				// Show the image
+				$placeholder.css('background-image', 'url(' + attachment.url + ')');
+				$uploader.addClass('ttfmake-has-image-set');
+				// Hide the link to set the image
+				$add.hide();
+				// Show the remove link
+				$remove.show();
+				// Trigger events on the view
+				view.$el.trigger('mediaSelected', attachment);
+			});
+
+			// Finally, open the modal
 			frame.open();
-			return;
-		}
+		},
 
-		// Create the media frame.
-		var frame = wp.media.frames.frame = wp.media({
-			title: view.$el.data('title'),
-			className: 'media-frame ttfmake-builder-uploader',
-			multiple: false
-		});
+		initColorPicker: function(view) {
+			if (!view.$el) {
+				return;
+			}
 
-		// When an image is selected, run a callback.
-		frame.on('select', function () {
-			// We set multiple to false so only get one image from the uploader
-			var attachment = frame.state().get('selection').first().toJSON();
-
-			// Remove the attachment caption
-			attachment.caption = '';
-
-			// Build the image
-			var props = wp.media.string.props(
-				{},
-				attachment
-			);
-
-			// Show the image
-			$placeholder.css('background-image', 'url(' + attachment.url + ')');
-			$uploader.addClass('ttfmake-has-image-set');
-
-			// Hide the link to set the image
-			$add.hide();
-
-			// Show the remove link
-			$remove.show();
-
-			view.$el.trigger('mediaSelected', attachment);
-		});
-
-		// Finally, open the modal
-		frame.open();
-	},
-
-  oneApp.initColorPicker = function(view) {
-		var $el = view.$el;
-
-		if ($el) {
-			var $colorPickerInput = $('.ttfmake-configuration-color-picker', $el);
-
+			var $colorPickerInput = $('.ttfmake-configuration-color-picker', view.$el);
 			var colorPickerOptions = {
 				change: function(event, ui) {
 					var $input = $(event.target);
@@ -291,33 +355,41 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 			// init color picker
 			$colorPickerInput.wpColorPicker(colorPickerOptions);
-		}
-	},
+		},
 
-		// populate JSON with section data for widgetized columns, on page load
-	$(document).ready(function() {
-		if (typeof makePlusPluginInfo === 'object') {
-			// loop through all Columns components
-			$('.ttfmake-section-text').each(function() {
-				var $this = $(this);
-				var sectionID = $this.attr('data-id');
+		setClearClasses: function ($el) {
+			var columns = $('.ttfmake-gallery-columns', $el).val(),
+				$items = $('.ttfmake-gallery-item', $el);
 
-				// check if it's widgetized
-				/*if ($this.find('.ttfmp-widget-area-overlay-region-active').length) {
-					oneApp.setActiveSectionID(sectionID);
-					oneApp.updateSectionJSON();
-				}*/
+			$items.each(function(index, item){
+				var $item = $(item);
+				if (0 !== index && 0 === index % columns) {
+					$item.addClass('clear');
+				} else {
+					$item.removeClass('clear');
+				}
 			});
-		}
+		},
+
+		// Leaving function to avoid errors if 3rd party code uses it. Deprecated in 1.4.0.
+		initAllEditors: function() {}
 	});
+
+	// Initialize builder view
+	oneApp.builder = new MakeBuilder({
+		el: '#ttfmake-builder'
+	});
+
+	// Initialize menu view
+	oneApp.menu = new oneApp.views.menu();
 
 	$('body').on('click', '.ttfmake-remove-image-from-modal', function(evt){
 		evt.preventDefault();
 
-		var $parent = oneApp.$currentPlaceholder.parents('.ttfmake-uploader');
+		var $parent = oneApp.builder.$currentPlaceholder.parents('.ttfmake-uploader');
 
 		// Remove the image
-		oneApp.$currentPlaceholder.css('background-image', '');
+		oneApp.builder.$currentPlaceholder.css('background-image', '');
 		$parent.removeClass('ttfmake-has-image-set');
 
 		// Trigger event on the uploader to propagate it to calling view
@@ -351,12 +423,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		}
 	});
 
-	// Leaving function to avoid errors if 3rd party code uses it. Deprecated in 1.4.0.
-	oneApp.initAllEditors = function(id, model) {};
-
 	$(document).ready(function() {
-		oneApp.initSortables();
-		oneApp.initViews();
-		oneApp.initFrames();
+		oneApp.builder.render();
 	})
-})(jQuery, oneApp, ttfMakeFrames);
+})(jQuery, Backbone, oneApp, ttfMakeFrames);
