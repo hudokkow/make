@@ -6,11 +6,11 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 	oneApp.views = oneApp.views || {}
 
-	oneApp.BannerView = oneApp.views.banner = oneApp.SectionView.extend({
+	oneApp.views.banner = oneApp.views.section.extend({
 		itemViews: [],
 
 		events: function() {
-			return _.extend({}, oneApp.SectionView.prototype.events, {
+			return _.extend({}, oneApp.views.section.prototype.events, {
 				'click .ttfmake-add-slide' : 'onSlideAdd',
 				'model-item-change': 'onSlideChange',
 				'view-ready': 'onViewReady',
@@ -21,7 +21,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		},
 
 		render: function () {
-			oneApp.SectionView.prototype.render.apply(this, arguments);
+			oneApp.views.section.prototype.render.apply(this, arguments);
 
 			var slides = this.model.get('banner-slides'),
 					self = this;
@@ -40,7 +40,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 		onViewReady: function(e) {
 			this.initializeSortables();
-			oneApp.initColorPicker(this);
+			oneApp.builder.initColorPicker(this);
 
 			_(this.itemViews).each(function(slideView) {
 				slideView.$el.trigger('view-ready');
@@ -103,7 +103,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.model.trigger('change');
 
 			if (!pseudo) {
-				oneApp.scrollToAddedView(slideView);
+				oneApp.builder.scrollToSectionView(slideView);
 			}
 		},
 

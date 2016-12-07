@@ -4,11 +4,13 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 (function (window, $, _, oneApp) {
 	'use strict';
 
-	oneApp.OverlayView = Backbone.View.extend({
+	oneApp.views = oneApp.views || {};
+
+	oneApp.views.overlay = Backbone.View.extend({
 		caller: null,
 
 		events: function() {
-			return _.extend({}, oneApp.SectionView.prototype.events, {
+			return _.extend({}, oneApp.views.section.prototype.events, {
 				'click .ttfmake-overlay-close-action' : 'closeOnClick'
 			});
 		},
@@ -19,7 +21,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.$el.show();
 
 			// Auto focus on the editor
-			var focusOn = (oneApp.isVisualActive()) ? tinyMCE.get('make') : oneApp.cache.$makeTextArea;
+			var focusOn = (oneApp.builder.isVisualActive()) ? tinyMCE.get('make') : oneApp.builder.$makeTextArea;
 			focusOn.focus();
 
 			view.$el.trigger('overlayOpen');
@@ -28,16 +30,14 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		close: function() {
 			this.$el.hide();
 
-			// Pass the new content to the iframe and textarea
-			var textAreaID = oneApp.getActiveTextAreaID();
-			oneApp.setTextArea(textAreaID);
+			oneApp.builder.setTextArea(oneApp.builder.activeTextAreaID);
 
-			if ('' !== oneApp.getActiveiframeID()) {
-				oneApp.filliframe(oneApp.getActiveiframeID());
+			if ('' !== oneApp.builder.activeiframeID) {
+				oneApp.builder.filliframe(oneApp.builder.activeiframeID);
 			}
 
 			this.toggleHasContent();
-			this.caller.$el.trigger('overlayClose', $('#' + textAreaID));
+			this.caller.$el.trigger('overlayClose', $('#' + oneApp.builder.activeTextAreaID));
 			this.caller = null;
 		},
 
@@ -47,10 +47,10 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		},
 
 		toggleHasContent: function(textareaID) {
-			textareaID = textareaID || oneApp.getActiveTextAreaID();
+			textareaID = textareaID || oneApp.builder.activeTextAreaID;
 
 			var link = $('.edit-content-link[data-textarea="' + textareaID + '"]'),
-				content = oneApp.getMakeContent();
+				content = oneApp.builder.getMakeContent();
 
 			if ('' !== content) {
 				link.addClass('item-has-content');
@@ -59,14 +59,4 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			}
 		}
 	});
-
-	// Initialize available gallery items
-	oneApp.initOverlayViews = function () {
-		oneApp.tinymceOverlay = new oneApp.OverlayView({
-			el: $('#ttfmake-tinymce-overlay')
-		});
-	};
-
-	// Initialize the views when the app starts up
-	oneApp.initOverlayViews();
 })(window, jQuery, _, oneApp);

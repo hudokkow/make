@@ -6,11 +6,11 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 	oneApp.views = oneApp.views || {}
 
-	oneApp.GalleryView = oneApp.views.gallery = oneApp.SectionView.extend({
+	oneApp.views.gallery = oneApp.views.section.extend({
 		itemViews: [],
 
 		events: function() {
-			return _.extend({}, oneApp.SectionView.prototype.events, {
+			return _.extend({}, oneApp.views.section.prototype.events, {
 				'change .ttfmake-gallery-columns' : 'handleColumns',
 				'view-ready': 'onViewReady',
 				'click .ttfmake-gallery-add-item' : 'onItemAdd',
@@ -21,7 +21,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		},
 
 		render: function () {
-			oneApp.SectionView.prototype.render.apply(this, arguments);
+			oneApp.views.section.prototype.render.apply(this, arguments);
 
 			var items = this.model.get('gallery-items'),
 					self = this;
@@ -45,7 +45,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			e.stopPropagation();
 
 			this.initializeSortables();
-			oneApp.initColorPicker(this);
+			oneApp.builder.initColorPicker(this);
 		},
 
 		addItem: function(itemModel) {
@@ -81,7 +81,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.model.trigger('change');
 
 			if (!pseudo) {
-				oneApp.scrollToAddedView(itemView);
+				oneApp.builder.scrollToAddedView(itemView);
 			}
 		},
 
@@ -145,22 +145,4 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			$stage.addClass('ttfmake-gallery-columns-' + parseInt(columns, 10));
 		}
 	});
-
-	// Set the classes for the elements
-	oneApp.setClearClasses = function ($el) {
-		var columns = $('.ttfmake-gallery-columns', $el).val(),
-			$items = $('.ttfmake-gallery-item', $el);
-
-		$items.each(function(index, item){
-			var $item = $(item);
-			if (0 !== index && 0 === index % columns) {
-				$item.addClass('clear');
-			} else {
-				$item.removeClass('clear');
-			}
-		});
-	};
-
-	// Initialize the views when the app starts up
-	// oneApp.initGalleryItemViews();
 })(window, jQuery, _, oneApp, $oneApp);

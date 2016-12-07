@@ -4,7 +4,9 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 		'use strict';
 
-		oneApp.ItemView = Backbone.View.extend({
+		oneApp.views = oneApp.views || {}
+
+		oneApp.views.item = Backbone.View.extend({
 			events: {
 				'click .ttfmake-media-uploader-add': 'onMediaOpen',
 				'mediaSelected': 'onMediaSelected',
@@ -59,7 +61,7 @@ var oneApp = oneApp || {};
 			onMediaOpen: function(e) {
 				e.preventDefault();
 				e.stopPropagation();
-				oneApp.initUploader(this);
+				oneApp.builder.initUploader(this);
 			},
 
 			onMediaSelected: function(e, attachment) {
@@ -79,13 +81,13 @@ var oneApp = oneApp || {};
 			onContentEdit: function(e) {
 				e.preventDefault();
 
-				oneApp.tinymceOverlay.open(this);
+				oneApp.builder.tinymceOverlay.open(this);
 
 				var $target = $(e.target),
 					iframeID = ($target.attr('data-iframe')) ? $target.attr('data-iframe') : '',
 					textAreaID = $target.attr('data-textarea');
 
-				oneApp.setMakeContentFromTextArea(iframeID, textAreaID);
+				oneApp.builder.setMakeContentFromTextArea(iframeID, textAreaID);
 			}
 		});
 })(window, Backbone, jQuery, _, oneApp);

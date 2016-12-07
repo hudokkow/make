@@ -6,10 +6,9 @@ var oneApp = oneApp || {};
 
 	oneApp.views = oneApp.views || {}
 
-	oneApp.BannerSlideView = oneApp.views['banner-slide'] = oneApp.ItemView.extend({
-
+	oneApp.views['banner-slide'] = oneApp.views.item.extend({
 		events: function() {
-			return _.extend({}, oneApp.ItemView.prototype.events, {
+			return _.extend({}, oneApp.views.item.prototype.events, {
 				'click .ttfmake-banner-slide-remove': 'onSlideRemove',
 				'click .ttfmake-banner-slide-toggle': 'toggleSection',
 				'overlayClose': 'onOverlayClose',
@@ -31,7 +30,7 @@ var oneApp = oneApp || {};
 
 		onViewReady: function(e) {
 			e.stopPropagation();
-			oneApp.initColorPicker(this);
+			oneApp.builder.initColorPicker(this);
 		},
 
 		onOverlayClose: function(e, textarea) {
@@ -57,7 +56,7 @@ var oneApp = oneApp || {};
 			this.$el.animate({
 				opacity: 'toggle',
 				height: 'toggle'
-			}, oneApp.options.closeSpeed, function() {
+			}, oneApp.builder.options.closeSpeed, function() {
 				this.$el.trigger('slide-remove', this);
 				this.remove();
 			}.bind(this));
@@ -72,12 +71,12 @@ var oneApp = oneApp || {};
 				$input = $('.ttfmake-banner-slide-state', this.$el);
 
 			if ($section.hasClass('ttfmake-banner-slide-open')) {
-				$sectionBody.slideUp(oneApp.options.closeSpeed, function() {
+				$sectionBody.slideUp(oneApp.builder.options.closeSpeed, function() {
 					$section.removeClass('ttfmake-banner-slide-open');
 					$input.val('closed');
 				});
 			} else {
-				$sectionBody.slideDown(oneApp.options.openSpeed, function() {
+				$sectionBody.slideDown(oneApp.builder.options.openSpeed, function() {
 					$section.addClass('ttfmake-banner-slide-open');
 					$input.val('open');
 				});

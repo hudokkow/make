@@ -4,7 +4,9 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 (function (window, Backbone, $, _, oneApp, $oneApp) {
 	'use strict';
 
-	oneApp.SectionView = Backbone.View.extend({
+	oneApp.views = oneApp.views || {};
+
+	oneApp.views.section = Backbone.View.extend({
 		template: '',
 		className: 'ttfmake-section',
 		$headerTitle: '',
@@ -68,12 +70,12 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				$sectionBody = $('.ttfmake-section-body', $section);
 
 			if ($section.hasClass('ttfmake-section-open')) {
-				$sectionBody.slideUp(oneApp.options.closeSpeed, function() {
+				$sectionBody.slideUp(oneApp.builder.options.closeSpeed, function() {
 					$section.removeClass('ttfmake-section-open');
 					self.model.set('state', 'closed');
 				});
 			} else {
-				$sectionBody.slideDown(oneApp.options.openSpeed, function() {
+				$sectionBody.slideDown(oneApp.builder.options.openSpeed, function() {
 					$section.addClass('ttfmake-section-open');
 					self.model.set('state', 'open');
 				});
@@ -92,10 +94,10 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			this.$el.animate({
 				opacity: 'toggle',
 				height: 'toggle'
-			}, oneApp.options.closeSpeed, function() {
-				oneApp.sections.remove(this.model);
+			}, oneApp.builder.options.closeSpeed, function() {
+				oneApp.builder.sections.remove(this.model);
 				this.remove();
-				oneApp.sections.toggleStageClass();
+				oneApp.builder.toggleStageClass();
 				$oneApp.trigger('afterSectionViewRemoved', this);
 			}.bind(this));
 		},
@@ -128,7 +130,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 		onMediaAdd: function(e) {
 			e.preventDefault();
-			oneApp.initUploader(this);
+			oneApp.builder.initUploader(this);
 		},
 
 		onMediaSelected: function(e, attachment) {
@@ -158,7 +160,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				$overlay.find('input,select').filter(':first').focus();
 			});
 
-			oneApp.initColorPicker(this);
+			oneApp.builder.initColorPicker(this);
 
 			$oneApp.trigger('ttfOverlayOpened', [this.model.get('section-type'), $overlay]);
 		},

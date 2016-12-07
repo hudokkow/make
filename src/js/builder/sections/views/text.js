@@ -6,11 +6,11 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 
 	oneApp.views = oneApp.views || {}
 
-	oneApp.TextView = oneApp.views.text = oneApp.SectionView.extend({
+	oneApp.views.text = oneApp.views.section.extend({
 		itemViews: [],
 
 		events: function() {
-			return _.extend({}, oneApp.SectionView.prototype.events, {
+			return _.extend({}, oneApp.views.section.prototype.events, {
 				'change .ttfmake-text-columns' : 'handleColumns',
 				'mouseup .ttfmake-text-column' : 'updateJSONOnSlide',
 				'model-item-change': 'onTextItemChange',
@@ -23,7 +23,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			var modelColumns = _(this.model.get('columns'));
 			var dataColumns = _(modelColumns).clone();
 
-			oneApp.SectionView.prototype.render.apply(this, arguments);
+			oneApp.views.section.prototype.render.apply(this, arguments);
 
 			var self = this;
 
@@ -48,13 +48,13 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 				// extend TextItemModel attributes with actual model data
 				textItemModelAttributes = _(textItemModelAttributes).extend(columnModel);
 
-				var textItemModel = new oneApp.TextItemModel(textItemModelAttributes);
+				var textItemModel = new oneApp.models['text-item'](textItemModelAttributes);
 				var textItemElSelector = '.ttfmake-text-column[data-id='+ourIndex+']';
 
 				dataColumns[ourIndex] = textItemModel;
 
 				// create view
-				var itemView = new oneApp.TextItemView({
+				var itemView = new oneApp.views['text-item']({
 					model: textItemModel,
 					elSelector: textItemElSelector
 				});
@@ -78,14 +78,14 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 		},
 
 		initFrames: function(e) {
-			var link = oneApp.getFrameHeadLinks();
+			var link = oneApp.builder.getFrameHeadLinks();
 
 			$('iframe', this.$el).each(function() {
 				var $this = $(this);
 
 				var id = $this.attr('id').replace('ttfmake-iframe-', '');
 
-				oneApp.initFrame(id, link);
+				oneApp.builder.initFrame(id, link);
 			});
 		},
 

@@ -6,15 +6,10 @@ var oneApp = oneApp || {};
 
 	oneApp.models = oneApp.models || {};
 
-	oneApp.TextItemModel = oneApp.models['text-item'] = Backbone.Model.extend({
+	oneApp.models['text-item'] = Backbone.Model.extend({
 		defaults: {
 			id: '',
 			parentID: '',
 		}
 	});
-
-	// Set up this model as a "no URL model" where data is not synced with the server
-	oneApp.TextItemModel.prototype.sync = function () { return null; };
-	oneApp.TextItemModel.prototype.fetch = function () { return null; };
-	oneApp.TextItemModel.prototype.save = function () { return null; };
 })(window, Backbone, jQuery, _, oneApp);

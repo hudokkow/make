@@ -6,7 +6,7 @@ var oneApp = oneApp || {};
 
 	oneApp.models = oneApp.models || {};
 
-	oneApp.TextModel = oneApp.models.text = oneApp.SectionModel.extend({
+	oneApp.models.text = oneApp.models.section.extend({
 		defaults: {
 			'id': '',
 			'label': '',
@@ -38,7 +38,7 @@ var oneApp = oneApp || {};
 		},
 
 		toJSON: function() {
-			var json = oneApp.SectionModel.prototype.toJSON.apply(this, arguments);
+			var json = oneApp.models.section.prototype.toJSON.apply(this, arguments);
 			var copyColumns = _(json['columns']).clone();
 
 			_(json['columns']).each(function(column, index) {
@@ -54,19 +54,13 @@ var oneApp = oneApp || {};
 
 		updateOrder: function(ids) {
 			var ids = _(ids);
-			var json = oneApp.SectionModel.prototype.toJSON.apply(this, arguments);
+			var json = oneApp.models.section.prototype.toJSON.apply(this, arguments);
 			var columns = _(json['columns']).clone();
 			var orderedColumns = {1: {}, 2: {}, 3: {}, 4: {}};
 
 			ids.each(function(id, index) {
 				var intIndex = parseInt(index, 10)+1;
-				var desiredColumn;
-				
-				_.each(columns, function(model) {
-					if (model.get('id') === parseInt(id, 10)) {
-						desiredColumn = model;
-					}
-				});
+				var desiredColumn = _.findWhere(columns, {id: id});
 
 				if (columns.hasOwnProperty('attributes')) {
 					orderedColumns[intIndex] = desiredColumn.attributes;
@@ -78,9 +72,4 @@ var oneApp = oneApp || {};
 			this.set('columns', orderedColumns);
 		}
 	});
-
-	// Set up this model as a "no URL model" where data is not synced with the server
-	oneApp.TextModel.prototype.sync = function () { return null; };
-	oneApp.TextModel.prototype.fetch = function () { return null; };
-	oneApp.TextModel.prototype.save = function () { return null; };
 })(window, Backbone, jQuery, _, oneApp);

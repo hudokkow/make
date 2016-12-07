@@ -6,7 +6,7 @@ var oneApp = oneApp || {};
 
 	oneApp.models = oneApp.models || {};
 
-	oneApp.GalleryModel = oneApp.models.gallery = oneApp.SectionModel.extend({
+	oneApp.models.gallery = oneApp.models.section.extend({
 		defaults: {
 			'section-type': 'gallery',
 			'state': 'open',
@@ -17,7 +17,7 @@ var oneApp = oneApp || {};
 			var attributes = _(data).clone();
 			attributes['gallery-items'] = _(attributes['gallery-items'])
 				.map(function(item) {
-					var itemModel = new oneApp.GalleryItemModel(item);
+					var itemModel = new oneApp.models['gallery-item'](item);
 					itemModel.set('parentID', data.id);
 					return itemModel;
 				});
@@ -26,7 +26,7 @@ var oneApp = oneApp || {};
 		},
 
 		toJSON: function() {
-			var json = oneApp.SectionModel.prototype.toJSON.apply(this, arguments);
+			var json = oneApp.models.section.prototype.toJSON.apply(this, arguments);
 			json['gallery-items'] = _(json['gallery-items']).map(function(item) {
 				return item.toJSON();
 			});
@@ -34,9 +34,4 @@ var oneApp = oneApp || {};
 			return json;
 		}
 	});
-
-	// Set up this model as a "no URL model" where data is not synced with the server
-	oneApp.GalleryModel.prototype.sync = function () { return null; };
-	oneApp.GalleryModel.prototype.fetch = function () { return null; };
-	oneApp.GalleryModel.prototype.save = function () { return null; };
 })(window, Backbone, jQuery, _, oneApp);

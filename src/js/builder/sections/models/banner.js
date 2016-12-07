@@ -6,7 +6,7 @@ var oneApp = oneApp || {};
 
 	oneApp.models = oneApp.models || {};
 
-	oneApp.BannerModel = oneApp.models.banner = oneApp.SectionModel.extend({
+	oneApp.models.banner = oneApp.models.section.extend({
 		defaults: {
 			'section-type': 'banner',
 			'state': 'open',
@@ -18,7 +18,7 @@ var oneApp = oneApp || {};
 			attributes['banner-slides'] = _(attributes['banner-slides'])
 				.values()
 				.map(function(slide) {
-					var slideModel = new oneApp.BannerSlideModel(slide);
+					var slideModel = new oneApp.models['banner-slide'](slide);
 					slideModel.set('parentID', data.id);
 					return slideModel;
 				});
@@ -27,7 +27,7 @@ var oneApp = oneApp || {};
 		},
 
 		toJSON: function() {
-			var json = oneApp.SectionModel.prototype.toJSON.apply(this, arguments);
+			var json = oneApp.models.section.prototype.toJSON.apply(this, arguments);
 			json['banner-slides'] = _(json['banner-slides']).map(function(slide) {
 				return slide.toJSON();
 			});
@@ -35,9 +35,4 @@ var oneApp = oneApp || {};
 			return json;
 		}
 	});
-
-	// Set up this model as a "no URL model" where data is not synced with the server
-	oneApp.BannerModel.prototype.sync = function () { return null; };
-	oneApp.BannerModel.prototype.fetch = function () { return null; };
-	oneApp.BannerModel.prototype.save = function () { return null; };
 })(window, Backbone, jQuery, _, oneApp);

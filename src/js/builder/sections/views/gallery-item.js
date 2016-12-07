@@ -6,10 +6,9 @@ var oneApp = oneApp || {};
 
 	oneApp.views = oneApp.views || {}
 
-	oneApp.GalleryItemView = oneApp.views['gallery-item'] = oneApp.ItemView.extend({
-
+	oneApp.views['gallery-item'] = oneApp.views.item.extend({
 		events: function() {
-			return _.extend({}, oneApp.ItemView.prototype.events, {
+			return _.extend({}, oneApp.views.item.prototype.events, {
 				'click .ttfmake-gallery-item-remove': 'onItemRemove',
 				'overlayClose': 'onOverlayClose',
 			});
@@ -43,7 +42,7 @@ var oneApp = oneApp || {};
 			this.$el.animate({
 				opacity: 'toggle',
 				height: 'toggle'
-			}, oneApp.options.closeSpeed, function() {
+			}, oneApp.builder.options.closeSpeed, function() {
 				this.$el.trigger('item-remove', this);
 				this.remove();
 			}.bind(this));

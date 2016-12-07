@@ -4,28 +4,23 @@ var oneApp = oneApp || {};
 (function (window, Backbone, $, _, oneApp) {
 	'use strict';
 
-	var Sections = Backbone.Collection.extend({
-		model: oneApp.SectionModel,
+	oneApp.collections = oneApp.collections || {};
 
-		$stage: $('#ttfmake-stage'),
-
-		toggleStageClass: function() {
-			var sections = $('.ttfmake-section', this.$stage).length;
-
-			if (sections > 0) {
-				this.$stage.removeClass('ttfmake-stage-closed');
-			} else {
-				this.$stage.addClass('ttfmake-stage-closed');
-				$('html, body').animate({
-					scrollTop: $('#ttfmake-menu').offset().top
-				}, oneApp.options.closeSpeed);
-			}
+	oneApp.collections.section = Backbone.Collection.extend({
+		model: function(sectionType) {
+			return oneApp.models[sectionType];
 		},
 
-		add: function(section, isOnLoad) {
-			this.trigger('section-added', section, isOnLoad);
+		parse: function(data) {
+			var models = _(data).map(function(sectionData) {
+					var sectionType = sectionData['section-type'];
+					var modelClass = oneApp.models[sectionType];
+					var sectionModel = new modelClass(sectionData, {parse: true});
+
+					return sectionModel;
+			});
+
+			return models;
 		}
 	});
-
-	oneApp.sections = new Sections();
 })(window, Backbone, jQuery, _, oneApp);

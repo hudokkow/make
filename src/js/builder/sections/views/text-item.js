@@ -6,13 +6,13 @@ var oneApp = oneApp || {};
 
 	oneApp.views = oneApp.views || {}
 
-	oneApp.TextItemView = oneApp.views['text-item'] = oneApp.ItemView.extend({
+	oneApp.views['text-item'] = oneApp.views.item.extend({
 		el: '',
 		elSelector: '',
 		className: 'ttfmake-text-column',
 
 		events: function() {
-			return _.extend({}, oneApp.ItemView.prototype.events, {
+			return _.extend({}, oneApp.views.item.prototype.events, {
 				'click .ttfmake-media-uploader-add': 'onMediaOpen',
 				'overlayClose': 'onOverlayClose'
 			});
