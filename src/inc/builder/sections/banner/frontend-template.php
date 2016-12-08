@@ -4,7 +4,7 @@
  */
 
 global $ttfmake_section_data, $ttfmake_sections;
-$banner_slides = ttfmake_builder_get_banner_array( $ttfmake_section_data );
+$banner_slides = $ttfmake_section_data['banner-slides'];
 $is_slider = ( count( $banner_slides ) > 1 ) ? true : false;
 $darken   = ( isset( $ttfmake_section_data[ 'darken' ] ) ) ? absint( $ttfmake_section_data[ 'darken' ] ) : 0;
 ?>

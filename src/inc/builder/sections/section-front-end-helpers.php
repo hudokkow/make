@@ -430,37 +430,37 @@ function ttfmake_builder_get_text_style( $ttfmake_section_data ) {
  * @param  array     $ttfmake_section_data    The section data.
  * @return array                              The data.
  */
-function ttfmake_builder_get_banner_array( $ttfmake_section_data ) {
-	$banner_order  = array();
-	$banner_slides = array();
-	$banner_array  = array();
+// function ttfmake_builder_get_banner_array( $ttfmake_section_data ) {
+// 	$banner_order  = array();
+// 	$banner_slides = array();
+// 	$banner_array  = array();
 
-	if ( ttfmake_builder_is_section_type( 'banner', $ttfmake_section_data ) ) {
-		if ( isset( $ttfmake_section_data['banner-slide-order'] ) ) {
-			$banner_order = $ttfmake_section_data['banner-slide-order'];
-		}
+// 	if ( ttfmake_builder_is_section_type( 'banner', $ttfmake_section_data ) ) {
+// 		if ( isset( $ttfmake_section_data['banner-slide-order'] ) ) {
+// 			$banner_order = $ttfmake_section_data['banner-slide-order'];
+// 		}
 
-		if ( isset( $ttfmake_section_data['banner-slides'] ) ) {
-			$banner_slides = $ttfmake_section_data['banner-slides'];
-		}
+// 		if ( isset( $ttfmake_section_data['banner-slides'] ) ) {
+// 			$banner_slides = $ttfmake_section_data['banner-slides'];
+// 		}
 
-		if ( ! empty( $banner_order ) && ! empty( $banner_slides ) ) {
-			foreach ( $banner_order as $order => $key ) {
-				$banner_array[$order] = $banner_slides[$key];
-			}
-		}
-	}
+// 		if ( ! empty( $banner_order ) && ! empty( $banner_slides ) ) {
+// 			foreach ( $banner_order as $order => $key ) {
+// 				$banner_array[$order] = $banner_slides[$key];
+// 			}
+// 		}
+// 	}
 
-	/**
-	 * Filter the data array for a banner section.
-	 *
-	 * @since 1.2.3.
-	 *
-	 * @param array    $banner_array            The ordered banner data.
-	 * @param array    $ttfmake_section_data    All of the data for the section.
-	 */
-	return apply_filters( 'make_builder_get_banner_array', $banner_array, $ttfmake_section_data );
-}
+// 	/**
+// 	 * Filter the data array for a banner section.
+// 	 *
+// 	 * @since 1.2.3.
+// 	 *
+// 	 * @param array    $banner_array            The ordered banner data.
+// 	 * @param array    $ttfmake_section_data    All of the data for the section.
+// 	 */
+// 	return apply_filters( 'make_builder_get_banner_array', $banner_array, $ttfmake_section_data );
+// }
 
 /**
  * Get the class for a banner section.
