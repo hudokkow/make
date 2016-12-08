@@ -153,6 +153,17 @@ class MAKE_Builder_Sections_Columns_Definition {
 					$data['columns'] = $ordered_items;
 					unset( $data['columns-order'] );
 				}
+
+				foreach ( $data['columns'] as $s => $column ) {
+					// Handle legacy data layout
+					$id = isset( $column['id'] ) ? $column['id']: $s;
+					$data['columns'][$s]['id'] = $id;
+
+					if ( isset( $column['image-id'] ) && ( $image_id = intval( $column['image-id'] ) ) > 0 ) {
+						$image = ttfmake_get_image_src( $image_id, 'large' );
+						$data['columns'][$s]['image-url'] = $image[0];
+					}
+				}
 			}
 		}
 
