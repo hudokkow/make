@@ -243,17 +243,6 @@ class MAKE_Builder_Sections_Banner_Definition {
 			}
 
 			if ( isset( $data['banner-slides'] ) && is_array( $data['banner-slides'] ) ) {
-				if ( isset( $data['banner-slide-order'] ) ) {
-					$ordered_items = array();
-
-					foreach ( $data['banner-slide-order'] as $item_id ) {
-						array_push( $ordered_items, $data['banner-slides'][$item_id] );
-					}
-
-					$data['banner-slides'] = $ordered_items;
-					unset( $data['banner-slide-order'] );
-				}
-
 				foreach ( $data['banner-slides'] as $s => $slide ) {
 					// Handle legacy data layout
 					$id = isset( $slide['id'] ) ? $slide['id']: $s;
@@ -263,6 +252,17 @@ class MAKE_Builder_Sections_Banner_Definition {
 						$image = ttfmake_get_image_src( $image_id, 'large' );
 						$data['banner-slides'][$s]['image-url'] = $image[0];
 					}
+				}
+
+				if ( isset( $data['banner-slide-order'] ) ) {
+					$ordered_items = array();
+
+					foreach ( $data['banner-slide-order'] as $item_id ) {
+						array_push( $ordered_items, $data['banner-slides'][$item_id] );
+					}
+
+					$data['banner-slides'] = $ordered_items;
+					unset( $data['banner-slide-order'] );
 				}
 			}
 		}
