@@ -4,7 +4,7 @@
  */
 
 global $ttfmake_section_data, $ttfmake_sections;
-$gallery  = ttfmake_builder_get_gallery_array( $ttfmake_section_data );
+$gallery  = $ttfmake_section_data['gallery-items'];
 $darken   = ( isset( $ttfmake_section_data[ 'darken' ] ) ) ? absint( $ttfmake_section_data[ 'darken' ] ) : 0;
 $captions = ( isset( $ttfmake_section_data[ 'captions' ] ) ) ? esc_attr( $ttfmake_section_data[ 'captions' ] ) : 'reveal';
 $aspect   = ( isset( $ttfmake_section_data[ 'aspect' ] ) ) ? esc_attr( $ttfmake_section_data[ 'aspect' ] ) : 'square';

@@ -220,17 +220,6 @@ class MAKE_Builder_Sections_Gallery_Definition {
 			}
 
 			if ( isset( $data['gallery-items'] ) && is_array( $data['gallery-items'] ) ) {
-				if ( isset( $data['gallery-item-order'] ) ) {
-					$ordered_items = array();
-
-					foreach ( $data['gallery-item-order'] as $item_id ) {
-						array_push( $ordered_items, $data['gallery-items'][$item_id] );
-					}
-
-					$data['gallery-items'] = $ordered_items;
-					unset( $data['gallery-item-order'] );
-				}
-
 				foreach ( $data['gallery-items'] as $s => $item ) {
 					// Handle legacy data layout
 					$id = isset( $item['id'] ) ? $item['id']: $s;
@@ -240,6 +229,17 @@ class MAKE_Builder_Sections_Gallery_Definition {
 						$image = ttfmake_get_image_src( $image_id, 'large' );
 						$data['gallery-items'][$s]['image-url'] = $image[0];
 					}
+				}
+
+				if ( isset( $data['gallery-item-order'] ) ) {
+					$ordered_items = array();
+
+					foreach ( $data['gallery-item-order'] as $item_id ) {
+						array_push( $ordered_items, $data['gallery-items'][$item_id] );
+					}
+
+					$data['gallery-items'] = $ordered_items;
+					unset( $data['gallery-item-order'] );
 				}
 			}
 		}
