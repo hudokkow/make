@@ -36,7 +36,7 @@ do_action( 'make_section_text_after_columns_select', $ttfmake_section_data );
  * @param array    $ttfmake_section_data    The data for the section.
  */
 do_action( 'make_section_text_after_title', $ttfmake_section_data ); ?>
-<div class="ttfmake-text-columns-stage ttfmake-text-columns-{{ get('columns-number') }}">
+<div class="ttfmake-text-columns-stage ttfmake-section-text ttfmake-text-columns-{{ get('columns-number') }}">
 	<?php $j = 1; foreach ( $section_order as $key => $i ) : ?>
 	<?php
 		$column_name = $section_name . '[columns][' . $i . ']';
