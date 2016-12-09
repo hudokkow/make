@@ -38,7 +38,8 @@ var oneApp = oneApp || {};
 					'image-url': '',
 					'title': '',
 					'content': '',
-					'size': ''
+					'size': '',
+					'original-position': ''
 				};
 
 				var textItemModelAttributes = _(textItemModelDefaults).extend({
