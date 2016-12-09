@@ -145,9 +145,9 @@ class MAKE_Builder_Sections_Columns_Definition {
 				if ( isset( $data['columns-order'] ) ) {
 					$ordered_items = array();
 
-					foreach ( $data['columns-order'] as $column_position ) {
+					foreach ( $data['columns-order'] as $index => $column_position ) {
 						$column_position = intval($column_position);
-						$ordered_items[$column_position] = $data['columns'][$column_position];
+						$ordered_items[$index+1] = $data['columns'][$column_position];
 					}
 
 					$data['columns'] = $ordered_items;

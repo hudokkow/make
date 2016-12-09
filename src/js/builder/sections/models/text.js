@@ -41,8 +41,6 @@ var oneApp = oneApp || {};
 			var json = oneApp.models.section.prototype.toJSON.apply(this, arguments);
 			var copyColumns = _(json['columns']).clone();
 
-			console.log(copyColumns);
-
 			_(json['columns']).each(function(column, index) {
 				if (column.hasOwnProperty('attributes')) {
 					copyColumns[index] = column.attributes;
@@ -50,8 +48,6 @@ var oneApp = oneApp || {};
 					copyColumns[index] = column;
 				}
 			});
-
-			console.log(json);
 
 			return json;
 		},
