@@ -148,7 +148,11 @@ class MAKE_Builder_Sections_Columns_Definition {
 					foreach ( $data['columns-order'] as $index => $column_position ) {
 						$column_position = intval($column_position);
 						$ordered_items[$index+1] = $data['columns'][$column_position];
-						$ordered_items[$index+1]['original-position'] = $column_position;
+
+						if ( $ordered_items[$index+1]['sidebar-label'] != '' && !$ordered_items[$index+1]['widget-area-id'] ) {
+							$page_id = get_the_ID();
+							$ordered_items[$index+1]['widget-area-id'] = 'ttfmp-' . $page_id . '-' . $data['id'] . '-' . $column_position;
+						}
 					}
 
 					$data['columns'] = $ordered_items;
@@ -247,6 +251,10 @@ class MAKE_Builder_Sections_Columns_Definition {
 
 				if ( isset( $item['sidebar-label'] ) ) {
 					$clean_data['columns'][ $id ]['sidebar-label'] = $item['sidebar-label'];
+				}
+
+				if ( isset( $item['widget-area-id'] ) ) {
+					$clean_data['columns'][ $id ]['widget-area-id'] = $item['widget-area-id'];
 				}
 			}
 		}

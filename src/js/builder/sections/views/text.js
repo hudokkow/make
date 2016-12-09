@@ -38,8 +38,7 @@ var oneApp = oneApp || {};
 					'image-url': '',
 					'title': '',
 					'content': '',
-					'size': '',
-					'original-position': ''
+					'size': ''
 				};
 
 				var textItemModelAttributes = _(textItemModelDefaults).extend({
