@@ -8,7 +8,7 @@ var oneApp = oneApp || {};
 
 		oneApp.views.item = Backbone.View.extend({
 			events: {
-				'click .ttfmake-media-uploader-add': 'onMediaOpen',
+				'click .ttfmake-media-uploader-add': 'onMediaAdd',
 				'mediaSelected': 'onMediaSelected',
 				'mediaRemoved': 'onMediaRemoved',
 				'click .edit-content-link': 'onContentEdit',
@@ -58,10 +58,10 @@ var oneApp = oneApp || {};
 				}
 			},
 
-			onMediaOpen: function(e) {
+			onMediaAdd: function(e) {
 				e.preventDefault();
 				e.stopPropagation();
-				oneApp.builder.initUploader(this);
+				oneApp.builder.initUploader(this, e.target);
 			},
 
 			onMediaSelected: function(e, attachment) {

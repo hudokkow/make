@@ -282,48 +282,61 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 			});
 		},
 
-		initUploader: function (view) {
-			var $uploader = $('.ttfmake-uploader', view.$el),
-					$placeholder = $('.ttfmake-media-uploader-placeholder:last', view.$el),
-					$remove = $('.ttfmake-media-uploader-remove:last', view.$el),
-					$add = $('.ttfmake-media-uploader-set-link:last', view.$el);
+		initUploader: function (view, placeholder) {
+			var $placeholder = $(placeholder),
+					$uploader = $placeholder.parent();
 
 			this.$currentPlaceholder = $placeholder;
 
 			// If the media frame already exists, reopen it.
-			if (window['frame'] && 'function' === typeof frame.open) {
-				frame.open();
+			if (window.frame && 'function' === typeof window.frame.open) {
+				window.frame.open();
 				return;
 			}
 
 			// Create the media frame.
-			var frame = wp.media.frames.frame = wp.media({
+			window.frame = wp.media.frames.frame = wp.media({
 				title: view.$el.data('title'),
 				className: 'media-frame ttfmake-builder-uploader',
 				multiple: false
 			});
 
-			// When an image is selected, run a callback.
-			frame.on('select', function () {
-				// We set multiple to false so only get one image from the uploader
-				var attachment = frame.state().get('selection').first().toJSON();
-				// Remove the attachment caption
-				attachment.caption = '';
-				// Build the image
-				var props = wp.media.string.props({}, attachment);
-				// Show the image
-				$placeholder.css('background-image', 'url(' + attachment.url + ')');
-				$uploader.addClass('ttfmake-has-image-set');
-				// Hide the link to set the image
-				$add.hide();
-				// Show the remove link
-				$remove.show();
-				// Trigger events on the view
-				view.$el.trigger('mediaSelected', attachment);
-			});
+			frame.on('open', this.onUploaderFrameOpen, this);
 
 			// Finally, open the modal
 			frame.open();
+		},
+
+		onUploaderFrameOpen: function($placeholder) {
+			// When an image is selected, run a callback.
+			frame.on('select', this.onUploaderFrameSelect, this, 2);
+
+			$('body').one('click', '.ttfmake-remove-image-from-modal', function(e) {
+				e.preventDefault();
+
+				// Remove the image
+				this.$currentPlaceholder.css('background-image', '');
+				this.$currentPlaceholder.parent().removeClass('ttfmake-has-image-set');
+
+				// Trigger event on the uploader to propagate it to calling view
+				$placeholder.trigger('mediaRemoved')
+
+				wp.media.frames.frame.close();
+			});
+		},
+
+		onUploaderFrameSelect: function() {
+			// We set multiple to false so only get one image from the uploader
+			var attachment = frame.state().get('selection').first().toJSON();
+			// Remove the attachment caption
+			attachment.caption = '';
+			// Build the image
+			var props = wp.media.string.props({}, attachment);
+			// Show the image
+			this.$currentPlaceholder.css('background-image', 'url(' + attachment.url + ')');
+			this.$currentPlaceholder.parent().addClass('ttfmake-has-image-set');
+			// Trigger events on the view
+			this.$currentPlaceholder.trigger('mediaSelected', attachment);
 		},
 
 		initColorPicker: function(view) {
@@ -383,20 +396,20 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 	// Initialize menu view
 	oneApp.menu = new oneApp.views.menu();
 
-	$('body').on('click', '.ttfmake-remove-image-from-modal', function(evt){
-		evt.preventDefault();
+	// $('body').on('click', '.ttfmake-remove-image-from-modal', function(evt){
+	// 	evt.preventDefault();
 
-		var $parent = oneApp.builder.$currentPlaceholder.parents('.ttfmake-uploader');
+	// 	var $parent = oneApp.builder.$currentPlaceholder.parents('.ttfmake-uploader');
 
-		// Remove the image
-		oneApp.builder.$currentPlaceholder.css('background-image', '');
-		$parent.removeClass('ttfmake-has-image-set');
+	// 	// Remove the image
+	// 	oneApp.builder.$currentPlaceholder.css('background-image', '');
+	// 	$parent.removeClass('ttfmake-has-image-set');
 
-		// Trigger event on the uploader to propagate it to calling view
-		$parent.trigger('mediaRemoved')
+	// 	// Trigger event on the uploader to propagate it to calling view
+	// 	$parent.trigger('mediaRemoved')
 
-		wp.media.frames.frame.close();
-	});
+	// 	wp.media.frames.frame.close();
+	// });
 
 	/**
 	 * Attach an event to 'Update' post/page submit to store all the ttfmake-section[] array fields to a single hidden input containing these fields serialized in JSON. Then remove the fields to prevent those from being submitted.

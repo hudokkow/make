@@ -127,7 +127,9 @@ var oneApp = oneApp || {};
 
 		onMediaAdd: function(e) {
 			e.preventDefault();
-			oneApp.builder.initUploader(this);
+			e.stopPropagation();
+
+			oneApp.builder.initUploader(this, e.target);
 		},
 
 		onMediaSelected: function(e, attachment) {
@@ -150,7 +152,7 @@ var oneApp = oneApp || {};
 				$overlay = $($this.attr('data-overlay')),
 				$wrapper = $('.ttfmake-overlay-wrapper', $overlay);
 
-			$overlay.show(1, function(){
+			$overlay.show(1, function() {
 				$('.wp-color-result', $overlay).click().off('click');
 				$( 'body' ).off( 'click.wpcolorpicker' );
 				self.setSize($overlay, $wrapper);
