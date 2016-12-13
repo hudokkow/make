@@ -215,7 +215,8 @@ class MAKE_Builder_Sections_Banner_Definition {
 		return array(
 			'alignment' => 'none',
 			'darken' => 0,
-			'background-color' => ''
+			'background-color' => '',
+			'content' => ''
 		);
 	}
 
@@ -277,8 +278,9 @@ class MAKE_Builder_Sections_Banner_Definition {
 	 * @return array             The cleaned data.
 	 */
 	public function save( $data ) {
-		$clean_data = array();
+		$data = wp_parse_args( $data, $this->get_defaults() );
 
+		$clean_data = array();
 		$clean_data['title']       = $clean_data['label'] = ( isset( $data['title'] ) ) ? apply_filters( 'title_save_pre', $data['title'] ) : '';
 		$clean_data['hide-arrows'] = ( isset( $data['hide-arrows'] ) && 1 === (int) $data['hide-arrows'] ) ? 1 : 0;
 		$clean_data['hide-dots']   = ( isset( $data['hide-dots'] ) && 1 === (int) $data['hide-dots'] ) ? 1 : 0;

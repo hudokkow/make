@@ -192,7 +192,9 @@ class MAKE_Builder_Sections_Gallery_Definition {
 	public function get_item_defaults() {
 		return array(
 			'title' => '',
-			'link' => ''
+			'link' => '',
+			'description' => '',
+			'image-id' => '',
 		);
 	}
 
@@ -254,6 +256,7 @@ class MAKE_Builder_Sections_Gallery_Definition {
 	 * @return array             The cleaned data.
 	 */
 	public function save( $data ) {
+		$data = wp_parse_args( $data, $this->get_defaults() );
 		$clean_data = array();
 
 		if ( isset( $data['columns'] ) ) {
@@ -308,6 +311,8 @@ class MAKE_Builder_Sections_Gallery_Definition {
 			$clean_data['gallery-items'] = array();
 
 			foreach ( $data['gallery-items'] as $i => $item ) {
+				$item = wp_parse_args( $item, $this->get_item_defaults() );
+
 				// Handle legacy data layout
 				$id = isset( $item['id'] ) ? $item['id']: $i;
 
