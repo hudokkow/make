@@ -51,10 +51,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 			this.initOverlayViews();
 			this.initFrames();
 
-			if (sectionView) {
-				this.scrollToSectionView(sectionView);
-			}
-
 			return this;
 		},
 
