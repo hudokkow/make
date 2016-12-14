@@ -81,7 +81,7 @@ var oneApp = oneApp || {};
 			this.model.trigger('change');
 
 			if (!pseudo) {
-				oneApp.builder.scrollToAddedView(itemView);
+				oneApp.builder.scrollToSectionView(itemView);
 			}
 		},
 
