@@ -24,6 +24,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		events: {
 			'section-created': 'onSectionCreated',
 			'section-sort': 'onSectionSort',
+			'uploader-image-removed': 'onUploaderFrameRemoveImage'
 		},
 
 		initialize: function(options) {
@@ -50,6 +51,11 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 			this.initSortables();
 			this.initOverlayViews();
 			this.initFrames();
+
+			var self = this;
+			$('body').on('click', '.ttfmake-remove-image-from-modal', function(e) {
+				self.$stage.trigger('uploader-image-removed')
+			});
 
 			return this;
 		},
@@ -281,10 +287,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		},
 
 		initUploader: function (view, placeholder) {
-			var $placeholder = $(placeholder),
-					$uploader = $placeholder.parent();
-
-			this.$currentPlaceholder = $placeholder;
+			this.$currentPlaceholder = $(placeholder);
 
 			// If the media frame already exists, reopen it.
 			if (window.frame && 'function' === typeof window.frame.open) {
@@ -300,27 +303,23 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 			});
 
 			frame.on('open', this.onUploaderFrameOpen, this);
+			frame.on('select', this.onUploaderFrameSelect, this, 2);
 
 			// Finally, open the modal
 			frame.open();
 		},
 
-		onUploaderFrameOpen: function($placeholder) {
-			// When an image is selected, run a callback.
-			frame.on('select', this.onUploaderFrameSelect, this, 2);
+		onUploaderFrameOpen: function() {},
 
-			$('body').one('click', '.ttfmake-remove-image-from-modal', function(e) {
-				e.preventDefault();
+		onUploaderFrameRemoveImage: function() {
+			// Remove the image
+			this.$currentPlaceholder.css('background-image', '');
+			this.$currentPlaceholder.parent().removeClass('ttfmake-has-image-set');
 
-				// Remove the image
-				this.$currentPlaceholder.css('background-image', '');
-				this.$currentPlaceholder.parent().removeClass('ttfmake-has-image-set');
+			// Trigger event on the uploader to propagate it to calling view
+			this.$currentPlaceholder.trigger('mediaRemoved')
 
-				// Trigger event on the uploader to propagate it to calling view
-				$placeholder.trigger('mediaRemoved')
-
-				wp.media.frames.frame.close();
-			});
+			wp.media.frames.frame.close();
 		},
 
 		onUploaderFrameSelect: function() {
@@ -393,21 +392,6 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 	// Initialize menu view
 	oneApp.menu = new oneApp.views.menu();
-
-	// $('body').on('click', '.ttfmake-remove-image-from-modal', function(evt){
-	// 	evt.preventDefault();
-
-	// 	var $parent = oneApp.builder.$currentPlaceholder.parents('.ttfmake-uploader');
-
-	// 	// Remove the image
-	// 	oneApp.builder.$currentPlaceholder.css('background-image', '');
-	// 	$parent.removeClass('ttfmake-has-image-set');
-
-	// 	// Trigger event on the uploader to propagate it to calling view
-	// 	$parent.trigger('mediaRemoved')
-
-	// 	wp.media.frames.frame.close();
-	// });
 
 	/**
 	 * Attach an event to 'Update' post/page submit to store all the ttfmake-section[] array fields to a single hidden input containing these fields serialized in JSON. Then remove the fields to prevent those from being submitted.
