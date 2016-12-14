@@ -7,10 +7,12 @@ var oneApp = oneApp || {};
 	oneApp.models = oneApp.models || {};
 
 	oneApp.models.gallery = oneApp.models.section.extend({
-		defaults: {
-			'section-type': 'gallery',
-			'state': 'open',
-			'gallery-items': [],
+		defaults: function() {
+			return {
+				'section-type': 'gallery',
+				'state': 'open',
+				'gallery-items': [],
+			}
 		},
 
 		parse: function(data) {

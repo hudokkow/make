@@ -7,10 +7,12 @@ var oneApp = oneApp || {};
 	oneApp.models = oneApp.models || {};
 
 	oneApp.models.banner = oneApp.models.section.extend({
-		defaults: {
-			'section-type': 'banner',
-			'state': 'open',
-			'banner-slides': [],
+		defaults: function() {
+			return {
+				'section-type': 'banner',
+				'state': 'open',
+				'banner-slides': [],
+			}
 		},
 
 		parse: function(data) {
