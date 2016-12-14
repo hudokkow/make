@@ -73,7 +73,9 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 		onSectionSort: function(e, ids) {
 			var sortedSections = _(ids).map(function(id) {
-				return this.sections.findWhere({id: id});
+				return this.sections.find(function(section) {
+					return section.id.toString() == id.toString();
+				});
 			}, this);
 
 			this.sections.reset(sortedSections);
