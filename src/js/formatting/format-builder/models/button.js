@@ -11,7 +11,8 @@ var MakeFormatBuilder = MakeFormatBuilder || {};
 	 */
 	builder.definitions.button = {
 		inline: 'a',
-		classes: 'ttfmake-button'
+		classes: 'ttfmake-button',
+		selector: 'a',
 	};
 
 	/**
@@ -19,7 +20,7 @@ var MakeFormatBuilder = MakeFormatBuilder || {};
 	 *
 	 * @since 1.4.1.
 	 */
-	builder.nodes.button = 'a.ttfmake-button';
+	builder.nodes.button = 'a';
 
 	/**
 	 * Defines the listbox item in the 'Choose a format' dropdown.
