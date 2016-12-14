@@ -122,6 +122,8 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		},
 
 		initSortables: function () {
+			var self = this;
+
 			this.$stage.sortable({
 				handle: '.ttfmake-section-header',
 				placeholder: 'sortable-placeholder',
@@ -140,8 +142,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 				stop: function (event, ui) {
 					var $item = $(ui.item.get(0)),
-						$frames = $('iframe', $item),
-						self = this;
+						$frames = $('iframe', $item);
 
 					$item.css('-webkit-transform', '');
 
