@@ -45,7 +45,7 @@ var oneApp = oneApp || {};
 			// Close it up
 			} else {
 				this.$pane.slideUp({
-					duration: oneApp.options.closeSpeed,
+					duration: oneApp.builder.options.closeSpeed,
 					easing: 'easeInOutQuad',
 					complete: function() {
 						setUserSetting( key, 'c' );
