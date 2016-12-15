@@ -20,7 +20,7 @@ var MakeFormatBuilder = MakeFormatBuilder || {};
 	 *
 	 * @since 1.4.1.
 	 */
-	builder.nodes.button = 'a';
+	builder.nodes.button = 'a.ttfmake-button';
 
 	/**
 	 * Defines the listbox item in the 'Choose a format' dropdown.
@@ -79,13 +79,18 @@ var MakeFormatBuilder = MakeFormatBuilder || {};
 		 */
 		initialize: function() {
 			var node = builder.getParentNode(builder.nodes.button);
+			var $currentNode = $(builder.currentSelection.getNode());
 
 			// Create a new element ID.
 			this.set('id', this.createID());
 
 			// Check to see if we're updating an existing format.
 			if (true === this.get('update')) {
+				// Formatted button
 				this.parseAttributes(node);
+			} else if (true === $currentNode.is('a')) {
+				// Plain anchor tag
+				this.set('url', $currentNode.attr('href') || '#');
 			}
 		},
 
