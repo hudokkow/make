@@ -2765,6 +2765,12 @@ div.wp-video-shortcode {
 	padding: 0 3.2rem;
 }
 
+.builder-section-gallery.builder-section-full-width .builder-section-content,
+.builder-section-text.builder-section-full-width .builder-section-content,
+.builder-section-blank.builder-section-full-width .builder-section-content {
+	max-width: 100%;
+}
+
 .builder-section {
 	position: relative;
 	margin-bottom: 44px;
