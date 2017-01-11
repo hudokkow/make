@@ -10,8 +10,19 @@ var oneApp = oneApp || {};
 		defaults: {
 			'id': '',
 			'section-type': 'text',
-			'columns': [],
-			'columns-order': ['1','2','3','4']
+			'columns': []
+		},
+
+		parse: function(data) {
+			var attributes = _(data).clone();
+
+			attributes['columns'] = _(attributes['columns']).values().map(function(column) {
+				var columnModel = new oneApp.models['text-item'](column);
+				columnModel.set('parentID', data.id);
+				return columnModel;
+			});
+
+			return attributes;
 		},
 
 		toJSON: function() {
@@ -25,6 +36,8 @@ var oneApp = oneApp || {};
 					copyColumns[index] = column;
 				}
 			});
+
+			console.log(json);
 
 			return json;
 		},

@@ -2858,6 +2858,14 @@ div.wp-video-shortcode {
 	.builder-text-columns-4 .builder-text-column {
 		width: 22.5%;
 	}
+
+	.builder-text-columns-5 .builder-text-column {
+		width: 16.666%;
+	}
+
+  .builder-text-columns-6 .builder-text-column {
+		width: 13.333%;
+	}
 }
 
 .builder-text-image {

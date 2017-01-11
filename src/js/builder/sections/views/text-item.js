@@ -14,6 +14,7 @@ var oneApp = oneApp || {};
 		events: function() {
 			return _.extend({}, oneApp.views.item.prototype.events, {
 				'click .ttfmake-media-uploader-add': 'onMediaOpen',
+				'view-ready': 'onViewReady',
 				'overlayClose': 'onOverlayClose'
 			});
 		},

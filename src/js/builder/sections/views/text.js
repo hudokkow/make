@@ -27,6 +27,10 @@ var oneApp = oneApp || {};
 
 			if (typeof columns === 'undefined' || !columns.length) {
 				this.addColumns(3);
+			} else {
+				_(columns).each(function(columnModel) {
+					var columnView = self.addColumn(columnModel);
+				});
 			}
 
 			return this;
@@ -50,22 +54,24 @@ var oneApp = oneApp || {};
 				number = 1;
 			}
 
-			var columnModelDefaults = ttfMakeSectionDefaults['text-item'] || {};
-			var columnModelAttributes = _(columnModelDefaults).extend({
-				id: new Date().getTime().toString(),
-				parentID: this.model.id
-			});
+			for (var i = 1; i <= number; i++) {
+				var columnModelDefaults = ttfMakeSectionDefaults['text-item'] || {};
+				var columnModelAttributes = _(columnModelDefaults).extend({
+					id: new Date().getTime().toString(),
+					parentID: this.model.id
+				});
 
-			var columnModel = new oneApp.models['text-item'](columnModelAttributes);
-			var columnView = this.addColumn(columnModel);
+				var columnModel = new oneApp.models['text-item'](columnModelAttributes);
+				var columnView = this.addColumn(columnModel);
 
-			columnView.$el.trigger('view-ready');
+				columnView.$el.trigger('view-ready');
 
-			var columns = this.model.get('columns');
-			columns.push(columnModel);
+				var columns = this.model.get('columns');
+				columns.push(columnModel);
 
-			this.model.set('columns', columns);
-			this.model.trigger('change');
+				this.model.set('columns', columns);
+				this.model.trigger('change');
+			}
 		},
 
 		onViewReady: function(e) {
@@ -90,17 +96,35 @@ var oneApp = oneApp || {};
 		onColumnsSort: function(e, ids) {
 			e.stopPropagation();
 
-			this.model.updateOrder(ids);
+			var columns = _(this.model.get('columns'));
+			var sortedColumns = _(ids).map(function(id) {
+				return columns.find(function(column) {
+					return column.id.toString() === id.toString();
+				});
+			});
+
+			this.model.set('columns', sortedColumns);
 		},
 
 		handleColumns : function (evt) {
 			evt.preventDefault();
 
-			var columns = $(evt.target).val(),
+			var columns = parseInt($(evt.target).val(), 10),
 				$stage = $('.ttfmake-text-columns-stage', this.$el);
 
-			$stage.removeClass('ttfmake-text-columns-1 ttfmake-text-columns-2 ttfmake-text-columns-3 ttfmake-text-columns-4');
-			$stage.addClass('ttfmake-text-columns-' + parseInt(columns, 10));
+			var numberOfColumnsToCreate = columns - this.model.get('columns').length;
+
+			if (numberOfColumnsToCreate !== 0) {
+				if (numberOfColumnsToCreate > 0) {
+					this.addColumns(numberOfColumnsToCreate);
+				}
+			}
+
+			$stage.removeClass(function(i, className) {
+				return className.match(/ttfmake-text-columns-[0-9]/g || []).join(' ');
+			});
+
+			$stage.addClass('ttfmake-text-columns-' + columns);
 		},
 
 		onTextItemChange: function(evt) {
@@ -165,10 +189,7 @@ var oneApp = oneApp || {};
 						i++;
 					});
 
-					var ids = $(this).sortable('toArray', {attribute: 'data-model-id'});
-
-					self.initFrames();
-
+					var ids = $(this).sortable('toArray', {attribute: 'data-id'});
 					self.$el.trigger('columns-sort', [ids]);
 				}
 			});

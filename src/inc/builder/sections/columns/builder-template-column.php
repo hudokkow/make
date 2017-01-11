@@ -1,8 +1,8 @@
 <?php
 global $ttfmake_section_data;
 
-$section_name   = 'ttfmake-section[{{ get("parentID") }}][columns][{{ id }}]';
-$combined_id = "{{ get('parentID') }}-{{ id }}";
+$section_name   = 'ttfmake-section[{{ get("parentID") }}][columns][{{ get("id") }}]';
+$combined_id = "{{ get('parentID') }}-{{ get('id') }}";
 $overlay_id  = "ttfmake-overlay-" . $combined_id;
 
 ?>
@@ -26,9 +26,9 @@ $overlay_id  = "ttfmake-overlay-" . $combined_id;
 		200 => array(
 			'label'              => __( 'Edit text column', 'make' ),
 			'href'               => '#',
-			'class'              => 'edit-content-link edit-text-column-link {{ (get("content") ? "item-has-content" : "" }}',
+			'class'              => 'edit-content-link edit-text-column-link {{ (get("content")) ? "item-has-content" : "" }}',
 			'title'              => __( 'Edit content', 'make' ),
-			'other-a-attributes' => 'data-textarea="' . esc_attr( $textarea_id ) . '" data-iframe="' . esc_attr( $iframe_id ) . '"',
+			'other-a-attributes' => 'data-textarea="' . $section_name . '" data-iframe="' . $iframe_id . '"',
 		),
 	);
 
@@ -55,7 +55,7 @@ $overlay_id  = "ttfmake-overlay-" . $combined_id;
 	$column_classes = apply_filters( 'ttfmake-text-column-classes', 'ttfmake-text-column ttfmake-text-column-position-', $ttfmake_section_data );
 ?>
 
-<div class="ttfmake-text-column ttfmake-text-column-position-{{ (get('size') ? ' ttfmake-column-width-'+get('size') : '' }}" data-id="">
+<div class="ttfmake-text-column ttfmake-text-column-position-{{ get('column-position') }} {{ (get('size')) ? ' ttfmake-column-width-'+get('size') : '' }}" data-id="{{ get('id') }}">
 	<div title="<?php esc_attr_e( 'Drag-and-drop this column into place', 'make' ); ?>" class="ttfmake-sortable-handle">
 		<div class="sortable-background column-sortable-background"></div>
 	</div>
@@ -79,8 +79,8 @@ $overlay_id  = "ttfmake-overlay-" . $combined_id;
 		</a>
 	<?php endforeach; ?>
 
-	<?php echo ttfmake_get_builder_base()->add_uploader( $column_name, ttfmake_sanitize_image_id( $image_id ), __( 'Set image', 'make' ), 'image-url' ); ?>
-	<?php ttfmake_get_builder_base()->add_frame( $section_id . '-' . $i, 'content', $content ); ?>
+	<?php echo ttfmake_get_builder_base()->add_uploader( $column_name, 0, __( 'Set image', 'make' ), 'image-url' ); ?>
+	<?php ttfmake_get_builder_base()->add_frame( $combined_id, 'content', '', $content ); ?>
 
 	<?php
 	/**
