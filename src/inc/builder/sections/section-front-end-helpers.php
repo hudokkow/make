@@ -372,6 +372,13 @@ function ttfmake_builder_get_text_class( $ttfmake_section_data, $sections ) {
 		$text_class .= ' has-background';
 	}
 
+	// Full width
+	$full_width = isset( $ttfmake_section_data['full-width'] ) && 0 !== absint( $ttfmake_section_data['full-width'] );
+
+	if ( true === $full_width ) {
+		$text_class .= ' builder-section-full-width';
+	}
+
 	/**
 	 * Filter the text section class.
 	 *

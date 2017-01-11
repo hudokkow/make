@@ -105,6 +105,12 @@ class MAKE_Builder_Sections_Columns_Definition {
 				'class'   => 'ttfmake-text-background-color ttfmake-configuration-color-picker',
 				'default' => ttfmake_get_section_default( 'background-color', 'text' ),
 			),
+			700 => array(
+				'type'    => 'checkbox',
+				'label'   => __( 'Full width', 'make' ),
+				'name'    => 'full-width',
+				'default' => ttfmake_get_section_default( 'full-width', 'text' ),
+			),
 		);
 	}
 
@@ -125,6 +131,7 @@ class MAKE_Builder_Sections_Columns_Definition {
 			'darken' => 0,
 			'background-style' => 'tile',
 			'background-color' => '',
+			'full-width' => 0,
 			'columns-number' => 3,
 			'columns' => array(
 				1 => array(),
@@ -266,6 +273,12 @@ class MAKE_Builder_Sections_Columns_Definition {
 			if ( in_array( $data['background-style'], array( 'tile', 'cover' ) ) ) {
 				$clean_data['background-style'] = $data['background-style'];
 			}
+		}
+
+		if ( isset( $data['full-width'] ) && $data['full-width'] == 1 ) {
+			$clean_data['full-width'] = 1;
+		} else {
+			$clean_data['full-width'] = 0;
 		}
 
 		if ( isset( $data['columns'] ) && is_array( $data['columns'] ) ) {

@@ -40,6 +40,12 @@
 		margin: 0 auto;
 		@include rem('padding', 0 $gut);
 	}
+
+	&.builder-section-full-width {
+		.builder-section-content {
+			max-width: 100%;
+		}
+	}
 }
 .builder-section {
 	@include rem('margin-bottom', $base*2);
