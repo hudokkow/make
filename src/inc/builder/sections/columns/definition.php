@@ -41,7 +41,10 @@ class MAKE_Builder_Sections_Columns_Definition {
 			Make()->scripts()->get_css_directory_uri() . '/builder/sections/images/text.png',
 			__( 'Create rearrangeable columns of content and images.', 'make' ),
 			array( $this, 'save' ),
-			'sections/columns/builder-template',
+			array (
+				'text' => 'sections/columns/builder-template',
+				'text-item' => 'sections/columns/builder-template-column'
+			),
 			'sections/columns/frontend-template',
 			100,
 			get_template_directory() . '/inc/builder/',
@@ -73,6 +76,8 @@ class MAKE_Builder_Sections_Columns_Definition {
 					2 => 2,
 					3 => 3,
 					4 => 4,
+					5 => 5,
+					6 => 6
 				),
 			),
 			300 => array(
@@ -124,14 +129,7 @@ class MAKE_Builder_Sections_Columns_Definition {
 			'background-image' => '',
 			'darken' => 0,
 			'background-style' => 'tile',
-			'background-color' => '',
-			'columns-number' => 3,
-			'columns' => array(
-				1 => array(),
-				2 => array(),
-				3 => array(),
-				4 => array()
-			)
+			'background-color' => ''
 		);
 	}
 
@@ -167,6 +165,7 @@ class MAKE_Builder_Sections_Columns_Definition {
 	 */
 	public function section_defaults( $defaults ) {
 		$defaults['text'] = $this->get_defaults();
+		$defaults['text-item'] = $this->get_column_defaults();
 
 		return $defaults;
 	}
@@ -191,14 +190,15 @@ class MAKE_Builder_Sections_Columns_Definition {
 				if ( isset( $data['columns-order'] ) ) {
 					$ordered_items = array();
 
-					foreach ( $data['columns-order'] as $index => $column_position ) {
-						$column_position = intval($column_position);
+					foreach ( $data['columns-order'] as $item_id ) {
+						array_push($ordered_items, $data['columns'][$index]);
+						/*$column_position = intval($column_position);
 						$ordered_items[$index+1] = $data['columns'][$column_position];
 
 						if ( array_key_exists('sidebar-label', $ordered_items[$index+1]) && $ordered_items[$index+1]['sidebar-label'] != '' && !array_key_exists('widget-area-id', $ordered_items[$index+1]) ) {
 							$page_id = get_the_ID();
 							$ordered_items[$index+1]['widget-area-id'] = 'ttfmp-' . $page_id . '-' . $data['id'] . '-' . $column_position;
-						}
+						}*/
 					}
 
 					$data['columns'] = $ordered_items;
@@ -230,7 +230,7 @@ class MAKE_Builder_Sections_Columns_Definition {
 		$clean_data = array();
 
 		if ( isset( $data['columns-number'] ) ) {
-			if ( in_array( $data['columns-number'], range( 1, 4 ) ) ) {
+			if ( in_array( $data['columns-number'], range( 1, 6 ) ) ) {
 				$clean_data['columns-number'] = $data['columns-number'];
 			}
 		}
