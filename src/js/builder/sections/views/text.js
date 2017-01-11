@@ -20,55 +20,52 @@ var oneApp = oneApp || {};
 		},
 
 		render: function() {
-			var modelColumns = _(this.model.get('columns'));
-			var dataColumns = _(modelColumns).clone();
-
 			oneApp.views.section.prototype.render.apply(this, arguments);
 
+			var columns = this.model.get('columns');
 			var self = this;
 
-			_(modelColumns).each(function(columnModel, index) {
-				var ourIndex = parseInt(index, 10);
-
-				var textItemModelDefaults = {
-					'id': '',
-					'parentID': '',
-					'image-link': '',
-					'image-id': '',
-					'image-url': '',
-					'title': '',
-					'content': '',
-					'size': ''
-				};
-
-				var textItemModelAttributes = _(textItemModelDefaults).extend({
-					id: new Date().getTime(),
-					parentID: self.model.get('id')
-				});
-
-				// extend TextItemModel attributes with actual model data
-				textItemModelAttributes = _(textItemModelAttributes).extend(columnModel);
-
-				var textItemModel = new oneApp.models['text-item'](textItemModelAttributes);
-				var textItemElSelector = '.ttfmake-text-column[data-id='+ourIndex+']';
-
-				dataColumns[ourIndex] = textItemModel;
-
-				// create view
-				var itemView = new oneApp.views['text-item']({
-					model: textItemModel,
-					elSelector: textItemElSelector
-				});
-
-				// set view element and render
-				itemView.setElement(self.$(textItemElSelector)).render();
-
-				self.itemViews.push(itemView);
-			});
-
-			self.model.set('columns', dataColumns);
+			if (typeof columns === 'undefined' || !columns.length) {
+				this.addColumns(3);
+			}
 
 			return this;
+		},
+
+		addColumn: function(columnModel) {
+			var columnView = new oneApp.views['text-item']({
+				model: columnModel
+			});
+
+			var html = columnView.render().el;
+			$('.ttfmake-text-columns-stage', this.$el).append(html);
+
+			this.itemViews.push(columnView);
+
+			return columnView;
+		},
+
+		addColumns: function(number) {
+			if (typeof number === 'undefined') {
+				number = 1;
+			}
+
+			var columnModelDefaults = ttfMakeSectionDefaults['text-item'] || {};
+			var columnModelAttributes = _(columnModelDefaults).extend({
+				id: new Date().getTime().toString(),
+				parentID: this.model.id
+			});
+
+			var columnModel = new oneApp.models['text-item'](columnModelAttributes);
+			var columnView = this.addColumn(columnModel);
+
+			columnView.$el.trigger('view-ready');
+
+			var columns = this.model.get('columns');
+			columns.push(columnModel);
+
+			this.model.set('columns', columns);
+			this.model.trigger('change');
 		},
 
 		onViewReady: function(e) {

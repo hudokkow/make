@@ -10,6 +10,7 @@ var oneApp = oneApp || {};
 		defaults: {
 			'id': '',
 			'section-type': 'text',
+			'columns': [],
 			'columns-order': ['1','2','3','4']
 		},
 
