@@ -113,6 +113,13 @@ function ttfmake_builder_get_gallery_class( $ttfmake_section_data, $sections ) {
 		$gallery_class .= ' has-background';
 	}
 
+	// Full width
+	$full_width = isset( $ttfmake_section_data['full-width'] ) && 0 !== absint( $ttfmake_section_data['full-width'] );
+
+	if ( true === $full_width ) {
+		$gallery_class .= ' builder-section-full-width';
+	}
+
 	/**
 	 * Filter the class applied to a gallery.
 	 *

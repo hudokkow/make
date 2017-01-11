@@ -141,7 +141,13 @@ class MAKE_Builder_Sections_Gallery_Definition {
 				'name'    => 'background-color',
 				'class'   => 'ttfmake-gallery-background-color ttfmake-configuration-color-picker',
 				'default' => ttfmake_get_section_default( 'background-color', 'gallery' )
-			)
+			),
+			1000 => array(
+				'type'    => 'checkbox',
+				'label'   => __( 'Full width', 'make' ),
+				'name'    => 'full-width',
+				'default' => ttfmake_get_section_default( 'full-width', 'gallery' )
+			),
 		);
 	}
 
@@ -192,7 +198,8 @@ class MAKE_Builder_Sections_Gallery_Definition {
 			'background-image' => '',
 			'darken' => 0,
 			'background-style' => 'tile',
-			'background-color' => ''
+			'background-color' => '',
+			'full-width' => 0
 		);
 	}
 
@@ -336,6 +343,12 @@ class MAKE_Builder_Sections_Gallery_Definition {
 			if ( in_array( $data['background-style'], array( 'tile', 'cover' ) ) ) {
 				$clean_data['background-style'] = $data['background-style'];
 			}
+		}
+
+		if ( isset( $data['full-width'] ) && $data['full-width'] == 1 ) {
+			$clean_data['full-width'] = 1;
+		} else {
+			$clean_data['full-width'] = 0;
 		}
 
 		if ( isset( $data['gallery-items'] ) && is_array( $data['gallery-items'] ) ) {
