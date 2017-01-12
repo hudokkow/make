@@ -190,8 +190,8 @@ class MAKE_Builder_Sections_Columns_Definition {
 				if ( isset( $data['columns-order'] ) ) {
 					$ordered_items = array();
 
-					foreach ( $data['columns-order'] as $item_id ) {
-						array_push($ordered_items, $data['columns'][$index]);
+					foreach ( $data['columns-order'] as $index => $item_id ) {
+						array_push($ordered_items, $data['columns'][$index+1]);
 						/*$column_position = intval($column_position);
 						$ordered_items[$index+1] = $data['columns'][$column_position];
 
