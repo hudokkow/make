@@ -67,6 +67,12 @@ class MAKE_Builder_Sections_Gallery_Definition {
 				'default' => ttfmake_get_section_default( 'title', 'gallery' )
 			),
 			200 => array(
+				'type'    => 'checkbox',
+				'label'   => __( 'Full width', 'make' ),
+				'name'    => 'full-width',
+				'default' => ttfmake_get_section_default( 'full-width', 'gallery' )
+			),
+			300 => array(
 				'type'    => 'select',
 				'name'    => 'columns',
 				'label'   => __( 'Columns', 'make' ),
@@ -79,7 +85,7 @@ class MAKE_Builder_Sections_Gallery_Definition {
 					4 => 4,
 				)
 			),
-			300 => array(
+			400 => array(
 				'type'    => 'select',
 				'name'    => 'aspect',
 				'label'   => __( 'Aspect ratio', 'make' ),
@@ -91,7 +97,7 @@ class MAKE_Builder_Sections_Gallery_Definition {
 					'none'      => __( 'None', 'make' ),
 				)
 			),
-			400 => array(
+			500 => array(
 				'type'    => 'select',
 				'name'    => 'captions',
 				'label'   => __( 'Caption style', 'make' ),
@@ -102,7 +108,7 @@ class MAKE_Builder_Sections_Gallery_Definition {
 					'none'    => __( 'None', 'make' ),
 				)
 			),
-			500 => array(
+			600 => array(
 				'type'    => 'select',
 				'name'    => 'caption-color',
 				'label'   => __( 'Caption color', 'make' ),
@@ -112,20 +118,20 @@ class MAKE_Builder_Sections_Gallery_Definition {
 					'dark' => __( 'Dark', 'make' ),
 				)
 			),
-			600 => array(
+			700 => array(
 				'type'  => 'image',
 				'name'  => 'background-image',
 				'label' => __( 'Background image', 'make' ),
 				'class' => 'ttfmake-configuration-media',
 				'default' => ttfmake_get_section_default( 'background-image', 'gallery' )
 			),
-			700 => array(
+			800 => array(
 				'type'    => 'checkbox',
 				'label'   => __( 'Darken background to improve readability', 'make' ),
 				'name'    => 'darken',
 				'default' => ttfmake_get_section_default( 'darken', 'gallery' ),
 			),
-			800 => array(
+			900 => array(
 				'type'    => 'select',
 				'name'    => 'background-style',
 				'label'   => __( 'Background style', 'make' ),
@@ -135,18 +141,12 @@ class MAKE_Builder_Sections_Gallery_Definition {
 					'cover' => __( 'Cover', 'make' ),
 				),
 			),
-			900 => array(
+			1000 => array(
 				'type'    => 'color',
 				'label'   => __( 'Background color', 'make' ),
 				'name'    => 'background-color',
 				'class'   => 'ttfmake-gallery-background-color ttfmake-configuration-color-picker',
 				'default' => ttfmake_get_section_default( 'background-color', 'gallery' )
-			),
-			1000 => array(
-				'type'    => 'checkbox',
-				'label'   => __( 'Full width', 'make' ),
-				'name'    => 'full-width',
-				'default' => ttfmake_get_section_default( 'full-width', 'gallery' )
 			),
 		);
 	}

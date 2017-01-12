@@ -63,6 +63,12 @@ class MAKE_Builder_Sections_Columns_Definition {
 				'default' => ttfmake_get_section_default( 'title', 'text' ),
 			),
 			200 => array(
+				'type'    => 'checkbox',
+				'label'   => __( 'Full width', 'make' ),
+				'name'    => 'full-width',
+				'default' => ttfmake_get_section_default( 'full-width', 'text' ),
+			),
+			300 => array(
 				'type'    => 'select',
 				'name'    => 'columns-number',
 				'class'   => 'ttfmake-text-columns',
@@ -75,20 +81,20 @@ class MAKE_Builder_Sections_Columns_Definition {
 					4 => 4,
 				),
 			),
-			300 => array(
+			400 => array(
 				'type'  => 'image',
 				'name'  => 'background-image',
 				'label' => __( 'Background image', 'make' ),
 				'class' => 'ttfmake-configuration-media',
 				'default' => ttfmake_get_section_default( 'background-image', 'text' ),
 			),
-			400 => array(
+			500 => array(
 				'type'    => 'checkbox',
 				'label'   => __( 'Darken background to improve readability', 'make' ),
 				'name'    => 'darken',
 				'default' => ttfmake_get_section_default( 'darken', 'text' ),
 			),
-			500 => array(
+			600 => array(
 				'type'    => 'select',
 				'name'    => 'background-style',
 				'label'   => __( 'Background style', 'make' ),
@@ -98,18 +104,12 @@ class MAKE_Builder_Sections_Columns_Definition {
 					'cover' => __( 'Cover', 'make' ),
 				),
 			),
-			600 => array(
+			700 => array(
 				'type'    => 'color',
 				'label'   => __( 'Background color', 'make' ),
 				'name'    => 'background-color',
 				'class'   => 'ttfmake-text-background-color ttfmake-configuration-color-picker',
 				'default' => ttfmake_get_section_default( 'background-color', 'text' ),
-			),
-			700 => array(
-				'type'    => 'checkbox',
-				'label'   => __( 'Full width', 'make' ),
-				'name'    => 'full-width',
-				'default' => ttfmake_get_section_default( 'full-width', 'text' ),
 			),
 		);
 	}
