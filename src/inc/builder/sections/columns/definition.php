@@ -215,8 +215,9 @@ class MAKE_Builder_Sections_Columns_Definition {
 
 					$data['columns'][$s]['image-url'] = ttfmake_get_image_src( $column['image-id'], 'large' );
 
-					if ( isset( $column['sidebar-label'] ) && !empty( $column['sidebar-label'] ) && !isset( $column['widget-area-id'] ) ) {
-						$data['columns'][$s]['widget-area-id'] = 'ttfmp-' . get_the_ID() . '-' . $data['id'] . '-' . $s;
+					if ( isset( $column['sidebar-label'] ) && !empty( $column['sidebar-label'] ) && !isset( $column['widget-area-id'] ) || $column['widget-area-id'] == '' ) {
+						$sn = $s + 1;
+						$data['columns'][$s]['widget-area-id'] = 'ttfmp-' . get_the_ID() . '-' . $data['id'] . '-' . $sn;
 					}
 				}
 			}
@@ -241,10 +242,6 @@ class MAKE_Builder_Sections_Columns_Definition {
 		}
 
 		$clean_data['title'] = $clean_data['label'] = ( isset( $data['title'] ) ) ? apply_filters( 'title_save_pre', $data['title'] ) : '';
-
-		if ( isset( $data['columns-order'] ) ) {
-			$clean_data['columns-order'] = $data['columns-order'];
-		}
 
 		if ( isset( $data['background-image'] ) ) {
 			$clean_data['background-image'] = ttfmake_sanitize_image_id( $data['background-image'] );
