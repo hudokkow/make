@@ -213,6 +213,10 @@ class MAKE_Builder_Sections_Columns_Definition {
 					$data['columns'][$s]['id'] = $id;
 
 					$data['columns'][$s]['image-url'] = ttfmake_get_image_src( $column['image-id'], 'large' );
+
+					if ( isset( $column['sidebar-label'] ) && !empty( $column['sidebar-label'] ) && !isset( $column['widget-area-id'] ) ) {
+						$data['columns'][$s]['widget-area-id'] = 'ttfmp-' . get_the_ID() . '-' . $data['id'] . '-' . $s;
+					}
 				}
 			}
 		}
@@ -299,10 +303,6 @@ class MAKE_Builder_Sections_Columns_Definition {
 
 				if ( isset( $item['sidebar-label'] ) ) {
 					$clean_data['columns'][ $id ]['sidebar-label'] = $item['sidebar-label'];
-				}
-
-				if ( isset( $item['widget-area-id'] ) ) {
-					$clean_data['columns'][ $id ]['widget-area-id'] = $item['widget-area-id'];
 				}
 			}
 		}
