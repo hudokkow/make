@@ -148,7 +148,8 @@ class MAKE_Builder_Sections_Columns_Definition {
 			'image-url' => '',
 			'size' => '',
 			'content' => '',
-			'sidebar-label' => ''
+			'sidebar-label' => '',
+			'widget-area-id' => ''
 		);
 	}
 
@@ -192,13 +193,13 @@ class MAKE_Builder_Sections_Columns_Definition {
 
 					foreach ( $data['columns-order'] as $index => $item_id ) {
 						array_push($ordered_items, $data['columns'][$index+1]);
-						/*$column_position = intval($column_position);
-						$ordered_items[$index+1] = $data['columns'][$column_position];
 
-						if ( array_key_exists('sidebar-label', $ordered_items[$index+1]) && $ordered_items[$index+1]['sidebar-label'] != '' && !array_key_exists('widget-area-id', $ordered_items[$index+1]) ) {
+						if ( array_key_exists('sidebar-label', $ordered_items[$index]) && $ordered_items[$index]['sidebar-label'] != '' && !array_key_exists('widget-area-id', $ordered_items[$index]) ) {
+							$old_index = $index + 1;
+
 							$page_id = get_the_ID();
-							$ordered_items[$index+1]['widget-area-id'] = 'ttfmp-' . $page_id . '-' . $data['id'] . '-' . $column_position;
-						}*/
+							$ordered_items[$index]['widget-area-id'] = 'ttfmp-' . $page_id . '-' . $data['id'] . '-' . $old_index;
+						}
 					}
 
 					$data['columns'] = $ordered_items;
