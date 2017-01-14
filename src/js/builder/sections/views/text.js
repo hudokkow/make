@@ -33,6 +33,8 @@ var oneApp = oneApp || {};
 				});
 			}
 
+			this.$el.trigger('columns-ready');
+
 			return this;
 		},
 
