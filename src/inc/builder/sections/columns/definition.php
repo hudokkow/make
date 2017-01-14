@@ -194,7 +194,7 @@ class MAKE_Builder_Sections_Columns_Definition {
 					foreach ( $data['columns-order'] as $index => $item_id ) {
 						array_push($ordered_items, $data['columns'][$index+1]);
 
-						if ( array_key_exists('sidebar-label', $ordered_items[$index]) && $ordered_items[$index]['sidebar-label'] != '' && !array_key_exists('widget-area-id', $ordered_items[$index]) ) {
+						if ( array_key_exists('sidebar-label', $ordered_items[$index]) && $ordered_items[$index]['sidebar-label'] != '' && empty($ordered_items[$index]['widget-area-id']) ) {
 							$old_index = $index + 1;
 
 							$page_id = get_the_ID();
@@ -215,9 +215,8 @@ class MAKE_Builder_Sections_Columns_Definition {
 
 					$data['columns'][$s]['image-url'] = ttfmake_get_image_src( $column['image-id'], 'large' );
 
-					if ( isset( $column['sidebar-label'] ) && !empty( $column['sidebar-label'] ) && !isset( $column['widget-area-id'] ) || $column['widget-area-id'] == '' ) {
-						$sn = $s + 1;
-						$data['columns'][$s]['widget-area-id'] = 'ttfmp-' . get_the_ID() . '-' . $data['id'] . '-' . $sn;
+					if ( isset( $column['sidebar-label'] ) && !empty( $column['sidebar-label'] ) && empty( $column['widget-area-id'] ) ) {
+						$data['columns'][$s]['widget-area-id'] = 'ttfmp-' . get_the_ID() . '-' . $data['id'] . '-' . $s;
 					}
 				}
 			}
