@@ -3,8 +3,12 @@
 	<div class="ttfmake-overlay-wrapper">
 		<div class="ttfmake-overlay-header">
 			<div class="ttfmake-overlay-window-head">
-				<div class="ttfmake-overlay-title"><?php if ( ! empty( $ttfmake_overlay_title ) ) : echo esc_html( $ttfmake_overlay_title ); else : esc_html_e( 'Configuration', 'make' ); endif; ?></div>
-				<span class="ttfmake-overlay-close ttfmake-overlay-close-action" aria-hidden="true"><?php esc_html_e( 'Done', 'make' ); ?></span>
+				<div class="ttfmake-overlay-title">
+					<?php if ( ! empty( $ttfmake_overlay_title ) ) : echo esc_html( $ttfmake_overlay_title ); else : esc_html_e( 'Configuration', 'make' ); endif; ?>
+					<button type="button" class="button-link media-modal-close ttfmake-overlay-close-action">
+						<span class="media-modal-icon"></span>
+					</button>
+				</div>
 			</div>
 		</div>
 		<div class="ttfmake-overlay-body">

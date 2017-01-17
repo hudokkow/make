@@ -488,61 +488,39 @@
 	background: rgba(0, 0, 0, 0.7) ;
 }
 .ttfmake-overlay-wrapper {
-	position: fixed !important;
-	top: 50% !important;
-	left: 50% !important;
-	min-height: 150px !important;
-	padding-bottom: 20px !important;
-	background-color: #fff;
-	-webkit-box-shadow: 0 3px 6px rgba(0,0,0,.3);
-	box-shadow: 0 3px 6px rgba(0,0,0,.3);
-	/* Fix webkit bug. @link https://github.com/mgcrea/angular-strap/issues/1234#issuecomment-61913920 */
-	-webkit-transform: translate3d(0,0,0);
+	position: fixed;
+	left: 50%;
+	top: 30px;
+	bottom: 30px;
+	transform: translate(-50%, 0);
+	width: 400px;
 }
 .ttfmake-overlay-window-head {
 	padding: 0; /*reser*/
-	min-height: 36px;
+	height: 50px;
 	background: #fcfcfc;
 }
 .ttfmake-overlay-title {
-	  width: 300px;
-	margin: 0;
-	padding: 0 36px 0 10px;
-	color: #444;
-	font-size: 18px;
-	font-weight: 600;
-	line-height: 36px;
-	text-rendering: optimizelegibility;
-	white-space: nowrap;
-	overflow: hidden;
+	padding: 0 16px;
+    font-size: 22px;
+    line-height: 50px;
+    margin: 0;
+    font-weight: 500;
 	text-overflow: ellipsis;
 }
 .ttfmake-overlay-close {
-	display: block;
-	position: absolute;
-	top: 0; /*reset*/
-	right: 0; /*reset*/
-	padding: 0 10px;
-	font-size: 15px;
-	font-size: 15px;
-	color: #fff;
-	line-height: 37px;
-	text-align: center;
-	background-color: #1bc865;
-	cursor: pointer;
+	float: right;
+	margin: 15px !important;
 }
 .ttfmake-configuration-overlay-input-wrap  .ttfmake-uploader {
 	width: 100%;
 }
-.ttfmake-configuration-overlay .ttfmake-overlay-wrapper {
-	margin-left: -200px;
-	width: 400px;
-}
 #ttfmake-tinymce-overlay .ttfmake-overlay-wrapper {
-	width: 800px !important;
-	height: 500px !important;
-	margin-left: -400px !important;
-	margin-top: -250px !important;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 800px;
+	height: 500px;
 }
 #ttfmake-tinymce-overlay .ttfmake-overlay-body {
 	overflow-y: hidden;
@@ -551,7 +529,7 @@
 	-webkit-font-smoothing: subpixel-antialiased !important;
 }
 .ttfmake-overlay-header {
-	border-bottom: 1px solid #dfdfdf;
+	border-bottom: 1px solid #ddd;
 }
 .ttfmake-overlay-header h2 {
 	float: left;
@@ -615,14 +593,29 @@
 	margin-left: auto;
 }
 .ttfmake-overlay-body {
-	padding: 20px !important;
-	clear: both;
-	overflow-y: scroll;
-	max-height: 500px;
+	position: absolute;
+    top: 51px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    outline: 0;
+    padding: 16px;
+    background-color: #ffffff;
 }
 .ttfmake-overlay-body .ttfmake-configuration-overlay-input-wrap:last-of-type {
 	padding-bottom: 0 !important;
 	border-bottom: 0 !important;
+}
+.ttfmake-overlay-footer {
+	position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 60px;
+    z-index: 100;
+    background-color: #ffffff;
+    border-top: 1px solid #ddd;
 }
 .ttfmake-configuration-title {
 	width: 100%;
