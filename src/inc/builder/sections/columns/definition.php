@@ -189,6 +189,7 @@ class MAKE_Builder_Sections_Columns_Definition {
 			$data['background-image-url'] = ttfmake_get_image_src( $data['background-image'], 'large' );
 
 			if ( isset( $data['columns'] ) && is_array( $data['columns'] ) ) {
+				// back compat
 				if ( isset( $data['columns-order'] ) ) {
 					$ordered_items = array();
 
@@ -196,9 +197,10 @@ class MAKE_Builder_Sections_Columns_Definition {
 						array_push($ordered_items, $data['columns'][$index+1]);
 
 						if ( array_key_exists('sidebar-label', $ordered_items[$index]) && $ordered_items[$index]['sidebar-label'] != '' && empty($ordered_items[$index]['widget-area-id']) ) {
-							$old_index = $index + 1;
+							$old_index = $index + 1; // index started at 1 before
 
 							$page_id = get_the_ID();
+
 							$ordered_items[$index]['widget-area-id'] = 'ttfmp-' . $page_id . '-' . $data['id'] . '-' . $old_index;
 						}
 					}

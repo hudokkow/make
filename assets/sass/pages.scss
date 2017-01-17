@@ -116,6 +116,12 @@
 	.builder-text-columns-4 .builder-text-column {
 		width: percentage( ( $width - ( $gut*3 ) ) / ( $width*4 ) );
 	}
+	.builder-text-columns-5 .builder-text-column {
+		width: percentage( ( $width - ( $gut*4 ) ) / ( $width*5 ) );
+	}
+	.builder-text-columns-6 .builder-text-column {
+		width: percentage( ( $width - ( $gut*5 ) ) / ( $width*6 ) );
+	}
 }
 .builder-text-image {
 	text-align: center;
