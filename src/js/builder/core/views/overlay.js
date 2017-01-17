@@ -11,7 +11,7 @@ var oneApp = oneApp || {};
 
 		events: function() {
 			return _.extend({}, oneApp.views.section.prototype.events, {
-				'click .ttfmake-overlay-close-action' : 'closeOnClick'
+				'click .ttfmake-overlay-close-action' : 'closeOnClick',
 			});
 		},
 
@@ -43,7 +43,16 @@ var oneApp = oneApp || {};
 
 		closeOnClick: function(e) {
 			e.preventDefault();
+			e.stopImmediatePropagation();
+
 			this.close();
+		},
+
+		onKeyDown: function(e) {
+			if (27 === event.which && this.$el.is(':visible')) {
+				event.stopImmediatePropagation();
+				this.close();
+			}
 		},
 
 		toggleHasContent: function(textareaID) {

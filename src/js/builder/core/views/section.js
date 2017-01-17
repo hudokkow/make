@@ -23,13 +23,14 @@ var oneApp = oneApp || {};
 			'click .ttfmake-media-uploader-add': 'onMediaAdd',
 			'color-picker-change': 'onColorPickerChange',
 			'click .ttfmake-overlay-open': 'openConfigurationOverlay',
-			'click .ttfmake-overlay-close': 'closeConfigurationOverlay',
+			'click .ttfmake-overlay-close-action': 'closeConfigurationOverlay',
 			'mediaSelected': 'onMediaSelected',
 			'mediaRemoved': 'onMediaRemoved',
 			'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 			'keyup .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
 			'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
 			'change .ttfmake-configuration-overlay select': 'updateSelectField',
+			'keydown': 'onKeyDown'
 		},
 
 		initialize: function (options) {
@@ -145,7 +146,7 @@ var oneApp = oneApp || {};
 			$overlay.show(1, function() {
 				$('.wp-color-result', $overlay).click().off('click');
 				$( 'body' ).off( 'click.wpcolorpicker' );
-				self.setSize($overlay, $wrapper);
+				// self.setSize($overlay, $wrapper);
 				$overlay.find('input,select').filter(':first').focus();
 			});
 
@@ -176,13 +177,21 @@ var oneApp = oneApp || {};
 				})
 		},
 
-		closeConfigurationOverlay: function (evt) {
-			evt.preventDefault();
+		closeConfigurationOverlay: function (e) {
+			e.preventDefault();
+			e.stopImmediatePropagation();
 
-			var $this = $(evt.target),
+			var $this = $(e.target),
 				$overlay = $this.parents('.ttfmake-overlay');
 
 			$overlay.hide();
+		},
+
+		onKeyDown: function(e) {
+			if (27 === event.which && this.$el.is(':visible')) {
+				event.stopImmediatePropagation();
+				$('.ttfmake-overlay', this.$el).hide();
+			}
 		},
 
 		updateInputField: function(evt) {
