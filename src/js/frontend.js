@@ -93,7 +93,7 @@ var MakeFrontEnd = MakeFrontEnd || {};
 				return;
 			}
 
-			menu = container.getElementsByTagName( 'ul' )[0];
+			menu = container.getElementsByClassName( 'menu-mobile' )[0];
 
 			// Hide menu toggle button if menu is empty and return early.
 			if ( 'undefined' === typeof menu ) {
@@ -107,12 +107,12 @@ var MakeFrontEnd = MakeFrontEnd || {};
 			}
 
 			button.onclick = function() {
-				if ( -1 !== container.className.indexOf( 'toggled' ) ) {
-					container.className = container.className.replace( ' toggled', '' );
+				if ( -1 !== menu.className.indexOf( 'toggled' ) ) {
+					menu.className = menu.className.replace( ' toggled', '' );
 					button.setAttribute( 'aria-expanded', 'false' );
 					menu.setAttribute( 'aria-expanded', 'false' );
 				} else {
-					container.className += ' toggled';
+					menu.className += ' toggled';
 					button.setAttribute( 'aria-expanded', 'true' );
 					menu.setAttribute( 'aria-expanded', 'true' );
 				}

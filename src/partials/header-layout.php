@@ -67,9 +67,24 @@ $header_bar_menu = wp_nav_menu( array(
 			<nav id="site-navigation" class="site-navigation" role="navigation">
 				<span class="menu-toggle"><?php echo make_get_thememod_value( 'navigation-mobile-label' ); ?></span>
 				<?php
-				wp_nav_menu( array(
-					'theme_location' => 'primary'
-				) );
+				$mobile_menu = make_get_thememod_value( 'mobile-menu' );
+				$mobile_menu_class = 'menu menu-mobile';
+
+				if ( $mobile_menu === 'primary' ) {
+					wp_nav_menu( array(
+						'theme_location' => 'primary',
+						'menu_class' => $mobile_menu_class,
+					) );
+				} else {
+					wp_nav_menu( array(
+						'theme_location' => 'primary'
+					) );
+
+					wp_nav_menu( array(
+						'theme_location' => $mobile_menu,
+						'menu_class' => $mobile_menu_class,
+					) );
+				}
 				?>
 			</nav>
 		</div>
