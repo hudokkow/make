@@ -43,7 +43,6 @@ var oneApp = oneApp || {};
 
 		onViewReady: function(e) {
 			e.stopPropagation();
-
 			this.initializeSortables();
 		},
 
