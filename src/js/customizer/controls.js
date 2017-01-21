@@ -195,6 +195,25 @@
 	});
 
 	/**
+	 * Initialize instances of MAKE_Customizer_Control_Radio
+	 *
+	 * @since 1.8.4.
+	 */
+	api.controlConstructor.make_select = api.Control.extend({
+		ready: function() {
+			var control = this,
+				$container = control.container.find('.make-select-container'),
+				$input = $('select', $container);
+
+			// Listen for changes to the radio group.
+			$input.on('change', function() {
+				var value = $(this).val();
+				control.setting.set(value);
+			});
+		}
+	});
+
+	/**
 	 * Initialize instances of MAKE_Customizer_Control_Range
 	 *
 	 * @since 1.7.0.
