@@ -20,7 +20,7 @@ function ttfmake_create_config_select( $section_name, $args, $section_data ) {
 		$label  = ( isset( $args['label'] ) ) ? '<label for="' . $id . '">' . esc_html( $args['label'] ) . '</label>' : '';
 		$class  = ( isset( $args['class'] ) ) ? ' class="' . esc_attr( $args['class'] ) . '"' : '';
 		$description = ( isset( $args['description'] ) ) ? '<div class="ttfmake-configuration-description">' . esc_html( $args['description'] ) . '</div>': '';
-		$select = '<select id="' . $id . '"' . $class .' name="' . $id . '" data-model-attr="' . $args['name'] .'">%s</select>';
+		$select = '<select id="' . $id . '"' . $class .' data-model-attr="' . $args['name'] .'">%s</select>';
 
 		$options = '';
 

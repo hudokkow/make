@@ -484,19 +484,18 @@
 	left: 0; /*reset*/
 	right: 0; /*reset*/
 	bottom: 0; /*reset*/
+	width: 100%;
+	height: 100%;
 	background: url(images/background.png) top left repeat;
 	background: rgba(0, 0, 0, 0.7) ;
 }
 .ttfmake-overlay-wrapper {
-	position: fixed !important;
-	top: 50% !important;
-	left: 50% !important;
-	min-height: 150px !important;
-	background-color: #fff;
-	-webkit-box-shadow: 0 3px 6px rgba(0,0,0,.3);
-	box-shadow: 0 3px 6px rgba(0,0,0,.3);
-	/* Fix webkit bug. @link https://github.com/mgcrea/angular-strap/issues/1234#issuecomment-61913920 */
-	-webkit-transform: translate3d(0,0,0);
+	display: table-cell;
+	vertical-align: middle;
+}
+.ttfmake-overlay-dialog {
+	margin: 30px auto;
+	background-color: #ffffff;
 }
 .ttfmake-overlay-window-head {
 	padding: 0; /*reser*/
@@ -531,14 +530,11 @@
 .ttfmake-configuration-overlay-input-wrap  .ttfmake-uploader {
 	width: 100%;
 }
-.ttfmake-configuration-overlay .ttfmake-overlay-wrapper {
-	margin-left: -200px;
+.ttfmake-configuration-overlay .ttfmake-overlay-dialog {
 	width: 400px;
 }
-#ttfmake-tinymce-overlay .ttfmake-overlay-wrapper {
+#ttfmake-tinymce-overlay .ttfmake-overlay-dialog {
 	width: 800px !important;
-	margin-left: -400px !important;
-	margin-top: -250px !important;
 }
 #ttfmake-tinymce-overlay .ttfmake-overlay-body {
 	/* overflow-y: hidden; */
