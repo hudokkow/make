@@ -10,7 +10,6 @@ var oneApp = oneApp || {};
 		events: function() {
 			return _.extend({}, oneApp.views.item.prototype.events, {
 				'click .ttfmake-banner-slide-remove': 'onSlideRemove',
-				'click .ttfmake-banner-slide-toggle': 'toggleSection',
 				'click .edit-content-link': 'onContentEdit',
 			});
 		},
@@ -34,13 +33,6 @@ var oneApp = oneApp || {};
 			$button.text('Update slide');
 		},
 
-		onColorPickerChange: function(e, data) {
-			e.stopPropagation();
-
-			this.model.set(data.modelAttr, data.color);
-			this.$el.trigger('model-item-change');
-		},
-
 		onSlideRemove: function (evt) {
 			evt.preventDefault();
 
@@ -55,26 +47,5 @@ var oneApp = oneApp || {};
 				this.remove();
 			}.bind(this));
 		},
-
-		toggleSection: function (evt) {
-			evt.preventDefault();
-
-			var $this = $(evt.target),
-				$section = $this.parents('.ttfmake-banner-slide'),
-				$sectionBody = $('.ttfmake-banner-slide-body', $section),
-				$input = $('.ttfmake-banner-slide-state', this.$el);
-
-			if ($section.hasClass('ttfmake-banner-slide-open')) {
-				$sectionBody.slideUp(oneApp.builder.options.closeSpeed, function() {
-					$section.removeClass('ttfmake-banner-slide-open');
-					$input.val('closed');
-				});
-			} else {
-				$sectionBody.slideDown(oneApp.builder.options.openSpeed, function() {
-					$section.addClass('ttfmake-banner-slide-open');
-					$input.val('open');
-				});
-			}
-		}
 	});
 })(window, Backbone, jQuery, _, oneApp);
