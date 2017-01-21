@@ -118,4 +118,6 @@ $this->add_choice_sets( array(
 		'uppercase' => __( 'Uppercase', 'make' ),
 		'lowercase' => __( 'Lowercase', 'make' ),
 	),
+
+	'mobile-menu' => get_registered_nav_menus()
 ) );

@@ -609,6 +609,10 @@ $this->add_settings(
 			'default'       => 'default',
 			'choice_set_id' => 'header-bar-content-layout',
 		),
+		'mobile-menu' => array(
+			'default'       => 'primary',
+			'choice_set_id' => 'mobile-menu',
+		)
 	),
 	array(
 		'sanitize' => array( Make()->sanitize(), 'sanitize_choice' ),
