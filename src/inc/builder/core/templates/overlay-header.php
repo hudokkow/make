@@ -5,6 +5,9 @@
 			<div class="ttfmake-overlay-header">
 				<div class="ttfmake-overlay-window-head">
 					<div class="ttfmake-overlay-title"><?php if ( ! empty( $ttfmake_overlay_title ) ) : echo esc_html( $ttfmake_overlay_title ); else : esc_html_e( 'Configuration', 'make' ); endif; ?></div>
+					<button type="button" class="button-link media-modal-close ttfmake-overlay-close-discard">
+						<span class="media-modal-icon">
+					</button>
 				</div>
 			</div>
 			<div class="ttfmake-overlay-body">

@@ -495,6 +495,7 @@
 	vertical-align: middle;
 }
 .ttfmake-overlay-dialog {
+	position: relative;
 	margin: 30px auto;
 	background-color: #ffffff;
 }
@@ -514,6 +515,7 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	float: left;
 }
 .ttfmake-overlay-close {
 	display: block;
@@ -549,7 +551,7 @@
 .ttfmake-overlay-header h2 {
 	float: left;
 }
-.ttfmake-overlay-header .ttfmake-overlay-close {
+.ttfmake-overlay-header .ttfmake-overlay-close-discard {
 	float: right;
 	-webkit-user-select: none;
 	-moz-user-select: none;
