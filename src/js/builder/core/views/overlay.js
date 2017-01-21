@@ -13,6 +13,7 @@ var oneApp = oneApp || {};
 		events: {
 			'click .ttfmake-overlay-close-update': 'onUpdate',
 			'click .ttfmake-overlay-close-discard': 'onDiscard',
+			'click': 'onClick',
 		},
 
 		initialize: function() {
@@ -43,6 +44,12 @@ var oneApp = oneApp || {};
 
 		onKeyDown: function() {
 			this.close(false);
+		},
+
+		onClick: function(e) {
+			if ($(e.target).is('.ttfmake-overlay-wrapper')) {
+				this.close(false);
+			}
 		}
 	});
 
