@@ -16,7 +16,7 @@ var oneApp = oneApp || {};
 				'view-ready': 'onViewReady',
 				'item-sort': 'onSlideSort',
 				'slide-remove': 'onSlideRemove',
-				'color-picker-change': 'onColorPickerChange'
+				// 'color-picker-change': 'onColorPickerChange'
 			});
 		},
 
@@ -39,8 +39,7 @@ var oneApp = oneApp || {};
 		},
 
 		onViewReady: function(e) {
-			this.initializeSortables();
-			oneApp.builder.initColorPicker(this);
+			// this.initializeSortables();
 
 			_(this.itemViews).each(function(slideView) {
 				slideView.$el.trigger('view-ready');

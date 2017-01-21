@@ -10,7 +10,6 @@ var oneApp = oneApp || {};
 		events: function() {
 			return _.extend({}, oneApp.views.item.prototype.events, {
 				'click .ttfmake-gallery-item-remove': 'onItemRemove',
-				'overlayClose': 'onOverlayClose',
 				'click .edit-content-link': 'onContentEdit',
 			});
 		},
@@ -24,13 +23,6 @@ var oneApp = oneApp || {};
 			this.setElement(html);
 
 			return this;
-		},
-
-		onOverlayClose: function(e, textarea) {
-			e.stopPropagation();
-
-			this.model.set('description', $(textarea).val());
-			this.$el.trigger('model-item-change');
 		},
 
 		onContentEdit: function(e) {

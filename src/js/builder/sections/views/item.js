@@ -8,53 +8,35 @@ var oneApp = oneApp || {};
 
 		oneApp.views.item = Backbone.View.extend({
 			events: {
+				'view-ready': 'onViewReady',
 				'click .ttfmake-media-uploader-add': 'onMediaAdd',
 				'mediaSelected': 'onMediaSelected',
 				'mediaRemoved': 'onMediaRemoved',
 				'click .edit-content-link': 'onContentEdit',
-				'change .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
-				'keyup .ttfmake-configuration-overlay input[type=text]' : 'updateInputField',
-				'change .ttfmake-configuration-overlay input[type=checkbox]' : 'updateCheckbox',
-				'change .ttfmake-configuration-overlay select': 'updateSelectField'
+				'click .ttfmake-overlay-open': 'openConfigurationOverlay',
+				'overlay-close': 'onOverlayClose',
 			},
 
-			updateInputField: function(e) {
+			onViewReady: function(e) {
+				// Trap this event to avoid stack overflow
 				e.stopPropagation();
-
-				var $input				= $(e.target);
-				var modelAttrName = $input.attr('data-model-attr');
-
-				if (typeof modelAttrName !== 'undefined') {
-					this.model.set(modelAttrName, $input.val());
-					this.$el.trigger('model-item-change');
-				}
 			},
 
-			updateCheckbox: function(e) {
+			openConfigurationOverlay: function (e) {
+				e.preventDefault();
 				e.stopPropagation();
 
-				var $checkbox = $(e.target);
-				var modelAttrName = $checkbox.attr('data-model-attr');
-
-				if (typeof modelAttrName !== 'undefined') {
-					if ($checkbox.is(':checked')) {
-						this.model.set(modelAttrName, 1);
-					} else {
-						this.model.set(modelAttrName, 0);
-					}
-
-					this.$el.trigger('model-item-change');
-				}
+				var $target = $(e.target);
+				var $overlay = $($target.attr('data-overlay'));
+				oneApp.builder.settingsOverlay.open(this, $overlay);
 			},
 
-			updateSelectField: function(e) {
+			onOverlayClose: function(e, changeset) {
 				e.stopPropagation();
 
-				var $select = $(e.target);
-				var modelAttrName = $select.attr('data-model-attr');
+				this.model.set(changeset);
 
-				if (typeof modelAttrName !== 'undefined') {
-					this.model.set(modelAttrName, $select.val());
+				if (this.model.hasChanged()) {
 					this.$el.trigger('model-item-change');
 				}
 			},

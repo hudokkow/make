@@ -376,6 +376,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 
 			// init color picker
 			$colorPickerInput.wpColorPicker(colorPickerOptions);
+			return $colorPickerInput;
 		},
 
 		setClearClasses: function ($el) {

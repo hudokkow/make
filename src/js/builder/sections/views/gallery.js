@@ -45,7 +45,6 @@ var oneApp = oneApp || {};
 			e.stopPropagation();
 
 			this.initializeSortables();
-			oneApp.builder.initColorPicker(this);
 		},
 
 		addItem: function(itemModel) {

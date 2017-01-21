@@ -11,10 +11,7 @@ var oneApp = oneApp || {};
 			return _.extend({}, oneApp.views.item.prototype.events, {
 				'click .ttfmake-banner-slide-remove': 'onSlideRemove',
 				'click .ttfmake-banner-slide-toggle': 'toggleSection',
-				'overlayClose': 'onOverlayClose',
 				'click .edit-content-link': 'onContentEdit',
-				'color-picker-change': 'onColorPickerChange',
-				'view-ready': 'onViewReady',
 			});
 		},
 
@@ -27,18 +24,6 @@ var oneApp = oneApp || {};
 			this.setElement(html);
 
 			return this;
-		},
-
-		onViewReady: function(e) {
-			e.stopPropagation();
-			oneApp.builder.initColorPicker(this);
-		},
-
-		onOverlayClose: function(e, textarea) {
-			e.stopPropagation();
-
-			this.model.set('content', $(textarea).val());
-			this.$el.trigger('model-item-change');
 		},
 
 		onContentEdit: function(e) {

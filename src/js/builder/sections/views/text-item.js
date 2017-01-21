@@ -14,8 +14,6 @@ var oneApp = oneApp || {};
 		events: function() {
 			return _.extend({}, oneApp.views.item.prototype.events, {
 				'click .ttfmake-media-uploader-add': 'onMediaOpen',
-				'view-ready': 'onViewReady',
-				'overlayClose': 'onOverlayClose',
 				'click .edit-content-link': 'onContentEdit',
 			});
 		},
@@ -29,18 +27,6 @@ var oneApp = oneApp || {};
 			this.setElement(html);
 
 			return this;
-		},
-
-		onViewReady: function(e) {
-			e.stopPropagation();
-			oneApp.builder.initColorPicker(this);
-		},
-
-		onOverlayClose: function(e, textarea) {
-			e.stopPropagation();
-
-			this.model.set('content', $(textarea).val());
-			this.$el.trigger('model-item-change');
 		},
 
 		onContentEdit: function(e) {
