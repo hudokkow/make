@@ -604,19 +604,17 @@ div.custom-logo {
 }
 .menu-toggle,
 .site-navigation .nav-menu.toggled,
-.site-navigation .menu.toggled {
+.site-navigation .menu.toggled, {
 	display: block;
 }
-.site-navigation .menu {
+.site-navigation .menu-desktop {
 	@include for(medium-screens) {
 		display: block;
 	}
 	display: none;
 }
-.site-navigation .menu ~ .menu-mobile {
-	@include for(medium-screens) {
-		display: none;
-	}
+.site-navigation .menu-mobile {
+	display: none;
 }
 @include for(medium-screens) {
 	.site-navigation ul {

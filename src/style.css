@@ -1353,20 +1353,18 @@ div.custom-logo a {
 	display: block;
 }
 
-.site-navigation .menu {
+.site-navigation .menu-desktop {
 	display: none;
 }
 
 @media screen and (min-width: 800px) {
-	.site-navigation .menu {
+	.site-navigation .menu-desktop {
 		display: block;
 	}
 }
 
-@media screen and (min-width: 800px) {
-	.site-navigation .menu ~ .menu-mobile {
-		display: none;
-	}
+.site-navigation .menu-mobile {
+	display: none;
 }
 
 @media screen and (min-width: 800px) {
