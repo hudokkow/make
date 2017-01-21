@@ -6,6 +6,7 @@ var oneApp = oneApp || {};
 
 	oneApp.views = oneApp.views || {};
 
+	// Base overlay view
 	oneApp.views.overlay = Backbone.View.extend({
 		caller: null,
 
@@ -20,12 +21,15 @@ var oneApp = oneApp || {};
 
 		open: function(view) {
 			this.caller = view;
-
 			this.$el.css('display', 'table');
 			$('body').addClass('modal-open');
+			$('body').one('keydown', _.bind(this.onKeyDown, this));
 		},
 
-		close: function(apply) {},
+		close: function(apply) {
+			this.$el.hide();
+			$('body').removeClass('modal-open');
+		},
 
 		onUpdate: function(e) {
 			e.preventDefault();
@@ -36,22 +40,39 @@ var oneApp = oneApp || {};
 			e.preventDefault();
 			this.close(false);
 		},
+
+		onKeyDown: function() {
+			this.close(false);
+		}
 	});
 
+	// Content editor overlay view
 	oneApp.views['tinymce-overlay'] = oneApp.views.overlay.extend({
 		open: function(view) {
 			oneApp.views.overlay.prototype.open.apply(this, arguments)
 
 			// Auto focus on the editor
-			var focusOn = (oneApp.builder.isVisualActive()) ? tinyMCE.get('make') : oneApp.builder.$makeTextArea;
-			focusOn.focus();
+			var focusOn = oneApp.builder.$makeTextArea;
+			var self = this;
 
+			if (oneApp.builder.isVisualActive()) {
+				focusOn = tinyMCE.get('make');
+
+				// Trap keypresses in the editor content area
+				focusOn.on('keydown', _.bind(this.onEditorKeyDown, this));
+			}
+
+			focusOn.focus();
 			view.$el.trigger('overlayOpen');
 		},
 
 		close: function(apply) {
-			this.$el.hide();
-			$('body').removeClass('modal-open');
+			var editor = tinyMCE.get('make');
+			if (editor) {
+				editor.off('keydown');
+			}
+
+			oneApp.views.overlay.prototype.close.apply(this, arguments);
 
 			if (apply) {
 				oneApp.builder.setTextArea(oneApp.builder.activeTextAreaID);
@@ -61,7 +82,6 @@ var oneApp = oneApp || {};
 				}
 
 				this.toggleHasContent();
-
 				var $textarea = $('#' + oneApp.builder.activeTextAreaID);
 				var modelAttr = $textarea.data('model-attr');
 				this.model.set(modelAttr, $textarea.val());
@@ -81,9 +101,14 @@ var oneApp = oneApp || {};
 			} else {
 				link.removeClass('item-has-content');
 			}
+		},
+
+		onEditorKeyDown: function() {
+			this.close(false);
 		}
 	});
 
+	// Columns configuration view
 	oneApp.views.settings = oneApp.views.overlay.extend({
 		$overlay: null,
 		$colorPickers: null,
@@ -122,8 +147,8 @@ var oneApp = oneApp || {};
 		},
 
 		close: function(apply) {
+			oneApp.views.overlay.prototype.close.apply(this, arguments);
 			var changeset = {};
-			this.$el.hide();
 
 			// Reset color picker inputs
 			// to original state
@@ -144,7 +169,6 @@ var oneApp = oneApp || {};
 			}
 
 			this.caller.$el.trigger('overlay-close', changeset);
-			$('body').removeClass('modal-open');
 			this.remove();
 		},
 
