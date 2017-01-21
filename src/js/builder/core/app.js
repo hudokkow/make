@@ -9,6 +9,7 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		activeTextAreaID: '',
 		activeiframeID: '',
 		tinymceOverlay: false,
+		settingsOverlay: false,
 
 		$stage: false,
 		$makeTextArea: false,
@@ -295,9 +296,11 @@ var oneApp = oneApp || {}, ttfMakeFrames = ttfMakeFrames || [];
 		},
 
 		initOverlayViews: function () {
-			this.tinymceOverlay = new oneApp.views.overlay({
+			this.tinymceOverlay = new oneApp.views['tinymce-overlay']({
 				el: $('#ttfmake-tinymce-overlay')
 			});
+
+			this.settingsOverlay = new oneApp.views.settings();
 		},
 
 		initUploader: function (view, placeholder) {
